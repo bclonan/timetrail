@@ -1,0 +1,13 @@
+node_modules/
+dist/
+public/frametrail/
+public/frame-bridge.js
+public/standalone-runtime.html
+playwright-report/
+test-results/
+.env.local
+vendor/frametrail/
+/public/standalone-viewer.js
+
+# Local Netlify folder
+.netlify

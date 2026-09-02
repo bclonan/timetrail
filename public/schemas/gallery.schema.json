@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "updatedAt": {
+      "type": "string"
+    },
+    "items": {
+      "maxItems": 200,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "creator": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "tags": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 60
+            }
+          },
+          "durationSeconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "thumbnail": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "projectUrl": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "watchUrl": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "summary",
+          "creator",
+          "tags",
+          "durationSeconds",
+          "projectUrl",
+          "license"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "version",
+    "updatedAt",
+    "items"
+  ],
+  "additionalProperties": false
+}

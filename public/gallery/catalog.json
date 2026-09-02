@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-02T12:00:00.000Z",
+  "items": [
+    {
+      "id": "published_dna",
+      "title": "How DNA Becomes a Protein",
+      "summary": "Follow the journey from genetic instructions to a working protein. An offline interactive lesson.",
+      "creator": "TimeTrail",
+      "tags": [
+        "Biology",
+        "Beginner",
+        "Generated"
+      ],
+      "durationSeconds": 90,
+      "thumbnail": "/demo-assets/dna.svg",
+      "projectUrl": "/gallery/dna.json",
+      "watchUrl": "/watch/published_dna",
+      "license": "MIT"
+    }
+  ]
+}

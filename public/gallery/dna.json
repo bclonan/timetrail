@@ -1,0 +1,459 @@
+{
+  "schemaVersion": "1.0",
+  "id": "demo_dna",
+  "title": "How DNA Becomes a Protein",
+  "slug": "how-dna-becomes-a-protein",
+  "description": "Follow the journey from genetic instructions to a working protein. An offline interactive lesson.",
+  "topic": "DNA, transcription, and translation",
+  "audience": "Curious beginners",
+  "tags": [
+    "Biology",
+    "Beginner",
+    "Generated"
+  ],
+  "createdAt": "2026-09-02T12:00:00.000Z",
+  "updatedAt": "2026-09-02T12:00:00.000Z",
+  "activeSequenceId": "demo_dna_main",
+  "sequences": [
+    {
+      "id": "demo_dna_main",
+      "title": "How DNA Becomes a Protein",
+      "description": "DNA, transcription, and translation",
+      "durationSeconds": 90,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_npdlzg_0_clip",
+          "mediaId": "build_npdlzg_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 22.5,
+          "durationSeconds": 22.5,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_npdlzg_1_clip",
+          "mediaId": "build_npdlzg_1_media",
+          "timelineStart": 22.5,
+          "sourceStart": 0,
+          "sourceEnd": 22.5,
+          "durationSeconds": 22.5,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_npdlzg_2_clip",
+          "mediaId": "build_npdlzg_2_media",
+          "timelineStart": 45,
+          "sourceStart": 0,
+          "sourceEnd": 22.5,
+          "durationSeconds": 22.5,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_npdlzg_3_clip",
+          "mediaId": "build_npdlzg_3_media",
+          "timelineStart": 67.5,
+          "sourceStart": 0,
+          "sourceEnd": 22.5,
+          "durationSeconds": 22.5,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 22.5,
+          "title": "A small code. A living world.",
+          "body": "Inside your cells, genetic instructions become the proteins that help life work.",
+          "id": "build_npdlzg_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "definition",
+          "start": 1,
+          "end": 22.5,
+          "title": "DNA",
+          "body": "Deoxyribonucleic acid stores genetic instructions in a sequence of chemical bases.",
+          "id": "build_npdlzg_0_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "note",
+          "start": 1,
+          "end": 22.5,
+          "title": "Packed into chromosomes",
+          "body": "In human cells, DNA is organized into chromosomes. Most cells keep these chromosomes inside a nucleus.",
+          "id": "build_npdlzg_0_card_1",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 22.5,
+          "body": "DNA stores genetic information. Cells use a working copy of that information to build proteins.",
+          "id": "build_npdlzg_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 22.5,
+          "body": "DNA stores genetic information. Cells use a working copy of that information to build proteins.",
+          "id": "build_npdlzg_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 22.5,
+          "end": 45,
+          "title": "Transcription: make a copy",
+          "body": "The cell copies a gene into messenger RNA. The DNA remains in place.",
+          "id": "build_npdlzg_1_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "definition",
+          "start": 23.5,
+          "end": 45,
+          "title": "Messenger RNA",
+          "body": "Messenger RNA, or mRNA, carries a copy of genetic instructions to a ribosome.",
+          "id": "build_npdlzg_1_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 23.5,
+          "end": 45,
+          "title": "The transcription step",
+          "body": "Read the National Human Genome Research Institute glossary.",
+          "url": "https://www.genome.gov/genetics-glossary/Transcription",
+          "id": "build_npdlzg_1_card_1",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 22.5,
+          "end": 45,
+          "body": "During transcription, RNA polymerase uses one DNA strand as a template to make RNA.",
+          "id": "build_npdlzg_1_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 22.5,
+          "end": 45,
+          "body": "During transcription, RNA polymerase uses one DNA strand as a template to make RNA.",
+          "id": "build_npdlzg_1_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 45,
+          "end": 67.5,
+          "title": "Translation: build a protein",
+          "body": "A ribosome reads the message, three bases at a time. Amino acids join into a chain.",
+          "id": "build_npdlzg_2_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "fact",
+          "start": 46,
+          "end": 67.5,
+          "title": "The ribosome reads in threes",
+          "body": "Each codon contains three RNA bases. Most codons specify an amino acid; some signal a stop.",
+          "id": "build_npdlzg_2_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "warning",
+          "start": 46,
+          "end": 67.5,
+          "title": "DNA does not turn into protein",
+          "body": "Information is copied and interpreted. The DNA molecule itself does not become a protein.",
+          "id": "build_npdlzg_2_card_1",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 46,
+          "end": 67.5,
+          "title": "Translation, explained",
+          "body": "National Human Genome Research Institute, genetics glossary.",
+          "url": "https://www.genome.gov/genetics-glossary/Translation",
+          "id": "build_npdlzg_2_card_2",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 45,
+          "end": 67.5,
+          "body": "The ribosome reads RNA codons. Transfer RNA brings amino acids, which link together to form a protein.",
+          "id": "build_npdlzg_2_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 45,
+          "end": 67.5,
+          "body": "The ribosome reads RNA codons. Transfer RNA brings amino acids, which link together to form a protein.",
+          "id": "build_npdlzg_2_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 67.5,
+          "end": 90,
+          "title": "One message. Many outcomes.",
+          "body": "The amino acid chain folds into a working protein. Changes in DNA can sometimes change that outcome.",
+          "id": "build_npdlzg_3_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 67.5,
+          "end": 90,
+          "body": "A protein is a chain of amino acids that folds into a shape. DNA changes may affect proteins, but many changes do not.",
+          "id": "build_npdlzg_3_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 67.5,
+          "end": 90,
+          "body": "A protein is a chain of amino acids that folds into a shape. DNA changes may affect proteins, but many changes do not.",
+          "id": "build_npdlzg_3_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "quiz",
+          "start": 82,
+          "end": 90,
+          "title": "Check your understanding",
+          "quiz": {
+            "question": "What carries a gene's message to the ribosome?",
+            "options": [
+              "Messenger RNA",
+              "The entire chromosome",
+              "A finished protein"
+            ],
+            "answerIndex": 0,
+            "explanation": "Messenger RNA carries the copied message. The ribosome uses it to assemble a protein."
+          },
+          "id": "build_npdlzg_3_quiz",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "branch",
+          "start": 67.5,
+          "end": 90,
+          "title": "Explore mutations",
+          "branch": {
+            "label": "Explore mutations",
+            "targetSequenceId": "build_npdlzg_3_branch",
+            "targetTime": 0
+          },
+          "id": "build_npdlzg_3_choice",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "build_npdlzg_3_branch",
+      "title": "When the instructions change",
+      "durationSeconds": 20,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_npdlzg_3_branch_clip",
+          "mediaId": "build_npdlzg_3_branch_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "durationSeconds": 20
+        }
+      ],
+      "cues": [
+        {
+          "kind": "note",
+          "start": 0,
+          "end": 20,
+          "title": "When the instructions change",
+          "body": "A DNA change may alter an amino acid, affect how much protein is made, or have no detectable effect. Context matters.",
+          "id": "build_npdlzg_3_branch_note",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "build_npdlzg_0_media",
+      "name": "A small code. A living world.",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "title",
+          "heading": "A small code. A living world.",
+          "body": "Inside your cells, genetic instructions become the proteins that help life work.",
+          "illustration": "dna",
+          "background": "forest",
+          "narration": "DNA stores genetic information. Cells use a working copy of that information to build proteins."
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_npdlzg_1_media",
+      "name": "Transcription: make a copy",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Transcription: make a copy",
+          "body": "The cell copies a gene into messenger RNA. The DNA remains in place.",
+          "illustration": "rna",
+          "background": "forest",
+          "narration": "During transcription, RNA polymerase uses one DNA strand as a template to make RNA."
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_npdlzg_2_media",
+      "name": "Translation: build a protein",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Translation: build a protein",
+          "body": "A ribosome reads the message, three bases at a time. Amino acids join into a chain.",
+          "illustration": "protein",
+          "background": "forest",
+          "narration": "The ribosome reads RNA codons. Transfer RNA brings amino acids, which link together to form a protein."
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_npdlzg_3_media",
+      "name": "One message. Many outcomes.",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "quiz-intro",
+          "heading": "One message. Many outcomes.",
+          "body": "The amino acid chain folds into a working protein. Changes in DNA can sometimes change that outcome.",
+          "illustration": "dna",
+          "background": "forest",
+          "narration": "A protein is a chain of amino acids that folds into a shape. DNA changes may affect proteins, but many changes do not."
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_npdlzg_3_branch_media",
+      "name": "When the instructions change",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "When the instructions change",
+          "body": "A DNA change may alter an amino acid, affect how much protein is made, or have no detectable effect. Context matters.",
+          "illustration": "mutation",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    }
+  ],
+  "settings": {
+    "captions": true,
+    "narration": false,
+    "targetSeconds": 90
+  },
+  "provenance": {
+    "creator": "TimeTrail",
+    "license": "MIT"
+  }
+}
