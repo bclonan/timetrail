@@ -25,7 +25,8 @@
     "fuse.js": "^7.1.0",
     "ulid": "^3.0.1",
     "dompurify": "^3.2.6",
-    "lucide-vue-next": "^0.468.0"
+    "lucide-vue-next": "^0.468.0",
+    "mediabunny": "1.55.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",

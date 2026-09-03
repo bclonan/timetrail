@@ -4,18 +4,30 @@ import { clone, projectSchema, type Project } from "../domain/model";
 import { storage } from "../storage/BrowserWorkspaceStore";
 import { escapeHtml, cardSvg } from "../runtime/generatedCard";
 import { fromFrameTrailExport, captionsVtt } from "../runtime/frameTrailMapper";
+import type { ExportOptions } from "./Mp4ExportService";
 export const exportFormats = [
+  "video-mp4",
+  "interactive-zip",
   "project-json",
   "project-zip",
   "standalone-html",
   "static-pack",
 ] as const;
 export type ExportFormat = (typeof exportFormats)[number];
+export const exportLabels: Record<ExportFormat, string> = {
+  "video-mp4": "Video only (.mp4)",
+  "interactive-zip": "Interactive hypermedia (.zip, Research view)",
+  "project-json": "Project JSON",
+  "project-zip": "Project ZIP",
+  "standalone-html": "Standalone HTML",
+  "static-pack": "Static hosting pack",
+};
 export interface PreparedExport {
   filename: string;
   blob: Blob;
   format: ExportFormat;
   assetsIncluded: boolean;
+  notes?: string[];
 }
 export function zipManifest(project: Project, files: string[]) {
   return {
@@ -59,8 +71,12 @@ function viewerHtml(
   runtime: string | undefined,
   assets: Record<string, string>,
   client: string,
+  startInResearch = false,
 ) {
-  const json = JSON.stringify({ project, assets }).replace(/</g, "\\u003c");
+  const json = JSON.stringify({ project, assets, startInResearch }).replace(
+    /</g,
+    "\\u003c",
+  );
   const src = runtime
     ? `srcdoc="${escapeHtml(runtime)}"`
     : 'src="./runtime/runtime.html"';
@@ -72,9 +88,22 @@ export class ExportService {
   async prepare(
     project: Project,
     format: ExportFormat,
+    options: ExportOptions = {},
   ): Promise<PreparedExport> {
     projectSchema.parse(project);
+    project = clone(project);
     const stem = project.slug || "timetrail";
+    if (format === "video-mp4") {
+      const { renderMp4 } = await import("./Mp4ExportService");
+      const result = await renderMp4(project, options);
+      return {
+        filename: stem + ".mp4",
+        format,
+        assetsIncluded: true,
+        ...result,
+      };
+    }
+    const notes: string[] = [];
     if (format === "project-json")
       return {
         filename: stem + ".json",
@@ -101,6 +130,55 @@ export class ExportService {
       ),
     };
     const urls: Record<string, string> = {};
+    if (format === "interactive-zip") {
+      notes.push(
+        "Unzip this folder and serve index.html on a static HTTP host. It opens in Research view with chapters, sources and interactive panels. Source links and embedded players still need internet.",
+      );
+      const { downloadMediaBlob } = await import("./Mp4ExportService");
+      let downloaded = 0;
+      for (const media of project.media) {
+        options.signal?.throwIfAborted();
+        if (media.source.kind !== "remote") continue;
+        if (!["video", "audio", "image"].includes(media.type)) {
+          if (["youtube", "vimeo"].includes(media.type))
+            notes.push(`${media.name}: embedded player requires internet.`);
+          continue;
+        }
+        options.progress?.(10, `Including ${media.name}`);
+        try {
+          const blob = await downloadMediaBlob(
+            media.source.url,
+            options.signal,
+          );
+          if (downloaded + blob.size > 150 * 1024 * 1024)
+            throw new Error("Remote download budget exceeds 150 MB.");
+          downloaded += blob.size;
+          const assetId = `export_${media.id}`;
+          const ext =
+            media.type === "image"
+              ? "img"
+              : media.type === "audio"
+                ? "audio"
+                : "video";
+          const path = `assets/${assetId}.${ext}`;
+          files[path] = new Uint8Array(await blob.arrayBuffer());
+          urls[assetId] = path;
+          media.source = { kind: "asset", assetId };
+          media.mimeType = blob.type;
+          media.sizeBytes = blob.size;
+        } catch (e) {
+          options.signal?.throwIfAborted();
+          notes.push(
+            `${media.name}: remains an online source because its download failed. ${e instanceof Error ? e.message : e}`,
+          );
+        }
+      }
+      for (const media of project.media)
+        if (media.source.kind === "generated" && media.source.document.image)
+          notes.push(`${media.name}: its linked card image requires internet.`);
+      files["project.json"] = strToU8(JSON.stringify(project, null, 2));
+      files["README.txt"] = strToU8(notes.join("\n\n"));
+    }
     for (const sequence of project.sequences)
       if (sequence.cues.some((c) => c.kind === "caption"))
         files[`captions/${sequence.id}.vtt`] = strToU8(
@@ -111,13 +189,16 @@ export class ExportService {
     for (const m of project.media) {
       if (m.source.kind !== "asset") continue;
       const assetId = m.source.assetId;
+      if (urls[assetId]) continue;
       const blob = await storage.getAsset(assetId);
       const meta = await storage.assetMetadata(assetId);
       const path = "assets/" + meta.path;
       files[path] = new Uint8Array(await blob.arrayBuffer());
       urls[assetId] = path;
     }
-    if (format === "standalone-html" || format === "static-pack") {
+    if (
+      ["standalone-html", "static-pack", "interactive-zip"].includes(format)
+    ) {
       const response = await fetch("/standalone-runtime.html");
       if (!response.ok)
         throw new Error(
@@ -148,7 +229,13 @@ export class ExportService {
         };
       }
       files["index.html"] = strToU8(
-        viewerHtml(project, undefined, urls, client),
+        viewerHtml(
+          project,
+          undefined,
+          urls,
+          client,
+          format === "interactive-zip",
+        ),
       );
       files["runtime/runtime.html"] = strToU8(runtime);
       files["runtime/LICENSE.md"] = new Uint8Array(
@@ -180,10 +267,18 @@ export class ExportService {
     );
     const bytes = zipSync(files, { level: 6 });
     return {
-      filename: stem + (format === "static-pack" ? "-static" : "") + ".zip",
+      filename:
+        stem +
+        (format === "static-pack"
+          ? "-static"
+          : format === "interactive-zip"
+            ? "-interactive"
+            : "") +
+        ".zip",
       blob: new Blob([bytes as BlobPart], { type: "application/zip" }),
       format,
       assetsIncluded: true,
+      notes,
     };
   }
   async import(file: File): Promise<Project> {

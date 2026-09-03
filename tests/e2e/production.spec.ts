@@ -20,6 +20,58 @@ const ready = (page: Page) =>
   expect(page.getByRole("button", { name: "Play", exact: true })).toBeEnabled();
 const inspect = (page: Page) => call(page, "timetrail.project.inspect");
 
+test("QA inspection explains a quiz pause and playback can continue after answering", async ({
+  page,
+}) => {
+  await page.goto("/demo");
+  await ready(page);
+  const revision = (await inspect(page)).revision;
+  await call(page, "timetrail.playback.control", {
+    action: "seek",
+    timeSeconds: 84,
+  });
+  const before = await call(page, "timetrail.player.control", {
+    action: "inspect",
+  });
+  expect(before.playback).toMatchObject({
+    ready: true,
+    paused: true,
+    ended: false,
+    durationSeconds: 90,
+    narrationEnabled: false,
+  });
+  expect(before.playback.activeQuizzes).toHaveLength(1);
+  expect(before.playback.activeQuizzes[0].answered).toBe(false);
+  expect(before.playback.next).toContain("Answer it");
+  const answered = await call(page, "timetrail.player.control", {
+    action: "answer",
+    id: before.playback.activeQuizzes[0].id,
+    answerIndex: 1,
+  });
+  expect(answered.playback.paused).toBe(true);
+  expect(answered.playback.activeQuizzes[0].answered).toBe(true);
+  expect(answered.playback.next).toContain("action play");
+  await call(page, "timetrail.playback.control", { action: "play" });
+  await expect
+    .poll(
+      async () =>
+        (await call(page, "timetrail.player.control", { action: "inspect" }))
+          .time,
+    )
+    .toBeGreaterThan(84.3);
+  await call(page, "timetrail.playback.control", { action: "pause" });
+  await call(page, "timetrail.playback.control", {
+    action: "seek",
+    timeSeconds: 90,
+  });
+  const ended = await call(page, "timetrail.player.control", {
+    action: "inspect",
+  });
+  expect(ended.playback.ended).toBe(true);
+  expect(ended.playback.next).toContain("prepare the export");
+  expect(ended.revision).toBe(revision);
+});
+
 test("no supplied video directs sourcing, recovers from empty search and uses found footage", async ({
   page,
   baseURL,

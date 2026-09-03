@@ -38,6 +38,13 @@ export const useWorkspace = defineStore("workspace", () => {
   const events = ref<AuditEvent[]>([]);
   const activity = ref(0);
   const prepared = shallowRef<PreparedExport>();
+  const exportTask = ref<{
+    id: string;
+    status: "preparing" | "ready" | "failed" | "canceled";
+    percent: number;
+    message: string;
+  }>();
+  let exportAbort: AbortController | undefined;
   const shareCode = ref("");
   const shareLink = ref("");
   const shareVersion = ref(0);
@@ -341,18 +348,82 @@ export const useWorkspace = defineStore("workspace", () => {
       paused.value = true;
     }
   }
-  async function prepareExport(format: ExportFormat) {
+  function cancelExport() {
+    exportAbort?.abort();
+  }
+  watch(
+    () => approved.value?.id,
+    () => {
+      cancelExport();
+      prepared.value = undefined;
+    },
+  );
+  async function prepareExport(format: ExportFormat, signal?: AbortSignal) {
     if (!approved.value) throw new Error("Open a project first.");
-    prepared.value = await exportsService.prepare(
-      clone(approved.value),
-      format,
-    );
-    await storage.log({
-      projectId: approved.value.id,
-      toolName: "export.prepared",
-      message: `Export prepared: ${prepared.value.filename}`,
+    if (exportTask.value?.status === "preparing")
+      throw new Error("An export is already running. Wait or cancel it first.");
+    const project = clone(approved.value);
+    const task = {
+      id: id(),
+      status: "preparing" as const,
+      percent: 0,
+      message: "Preparing your download",
+    };
+    exportTask.value = task;
+    prepared.value = undefined;
+    const controller = new AbortController();
+    exportAbort = controller;
+    const combined = AbortSignal.any([
+      controller.signal,
+      ...(signal ? [signal] : []),
+    ]);
+    try {
+      const result = await exportsService.prepare(project, format, {
+        signal: combined,
+        progress: (percent, message) => {
+          exportTask.value = { ...task, percent: Math.round(percent), message };
+        },
+      });
+      combined.throwIfAborted();
+      if (approved.value?.id !== project.id)
+        throw new Error("The open project changed. Export canceled.");
+      prepared.value = result;
+      exportTask.value = {
+        ...task,
+        status: "ready",
+        percent: 100,
+        message: result.filename,
+      };
+      await storage.log({
+        projectId: project.id,
+        toolName: "export.prepared",
+        message: `Export prepared: ${result.filename}`,
+      });
+      return result;
+    } catch (e) {
+      const message = combined.aborted
+        ? "Export canceled. No partial file was downloaded."
+        : e instanceof Error
+          ? e.message
+          : String(e);
+      exportTask.value = {
+        ...task,
+        status: combined.aborted ? "canceled" : "failed",
+        message,
+      };
+      throw new Error(message);
+    } finally {
+      exportAbort = undefined;
+    }
+  }
+  function startExport(format: ExportFormat, signal?: AbortSignal) {
+    if (exportTask.value?.status === "preparing")
+      throw new Error("An export is already running.");
+    if (!approved.value) throw new Error("Open a project first.");
+    void prepareExport(format, signal).catch((e) => {
+      error.value = e.message;
     });
-    return prepared.value;
+    return { ...exportTask.value, nextTool: "timetrail.export.status" };
   }
   async function prepareShare() {
     if (!approved.value) throw new Error("Open a project first.");
@@ -424,6 +495,9 @@ export const useWorkspace = defineStore("workspace", () => {
     events,
     activity,
     prepared,
+    exportTask,
+    cancelExport,
+    startExport,
     shareCode,
     shareLink,
     shareVersion,

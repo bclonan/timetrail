@@ -20,7 +20,11 @@ import EditorForms from "../components/editor/EditorForms.vue";
 import { useWorkspace } from "../stores/workspace";
 import { registeredNames } from "../webmcp/registry";
 import { judgePrompt } from "../demo/demoProject";
-import { exportFormats, type ExportFormat } from "../services/ExportService";
+import {
+  exportFormats,
+  exportLabels,
+  type ExportFormat,
+} from "../services/ExportService";
 import { storage } from "../storage/BrowserWorkspaceStore";
 import Player from "../components/player/Player.vue";
 import ContextStack from "../components/context/ContextStack.vue";
@@ -30,6 +34,7 @@ import Timeline from "../components/timeline/Timeline.vue";
 import ProposalReview from "../components/proposals/ProposalReview.vue";
 import ProductionControls from "../components/editor/ProductionControls.vue";
 import QualityReview from "../components/editor/QualityReview.vue";
+import FrameEditStudio from "../components/editor/FrameEditStudio.vue";
 const w = useWorkspace();
 const route = useRoute();
 const router = useRouter();
@@ -174,14 +179,7 @@ async function share() {
             class="compact-select"
           >
             <option v-for="f in exportFormats" :key="f" :value="f">
-              {{
-                {
-                  "project-json": "Project JSON",
-                  "project-zip": "Project ZIP",
-                  "standalone-html": "Standalone HTML",
-                  "static-pack": "Static hosting pack",
-                }[f]
-              }}
+              {{ exportLabels[f] }}
             </option></select
           ><button class="small" @click="w.run(() => w.prepareExport(format))">
             <Download :size="15" />Export</button
@@ -192,6 +190,7 @@ async function share() {
       </header>
       <ProductionControls />
       <QualityReview />
+      <FrameEditStudio />
       <div class="editor-layout" :class="{ 'library-closed': !w.mediaOpen }">
         <MediaLibrary v-if="w.mediaOpen" />
         <div class="preview-column">

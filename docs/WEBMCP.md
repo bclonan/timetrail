@@ -345,8 +345,36 @@ media. When a source fails or stops loading, playback pauses and the same recove
 actions appear in the Player. Choose a replacement through an editing proposal
 if the source remains unusable.
 
+`player.control` inspection includes `playback.ready`,
+`paused`, `ended`, duration, narration state and active quiz IDs with answer status.
+An answered quiz stays paused while the viewer reads feedback. Resume with
+`playback.control` and `action: play`, the same action as Continue film. Repeating
+inspection will not move a paused timeline. At the end, continue QA on another
+screen or prepare the export. Inspecting metadata does not prove narrated playback.
+
 The public `/hackathon` page explains the project, links working examples and
 contains illustrated tool calls, all required submission answers and a complete
 2:40 demo production prompt. `/webmcp` remains the live tool Lab. The prompt
-requires actual screen recordings and audio for YouTube delivery; HTML and ZIP
-exports are interactive artifacts, not an MP4 encoder.
+requires actual screen recordings and recorded audio for YouTube delivery.
+HTML and ZIP remain interactive artifacts. MP4 export
+uses recorded clip audio and cannot record browser read-aloud speech.
+
+## Frame selection, inpainting and character replacement
+
+Six `timetrail.retouch.*` tools support capture,
+inspection, area masks, request preparation, file transfer and returned-result
+proposals. They share the visible Frame edits workspace. The calling agent uses
+its own image/video editor and uploads the actual result. TimeTrail preserves
+unselected image pixels when compositing a still result. Timed still holds and
+full edited-video replacement are distinct placements. See [Frame editing](FRAME_EDITING.md)
+for inputs, a complete prompt, limits and the review sequence.
+
+## MP4 and interactive downloads
+
+`timetrail.export.prepare` now accepts `video-mp4` and `interactive-zip`.
+Both return a background task; use `timetrail.export.status` for progress,
+completion and warnings, or `timetrail.export.cancel` to stop. MP4 renders the
+approved main timeline with clip audio and captions. Interactive ZIP includes
+an `index.html` that starts in Research view. The visible download control still
+owns file delivery. See [Download formats](DOWNLOADS.md) for audio, codec,
+source-file and static-host requirements.

@@ -1,6 +1,6 @@
 import { projectSchema } from "../domain/model";
 import { runtimeMessage } from "./bridgeMessages";
-import { defaultPresentation } from "../domain/presentation";
+import { defaultPresentation, type PlayerView } from "../domain/presentation";
 import { renderPanels, visiblePanels } from "./playerPanels";
 
 // This client is bundled into each export. It never reads the Studio database.
@@ -23,10 +23,24 @@ const answered = new Map<string, number>();
 const pinned = new Set<string>();
 const flags: Record<string, boolean> = {};
 const presentation = project.presentation || defaultPresentation();
+// Export-only view selection does not change the saved project's default layout.
+let research = presentation.views.find((v) => v.layout === "research");
+if (data.startInResearch && !research) {
+  let id = "export-research";
+  while (presentation.views.some((v) => v.id === id)) id += "-view";
+  research = {
+    ...defaultPresentation().views[1]!,
+    id,
+    panels: presentation.panels.map((p) => p.id),
+  } satisfies PlayerView;
+  presentation.views.push(research);
+}
 let view =
   presentation.views.find(
     (v) => v.id === new URLSearchParams(location.search).get("view"),
-  ) || presentation.views.find((v) => v.id === presentation.defaultViewId)!;
+  ) ||
+  (data.startInResearch ? research : undefined) ||
+  presentation.views.find((v) => v.id === presentation.defaultViewId)!;
 const seenQuizzes = new Set<string>();
 const sequence = () => project.sequences.find((s) => s.id === sequenceId)!;
 for (const key of Object.keys(assets))

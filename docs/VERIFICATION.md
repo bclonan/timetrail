@@ -327,3 +327,126 @@ The exact earthquake film and remote source from the screenshot were not
 available in this browser workspace; its Player or share URL is still needed to
 verify that specific file. The request was to supply a demo production prompt.
 No public YouTube recording was created or claimed in this release.
+
+## Frame editing development branch
+
+`codex/frame-inpainting` adds image and video-frame capture, rectangular masks,
+character reference packages, six native WebMCP tools and returned-media
+proposals. This branch has not been deployed to Netlify. Its separate local
+preview runs at `http://127.0.0.1:4175`.
+
+Frozen install, lint, typecheck, 103 unit tests, the production build and diff
+checks passed. The final complete Chromium suite passed 33 tests and skipped
+its one native-only test. Native tool checks are recorded separately below.
+
+The browser regressions use known image pixels and a real MP4. They check drawn
+and numeric masks, source/mask/reference ZIP contents, bounded file reads,
+outside-mask pixel preservation, before/after viewing, visible acceptance,
+reload, phone layout, timed still holds and actual-video replacement proposals.
+They also reject unsupported embedded players and a valid PNG whose server
+allows a different origin. The first complete run exposed a missing save wait
+in that error-case test. Its fixture now explicitly supplies the mismatched
+cross-origin header instead of relying on the browser test router's defaults.
+
+Native WebMCP was checked separately in ChatGPT's in-app browser against the
+development preview. An isolated QA project imported and visibly accepted a
+sample image. Native tools captured its actual 1280-by-720 pixels, saved a mask,
+prepared the editing package and inspected the saved request. A bounded read
+returned 262,144 PNG bytes and a continuation offset from a 1,812,199-byte file.
+Submitting the original image as an edited result failed with a useful error.
+The project stayed at revision one with no result proposal. The mask and editing
+controls were visually checked, and browser error logs were empty.
+
+The tests do not invoke an image-generation service or prove a generated edit's
+visual quality. A calling agent must create the actual edit through its own
+image or video provider. Continuous character replacement requires a returned
+video; still holds do not reconstruct motion or retain video audio during the
+hold. The pinned FrameTrail checkout remains unchanged.
+
+## MP4 and interactive downloads on the development branch
+
+The same `codex/frame-inpainting` branch now has Video only MP4 and Interactive
+hypermedia ZIP downloads in Studio, Player and WebMCP. This work has not been
+deployed to Netlify. The local production preview runs at
+`http://127.0.0.1:4175`.
+
+Frozen install, lint, typecheck, all 106 unit tests and the production build
+passed. The complete Chromium suite passed 36 tests and skipped its one
+native-only test. Diff checks passed and the FrameTrail vendor checkout stayed
+unchanged.
+
+The MP4 browser test creates a real source with red and blue frames and a tone.
+It trims, repeats and extends clips, then independently decodes the downloaded
+MP4. It checks picture colors, dimensions, duration, AAC sound and silent gaps.
+The interactive test bundles a remote image, extracts the ZIP, serves index.html
+on a separate host and checks Research view, custom panels, a quiz and switching
+to Cinema. It covers a film with no saved Research layout and verifies that the
+project's saved default view does not change. Other checks cover embedded-source
+errors, cancellation, Player export choices and unchanged approved revisions.
+
+Native WebMCP was checked separately in ChatGPT's in-app browser on the local
+preview. It prepared the 90-second DNA demo as a 6,944,511-byte MP4 and a
+1,256,482-byte interactive ZIP. Both status calls reported ready, the visible
+download dialogs showed the correct filenames and notes, and the project stayed
+at revision zero. Browser error logs were empty. This demo has no recorded audio;
+the MP4 dialog correctly described it as silent. Actual encoded audio was checked
+by the separate browser regression described above.
+
+The interactive archive needs an HTTP or HTTPS static host. Embedded players and
+source links still need internet. MP4 includes recorded clip audio but does not
+record browser read-aloud speech. These limits appear in the download dialogs
+and in `docs/DOWNLOADS.md`.
+
+## QA playback pause diagnosis
+
+The user's overview film in the live Chrome Player was paused at 112 seconds
+after a quiz had been answered. The local activity page showed repeated Player
+inspection calls and successful HTML/ZIP preparation. Clicking Continue film
+advanced playback past 131 seconds and to the 160-second ending. This recovered
+playback without editing the film. The creation chat's step-six status was not
+accessible, so the playback pause is confirmed but the chat's progress state is
+not diagnosed as a TimeTrail exception.
+
+The development branch now includes readiness, paused/ended state, duration,
+narration state and active quizzes in Player inspection. Feedback remains paused
+after an answer. Results explicitly tell an agent to play again, and an ended
+screen points to the remaining QA or export work. The checks tool's export list
+also includes the development MP4 and Research ZIP formats.
+
+Native WebMCP on the local preview reported the DNA quiz paused at 84 seconds,
+then answered and still paused with the resume instruction. A play call advanced
+to 90 seconds and inspection reported ended. The approved revision stayed zero
+and browser error logs were empty. This verifies state and playback progression,
+not audible narration or the content of the user's creation chat.
+
+After this change, frozen install, lint, typecheck, all 106 unit tests, the build
+and diff checks passed. The complete browser suite passed 37 tests and skipped
+the native-only case. Its added regression checks unanswered and answered quiz
+pauses, the resume instruction, actual time progression and end detection.
+
+## Netlify release of downloads, frame editing and QA status
+
+Published the tested `codex/frame-inpainting` build to the existing production
+site on 2026-09-03 at 01:41 UTC. Netlify deploy
+`6a98d054dea5cd0e5b5abe86` reported `ready`, context `production`, with no deployment
+error. This release supersedes the earlier undeployed status notes above.
+
+Production URL: https://timetrail-studio-bclonan.netlify.app
+
+The deployed index, runtime, bridge, standalone viewer/runtime, service worker,
+bug log, Mediabunny license and both JavaScript bundles matched the local SHA-256
+hashes. Each returned HTTP 200 with the expected content type and `tools=(self)`.
+Hackathon, Player and example routes returned the current app shell.
+
+Native WebMCP was checked in ChatGPT's in-app browser after refreshing production.
+Player inspection returned the new readiness and paused/ended fields with the
+resume instruction. Frame-edit inspection returned an empty request list for the
+demo. Export prepared a 7,212,088-byte MP4 and a 1,258,991-byte interactive ZIP,
+both reporting ready. The visible MP4 download dialog included the recorded-audio
+limitation and correctly described the demo as silent. The approved project stayed
+at revision zero and browser error logs were empty.
+
+Before release, frozen install, lint, typecheck, 106 unit tests and 37 browser
+tests passed, with the native-only Chromium case skipped. The final documentation
+update was rebuilt and passed diff checks. No application code changed after that
+complete test run. The pinned FrameTrail checkout remains unchanged.

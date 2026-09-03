@@ -2,6 +2,26 @@
 
 Date: 2026-09-02. Status: released to Netlify. Verification and remaining limits are recorded below.
 
+## Downloads, frame editing and QA playback update
+
+QA pause diagnosis: the saved overview Player was paused at 112 seconds on an
+answered quiz while the activity log showed repeated Player inspections. Continue
+film resumed it past 131 seconds. This confirms the playback pause; the chat's
+step-six progress state is outside TimeTrail and was not inspected. The Player
+tool now reports paused/ended state, readiness, narration state, active quizzes and
+the action needed to continue. Answering a quiz preserves its feedback pause.
+Repeated inspection does not advance the timeline. The checks tool also advertises
+the new MP4 format instead of the obsolete unavailable message.
+
+This update was built on `codex/frame-inpainting`. Video only exports encode the approved main timeline
+as H.264 MP4 with AAC clip audio and captions. Interactive hypermedia ZIP includes
+index.html starting in Research view, the Player runtime and media files.
+Both formats have visible download controls; background tasks report progress and
+support cancellation. Source files that cannot be rendered fail explicitly.
+Browser read-aloud is not recorded audio. Embeds require a direct source file for
+MP4, and online dependencies remain documented in interactive downloads.
+See DOWNLOADS.md and VERIFICATION.md for the current development checks.
+
 ## Fixed during implementation
 
 B20: A failed or stalled video source left FrameTrail's "Loading Interface"

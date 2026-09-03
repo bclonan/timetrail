@@ -32,6 +32,10 @@ support for that invocation. Do not disable certificate verification.
 
 ## What works
 
+- Studio includes frame capture, area masks, character-reference
+  packages and reviewed image/video replacements. [Frame editing](docs/FRAME_EDITING.md)
+  explains the WebMCP workflow and its external image/video editor requirement.
+
 - Browse 41 creation and smoke-test prompts with explicit acceptance checks.
   Five authored films demonstrate documentaries, branching training, product
   concepts, quizzes and cook-along panels.
@@ -66,7 +70,8 @@ support for that invocation. Do not disable certificate verification.
   and sound still need playback review.
 - Review agent proposals by batch or item. The ghost track and proposed preview
   are separate from the approved project. Acceptance is atomic.
-- Export JSON, a portable project ZIP, self-contained HTML, or a static hosting ZIP.
+- Download a rendered MP4 or an interactive hypermedia ZIP that opens `index.html`
+  in Research view. Export JSON, a portable project ZIP, self-contained HTML, or a static hosting ZIP.
   ZIP packs include local assets, caption files, provenance, a manifest, and a
   thumbnail when a generated card is available.
 - Share a compact code or fragment link for projects without local files.
@@ -76,7 +81,7 @@ support for that invocation. Do not disable certificate verification.
 - Inspect registered tools and the durable activity log in WebMCP Lab.
 
 Read [the smoke prompts](docs/SMOKE_PROMPTS.md) and [release bug log](docs/BUG_LOG.md)
-for coverage and limits. Exports are interactive webpages, not flattened MP4 files.
+for coverage and limits. MP4 renders the main timeline; interactive exports retain choices and panels.
 Uploaded files need a portable HTML or ZIP/static pack; device-local project URLs
 are not public share links.
 
@@ -166,8 +171,11 @@ checks. Double-clicking a `file:` URL is not supported. Remote images in generat
 SVG cards may be blocked by browser image rules; import an image clip for reliable
 local playback. Narration uses installed browser voices and requires a user gesture.
 
-There is no video transcoder, remote rendering service, arbitrary HTML execution,
-or flat MP4/WebM export. Imported FrameTrail executable snippets, custom CSS, and
+MP4 export uses the browser's H.264 and AAC encoders at 720p and 24 fps, with a
+ten-minute main-timeline limit. It includes clip audio and burned-in captions.
+Browser read-aloud voices are not recorded. Embedded YouTube/Vimeo clips need
+uploaded or downloadable source files. See [Download formats](docs/DOWNLOADS.md).
+There is no remote rendering service or arbitrary HTML execution. Imported FrameTrail executable snippets, custom CSS, and
 unsupported overlays are omitted. The source project is preserved.
 
 ## License
@@ -175,6 +183,8 @@ unsupported overlays are omitted. The source project is preserved.
 TimeTrail is MIT licensed. FrameTrail is used under its MIT option, with its
 upstream notices and bundled library licenses preserved. Original demo SVGs
 and the seeded project are included under the TimeTrail license.
+The browser MP4 encoder uses Mediabunny 1.55.5 under MPL-2.0. Its unmodified
+source and license are available through the package and upstream repository.
 
 When no usable video is supplied and the calling agent is not generating video,
 the creation workflow directs it to find source footage, preserve credits,

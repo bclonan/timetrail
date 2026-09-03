@@ -31,6 +31,9 @@ watch(
     if (p) {
       downloadUrl.value = URL.createObjectURL(p.blob);
       exportOpen.value = true;
+    } else {
+      exportOpen.value = false;
+      downloadUrl.value = "";
     }
   },
 );
@@ -110,6 +113,26 @@ async function folderExport() {
     </div></Modal
   >
   <Modal
+    v-if="w.exportTask?.status === 'preparing'"
+    title="Preparing your download"
+    @close="w.cancelExport()"
+  >
+    <p role="status">{{ w.exportTask.message }}</p>
+    <progress
+      :value="w.exportTask.percent"
+      max="100"
+      aria-label="Export progress"
+      style="width: 100%"
+    />
+    <p>{{ w.exportTask.percent }}%</p>
+    <p class="muted">
+      MP4 renders the main timeline with recorded clip audio and captions.
+      Browser read-aloud voices are not recorded. Keep this page open until it
+      finishes.
+    </p>
+    <button @click="w.cancelExport()">Cancel export</button>
+  </Modal>
+  <Modal
     v-if="exportOpen && w.prepared"
     title="Your export is ready"
     @close="exportOpen = false"
@@ -117,13 +140,14 @@ async function folderExport() {
       {{ w.prepared.filename }} ·
       {{ (w.prepared.blob.size / 1024).toFixed(1) }} KB
     </p>
-    <p>
+    <p v-if="!w.prepared.notes?.length">
       {{
         w.prepared.assetsIncluded
           ? "Local assets are included."
           : "JSON keeps references to local files. Choose ZIP to include their contents."
       }}
     </p>
+    <p v-for="note in w.prepared.notes" :key="note">{{ note }}</p>
     <div class="dialog-actions">
       <button @click="w.run(folderExport)">Save to folder</button
       ><a

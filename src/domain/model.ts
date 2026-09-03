@@ -115,6 +115,15 @@ export const mediaSchema = z.object({
     .optional(),
   importedAt: z.iso.datetime(),
   importedBy: z.enum(["human", "agent", "demo"]),
+  visualEdit: z
+    .object({
+      sourceMediaId: key,
+      sourceSeconds: z.number().nonnegative(),
+      mode: z.enum(["inpaint", "replace-character"]),
+      instruction: z.string().max(4000),
+      createdAt: z.iso.datetime(),
+    })
+    .optional(),
 });
 export const cueInputSchema = z.object({
   kind: z.enum(kinds),

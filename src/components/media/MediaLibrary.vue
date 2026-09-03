@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from "lucide-vue-next";
 import { useEditor } from "../../stores/editor";
+import { useRetouch } from "../../stores/retouch";
 import { useWorkspace } from "../../stores/workspace";
 import {
   importFile,
@@ -29,6 +30,7 @@ const w = useWorkspace();
 const router = useRouter();
 const importing = ref(false);
 const e = useEditor();
+const edits = useRetouch();
 const open = computed({
   get: () => e.active === "urls",
   set: (v) => (v ? e.open("urls") : e.close()),
@@ -210,6 +212,14 @@ async function createCard() {
             }}</span
           >
         </div>
+        <button
+          v-if="!m.staged && ['image', 'video'].includes(m.type)"
+          class="icon-button"
+          :aria-label="'Select frames or edit image ' + m.name"
+          @click="edits.show(m.id)"
+        >
+          <Sparkles :size="14" />
+        </button>
         <button
           v-if="!m.staged && m.type === 'generated-card'"
           class="icon-button"

@@ -31,6 +31,7 @@ import { createProductionTools } from "./productionTools";
 import { createExampleTools } from "./exampleTools";
 import { videoSourcing, videoSourcingRule } from "../services/VideoSourcing";
 import { createQualityTools } from "./qualityTools";
+import { createRetouchTools } from "./retouchTools";
 export type Tool = ToolDefinition;
 declare global {
   interface Window {
@@ -148,6 +149,7 @@ export function createTools(router: Router): Tool[] {
   return [
     ...createEditorTools(router, tool),
     ...createProductionTools(router, tool, available),
+    ...createRetouchTools(tool),
     ...createExampleTools(tool),
     ...createQualityTools(tool),
     tool(
@@ -462,12 +464,14 @@ export function createTools(router: Router): Tool[] {
     ),
     tool(
       "timetrail.export.prepare",
-      "Prepare a portable export and show a human download button.",
+      "Prepare a download. video-mp4 renders the approved main timeline with clip audio and captions, without interactive controls. Browser read-aloud is not recorded; embedded YouTube/Vimeo needs a source file. interactive-zip includes index.html opening Research view and local media, with online-source warnings. These two formats start a background job: poll export.status. Downloads remain visible human actions.",
       z.object({ format: z.enum(exportFormats) }),
       false,
       false,
-      async ({ format }) => {
-        const p = await w.prepareExport(format);
+      async ({ format }, _correlation, signal) => {
+        if (format === "video-mp4" || format === "interactive-zip")
+          return w.startExport(format, signal);
+        const p = await w.prepareExport(format, signal);
         return {
           status: "ready_for_download",
           format,
@@ -475,6 +479,30 @@ export function createTools(router: Router): Tool[] {
           size: p.blob.size,
           assetsIncluded: p.assetsIncluded,
         };
+      },
+    ),
+    tool(
+      "timetrail.export.status",
+      "Read export progress or the prepared file and its limitations. Does not download.",
+      z.object({}),
+      true,
+      false,
+      () => ({
+        ...w.exportTask,
+        filename: w.prepared?.filename,
+        size: w.prepared?.blob.size,
+        notes: w.prepared?.notes,
+      }),
+    ),
+    tool(
+      "timetrail.export.cancel",
+      "Cancel the current export without downloading a partial file or changing the film.",
+      z.object({}),
+      false,
+      false,
+      () => {
+        w.cancelExport();
+        return { status: "cancel_requested" };
       },
     ),
     tool(
@@ -605,6 +633,8 @@ export function installRegistry(router: Router) {
               [
                 "timetrail.playback.control",
                 "timetrail.export.prepare",
+                "timetrail.export.status",
+                "timetrail.export.cancel",
                 "timetrail.share.prepare",
                 "timetrail.player.control",
                 "timetrail.views.inspect",
@@ -625,6 +655,7 @@ export function installRegistry(router: Router) {
   router.afterEach((to, from) => {
     if (to.path === from.path && to.hash === from.hash) return;
     useWorkspace().confirmation?.resolve(false);
+    useWorkspace().cancelExport();
     void register();
   });
   const stop = watch(

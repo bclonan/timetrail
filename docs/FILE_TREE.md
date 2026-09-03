@@ -24,7 +24,9 @@ timetrail/
     BUG_LOG.md
     DECISIONS.md
     DEMO_SCRIPT.md
+    DOWNLOADS.md
     FILE_TREE.md
+    FRAME_EDITING.md
     FRAME_TRAIL_INTEGRATION.md
     HACKATHON_SUBMISSION.md
     SMOKE_PROMPTS.md
@@ -66,6 +68,7 @@ timetrail/
       context/ContextStack.vue
       context/CueInspector.vue
       editor/EditorForms.vue
+      editor/FrameEditStudio.vue
       editor/ProductionControls.vue
       editor/QualityReview.vue
       media/MediaLibrary.vue
@@ -85,6 +88,7 @@ timetrail/
       model.ts
       presentation.ts
       hotspots.ts
+      retouch.ts
     pages/
       DiscoverPage.vue
       ExamplesPage.vue
@@ -107,15 +111,18 @@ timetrail/
     services/
       AssetTransferService.ts
       ExportService.ts
+      FrameCapture.ts
       GalleryService.ts
       HotspotService.ts
       MediaImportService.ts
       MediaSearchService.ts
+      Mp4ExportService.ts
       ProductionService.ts
       ProjectService.ts
       ProposalService.ts
       ProposalReviewPlan.ts
       QualityService.ts
+      RetouchService.ts
       ShareService.ts
       TimelineCompiler.ts
       TimelineEditing.ts
@@ -124,30 +131,36 @@ timetrail/
       BrowserWorkspaceStore.ts
     stores/
       editor.ts
+      retouch.ts
       workspace.ts
     webmcp/
       editorTools.ts
       exampleTools.ts
       productionTools.ts
       qualityTools.ts
+      retouchTools.ts
       registry.ts
       ToolRegistry.ts
   tests/
     setup.ts
     e2e/
+      downloads.spec.ts
       hackathon.spec.ts
       editor.spec.ts
       exports.spec.ts
       media.spec.ts
       production.spec.ts
       quality.spec.ts
+      retouch.spec.ts
       studio.spec.ts
       timeline.spec.ts
     unit/
+      mp4-export.test.ts
       media-load.test.ts
       editor.test.ts
       production.test.ts
       quality.test.ts
+      retouch.test.ts
       timeline.test.ts
       domain.test.ts
 ```

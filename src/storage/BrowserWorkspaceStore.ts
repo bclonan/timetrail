@@ -1,4 +1,5 @@
 import { openDB, type IDBPDatabase } from "idb";
+import type { RetouchJob } from "../domain/retouch";
 import {
   clone,
   id,
@@ -46,6 +47,32 @@ export class BrowserWorkspaceStore implements StorageProvider {
   }
   async records(): Promise<ProjectRecord[]> {
     return (await this.db()).getAll("projects");
+  }
+  async retouchJobs(projectId: string): Promise<RetouchJob[]> {
+    return (await (await this.db()).getAll("settings"))
+      .filter(
+        (j) =>
+          j.id.startsWith("retouch_job_") && j.value.projectId === projectId,
+      )
+      .map((j) => j.value)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+  async retouchJob(jobId: string): Promise<RetouchJob | undefined> {
+    return (await (await this.db()).get("settings", `retouch_job_${jobId}`))
+      ?.value;
+  }
+  async saveRetouch(job: RetouchJob, expectedVersion?: number) {
+    const tx = (await this.db()).transaction("settings", "readwrite");
+    const key = `retouch_job_${job.id}`;
+    const existing = await tx.store.get(key);
+    if (existing?.value.version !== expectedVersion) {
+      await tx.done;
+      throw new Error(
+        "The editing request changed. Inspect it again before continuing.",
+      );
+    }
+    await tx.store.put({ id: key, value: clone(job) });
+    await tx.done;
   }
   async record(projectId: string): Promise<ProjectRecord | undefined> {
     return (await this.db()).get("projects", projectId);

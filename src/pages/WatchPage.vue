@@ -16,6 +16,12 @@ import { defaultPresentation } from "../domain/presentation";
 import Player from "../components/player/Player.vue";
 import PlayerPanels from "../components/player/PlayerPanels.vue";
 import ContextStack from "../components/context/ContextStack.vue";
+import {
+  exportFormats,
+  exportLabels,
+  type ExportFormat,
+} from "../services/ExportService";
+const exportFormat = ref<ExportFormat>("interactive-zip");
 const route = useRoute();
 const router = useRouter();
 const w = useWorkspace();
@@ -145,9 +151,18 @@ onBeforeUnmount(() => window.removeEventListener("keydown", keyboard));
         <button class="small" @click="w.run(() => w.prepareShare())">
           <Share2 :size="14" />Share
         </button>
+        <select
+          v-model="exportFormat"
+          aria-label="Export format"
+          class="compact-select"
+        >
+          <option v-for="format in exportFormats" :key="format" :value="format">
+            {{ exportLabels[format] }}
+          </option>
+        </select>
         <button
           class="small"
-          @click="w.run(() => w.prepareExport('standalone-html'))"
+          @click="w.run(() => w.prepareExport(exportFormat))"
         >
           <Download :size="14" />Export film
         </button>

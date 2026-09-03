@@ -22,6 +22,9 @@ importers:
       lucide-vue-next:
         specifier: ^0.468.0
         version: 0.468.0(vue@3.5.42(typescript@5.9.3))
+      mediabunny:
+        specifier: 1.55.5
+        version: 1.55.5
       pinia:
         specifier: ^3.0.3
         version: 3.0.4(typescript@5.9.3)(vue@3.5.42(typescript@5.9.3))
@@ -765,6 +768,18 @@ packages:
     resolution:
       {
         integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==,
+      }
+
+  "@types/dom-mediacapture-transform@0.1.12":
+    resolution:
+      {
+        integrity: sha512-d7/QsLRwF864A5mgIM/YrfiglHoYn7zgCcAoJgW404r+2DwnNr7EBbLnCWpmOMgH8y0te73L1AV6H1bmauaWFw==,
+      }
+
+  "@types/dom-webcodecs@0.1.13":
+    resolution:
+      {
+        integrity: sha512-O5hkiFIcjjszPIYyUSyvScyvrBoV3NOEEZx/pMlsu44TKzWNkLVBBxnxJz42in5n3QIolYOcBYFCPZZ0h8SkwQ==,
       }
 
   "@types/esrecurse@4.3.1":
@@ -1822,6 +1837,12 @@ packages:
         integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==,
       }
 
+  mediabunny@1.55.5:
+    resolution:
+      {
+        integrity: sha512-m0v6y8FGXiK+HKOc3AZqU+kJPLYsSKaLitmQNQIIHZKIGlTwQ34OF+X6Ul0K8iV4b03oPse10apwuoqbvmKeAA==,
+      }
+
   minimatch@10.2.6:
     resolution:
       {
@@ -2824,6 +2845,12 @@ snapshots:
 
   "@types/deep-eql@4.0.2": {}
 
+  "@types/dom-mediacapture-transform@0.1.12":
+    dependencies:
+      "@types/dom-webcodecs": 0.1.13
+
+  "@types/dom-webcodecs@0.1.13": {}
+
   "@types/esrecurse@4.3.1": {}
 
   "@types/estree@1.0.9": {}
@@ -3521,6 +3548,11 @@ snapshots:
   magic-string@0.30.21:
     dependencies:
       "@jridgewell/sourcemap-codec": 1.6.0
+
+  mediabunny@1.55.5:
+    dependencies:
+      "@types/dom-mediacapture-transform": 0.1.12
+      "@types/dom-webcodecs": 0.1.13
 
   minimatch@10.2.6:
     dependencies:

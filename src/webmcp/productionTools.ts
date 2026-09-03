@@ -240,7 +240,7 @@ export function createProductionTools(
     ),
     tool(
       "timetrail.player.control",
-      "Use Player controls without editing the film. Choose a saved view, answer a quiz, follow a cue branch, set a visible checklist entry, restart or open the dedicated Player. Inspect reports interactive state.",
+      "Use Player controls without editing the film. Choose a saved view, answer a quiz, follow a cue branch, set a visible checklist entry, restart or open the dedicated Player. Inspect reports readiness, paused/ended state, narration and active quizzes. Answering a quiz leaves the film paused for feedback. Call playback.control play to continue; repeated inspection never advances playback.",
       z.object({
         action: z.enum([
           "inspect",
@@ -332,10 +332,43 @@ export function createProductionTools(
             w.time = 0;
           }
         }
+        const activeQuizzes =
+          w.sequence?.cues.filter(
+            (c) =>
+              c.quiz && w.time >= c.start && w.time < (c.end ?? c.start + 5),
+          ) || [];
+        const ended = Boolean(
+          w.sequence && w.time >= w.sequence.durationSeconds - 0.05,
+        );
+        const unanswered = activeQuizzes.some(
+          (c) => w.quizAnswers[c.id] === undefined,
+        );
         return {
           viewId: w.playerViewId,
           sequenceId: w.sequenceId,
           time: w.time,
+          playback: {
+            ready: w.playerReady,
+            paused: w.paused,
+            ended,
+            durationSeconds: w.sequence?.durationSeconds,
+            narrationEnabled: w.narration,
+            captionsEnabled: w.captions,
+            activeQuizzes: activeQuizzes.slice(0, 5).map((c) => ({
+              id: c.id,
+              answered: w.quizAnswers[c.id] !== undefined,
+            })),
+            activeQuizCount: activeQuizzes.length,
+            next: !w.playerReady
+              ? "Open Studio or Player and wait for its preview. If startup fails, use Retry preview."
+              : ended
+                ? "This screen has ended. Continue QA on the other screens or prepare the export."
+                : w.paused
+                  ? unanswered
+                    ? "A quiz is active. Answer it, then call timetrail.playback.control with action play to continue. Inspection alone does not resume playback."
+                    : "Playback is paused. Call timetrail.playback.control with action play to continue, or seek to the next QA checkpoint."
+                  : "Playback is running. Check the next checkpoint; avoid polling an unchanged time repeatedly.",
+          },
           flags: w.viewerFlags,
           answers: w.quizAnswers,
           revision: w.record?.revision,
@@ -374,7 +407,7 @@ export function createProductionTools(
             ? "Use HTML or static pack to include uploaded files; fragment links cannot carry large binaries."
             : "Fragment link available within size limit.",
           export:
-            "Interactive HTML, project JSON/ZIP, static hosting pack. MP4 rendering is not available.",
+            "MP4 with recorded clip audio and captions; interactive ZIP opening index.html in Research view; interactive HTML, project JSON/ZIP and static hosting pack. Browser read-aloud speech is not recorded into MP4.",
         };
       },
     ),
