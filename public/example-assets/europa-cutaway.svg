@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs><radialGradient id="ice"><stop stop-color="#e1f4fa"/><stop offset=".75" stop-color="#96b9c7"/><stop offset="1" stop-color="#456a83"/></radialGradient><radialGradient id="ocean"><stop stop-color="#12334d"/><stop offset="1" stop-color="#3c9aaf"/></radialGradient><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" fill="none" stroke="#badcf1" stroke-opacity=".04"/></pattern></defs>
+  <rect width="1600" height="900" fill="#101c29"/><rect width="1600" height="900" fill="url(#grid)"/>
+  <text x="88" y="98" fill="#94d3e7" font-family="Arial" font-size="18" letter-spacing="5">EUROPA / A LAYERED WORLD</text>
+  <text x="88" y="185" fill="#edf5f8" font-family="Georgia" font-size="60">What lies beneath?</text>
+  <circle cx="530" cy="510" r="265" fill="url(#ice)"/>
+  <path d="M530 245 A265 265 0 0 1 795 510 L530 510Z" fill="#c3e8ee"/>
+  <path d="M530 275 A235 235 0 0 1 765 510 L530 510Z" fill="url(#ocean)"/>
+  <path d="M530 350 A160 160 0 0 1 690 510 L530 510Z" fill="#7b6358"/>
+  <path d="M530 442 A68 68 0 0 1 598 510 L530 510Z" fill="#bc9470"/>
+  <g fill="none" stroke="#6e463d" stroke-width="4" opacity=".65"><path d="M316 365L371 387L404 467L380 516L416 635L475 727"/><path d="M292 570L348 549L450 600L492 653"/><path d="M397 286L428 373L490 394"/></g>
+  <g fill="none" stroke="#a7cbd9" stroke-width="2"><path d="M731 325H980"/><path d="M699 400H1030"/><path d="M639 465H980"/><path d="M574 493L820 634H1030"/></g>
+  <g fill="#edf5f8" font-family="Arial" font-size="26"><text x="1010" y="334">Ice shell</text><text x="1060" y="409">Inferred ocean</text><text x="1010" y="474">Rocky interior</text><text x="1060" y="643">Core</text></g>
+  <text x="88" y="832" fill="#9baeba" font-family="Arial" font-size="18">SCHEMATIC, NOT TO SCALE · Structural interpretation, not an image of Europa's interior.</text>
+</svg>

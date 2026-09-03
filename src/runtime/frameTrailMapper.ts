@@ -11,6 +11,7 @@ import {
 } from "../domain/model";
 import { mediaFromUrl } from "../services/MediaImportService";
 import { cardSvg, escapeHtml } from "./generatedCard";
+import { hotspotAppearance } from "../domain/hotspots";
 export type AssetUrls = Record<string, string>;
 export function mediaUrl(m: Media, assets: AssetUrls = {}) {
   return m.source.kind === "remote"
@@ -100,11 +101,7 @@ export function interactiveContents(cues: Cue[], sequenceId: string) {
         c.position || { x: 60, y: 72, width: 34, height: 14 },
         {
           text: c.branch?.label || c.title || "Explore",
-          shape: "rounded",
-          color: "#bfe693",
-          textColor: "#142b21",
-          backgroundColor: "#c5ef91",
-          borderWidth: 0,
+          ...hotspotAppearance(c.style),
           linkUrl: "",
           action: "none",
         },

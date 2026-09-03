@@ -1,0 +1,226 @@
+{
+  "media": [],
+  "spec": {
+    "title": "Mars · Five decisions before sunrise",
+    "description": "A classroom exercise about the systems a crew would need. Generated title cards, five questions and a transcript.",
+    "presentation": {
+      "defaultViewId": "classroom",
+      "views": [
+        {
+          "id": "cinema",
+          "name": "Cinema",
+          "layout": "cinema",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": []
+        },
+        {
+          "id": "research",
+          "name": "Research",
+          "layout": "research",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "transcript"
+          ]
+        },
+        {
+          "id": "classroom",
+          "name": "Classroom",
+          "layout": "classroom",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "score",
+            "transcript"
+          ]
+        }
+      ],
+      "panels": [
+        {
+          "id": "transcript",
+          "title": "Transcript",
+          "kind": "transcript",
+          "entries": []
+        },
+        {
+          "id": "score",
+          "title": "Your progress",
+          "kind": "score",
+          "entries": []
+        }
+      ]
+    },
+    "sequences": [
+      {
+        "key": "main",
+        "storyboard": {
+          "title": "Five decisions",
+          "topic": "Five decisions",
+          "targetSeconds": 120,
+          "segments": [
+            {
+              "title": "Air",
+              "summary": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+              "narration": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+              "card": {
+                "layout": "concept",
+                "heading": "Air",
+                "body": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "quiz": {
+                "question": "What provides breathable air?",
+                "options": [
+                  "A life-support system",
+                  "The open Martian atmosphere"
+                ],
+                "answerIndex": 0,
+                "explanation": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+                "retryTime": 0
+              },
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "NASA Mars overview",
+                  "body": "Background reading on the Martian environment.",
+                  "url": "https://science.nasa.gov/mars/facts/"
+                }
+              ]
+            },
+            {
+              "title": "Shelter",
+              "summary": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+              "narration": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+              "card": {
+                "layout": "concept",
+                "heading": "Shelter",
+                "body": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "quiz": {
+                "question": "Which shelter function matters?",
+                "options": [
+                  "Maintaining pressure",
+                  "Having an open roof"
+                ],
+                "answerIndex": 0,
+                "explanation": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+                "retryTime": 24
+              },
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "NASA Mars overview",
+                  "body": "Background reading on the Martian environment.",
+                  "url": "https://science.nasa.gov/mars/facts/"
+                }
+              ]
+            },
+            {
+              "title": "Water",
+              "summary": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+              "narration": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+              "card": {
+                "layout": "concept",
+                "heading": "Water",
+                "body": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "quiz": {
+                "question": "What makes water usable?",
+                "options": [
+                  "Verification and treatment",
+                  "Its appearance in a picture"
+                ],
+                "answerIndex": 0,
+                "explanation": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+                "retryTime": 48
+              },
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "NASA Mars overview",
+                  "body": "Background reading on the Martian environment.",
+                  "url": "https://science.nasa.gov/mars/facts/"
+                }
+              ]
+            },
+            {
+              "title": "Power",
+              "summary": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+              "narration": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+              "card": {
+                "layout": "concept",
+                "heading": "Power",
+                "body": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "quiz": {
+                "question": "Why keep an energy reserve?",
+                "options": [
+                  "To handle interruptions",
+                  "To replace all maintenance"
+                ],
+                "answerIndex": 0,
+                "explanation": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+                "retryTime": 72
+              },
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "NASA Mars overview",
+                  "body": "Background reading on the Martian environment.",
+                  "url": "https://science.nasa.gov/mars/facts/"
+                }
+              ]
+            },
+            {
+              "title": "Communication",
+              "summary": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+              "narration": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+              "card": {
+                "layout": "concept",
+                "heading": "Communication",
+                "body": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "quiz": {
+                "question": "How should crews plan decisions?",
+                "options": [
+                  "Allow for communication delays",
+                  "Assume instant replies"
+                ],
+                "answerIndex": 0,
+                "explanation": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+                "retryTime": 96
+              },
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "NASA Mars overview",
+                  "body": "Background reading on the Martian environment.",
+                  "url": "https://science.nasa.gov/mars/facts/"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

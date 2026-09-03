@@ -12,6 +12,12 @@ const w = useWorkspace();
 const pinned = toRef(w, "pinnedCues");
 const answered = computed(() => w.quizAnswers);
 const seen = new Set<string>();
+watch(
+  () => w.quizAnswers,
+  () => {
+    if (!Object.keys(w.quizAnswers).length) seen.clear();
+  },
+);
 const active = computed(
   () =>
     w.sequence?.cues.filter(
@@ -123,6 +129,16 @@ const label = (kind: string) =>
           }}{{ cue.quiz.explanation }}
         </p>
         <button
+          v-if="
+            answered[cue.id] !== undefined &&
+            answered[cue.id] !== cue.quiz.answerIndex &&
+            cue.quiz.retryTime !== undefined
+          "
+          @click="w.playback('seek', cue.quiz.retryTime)"
+        >
+          Review explanation
+        </button>
+        <button
           v-if="answered[cue.id] !== undefined"
           @click="w.playback('play')"
         >
@@ -131,7 +147,12 @@ const label = (kind: string) =>
       ><button
         v-if="cue.branch"
         class="branch-link"
-        @click="w.branch(cue.branch.targetSequenceId, cue.branch.targetTime)"
+        :disabled="
+          Boolean(
+            cue.branch.requiresFlag && !w.viewerFlags[cue.branch.requiresFlag],
+          )
+        "
+        @click="w.choose(cue)"
       >
         <GitBranch :size="15" />{{ cue.branch.label }}
       </button>

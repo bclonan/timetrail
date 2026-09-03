@@ -1,5 +1,7 @@
 import { projectSchema } from "../domain/model";
 import { runtimeMessage } from "./bridgeMessages";
+import { defaultPresentation } from "../domain/presentation";
+import { renderPanels, visiblePanels } from "./playerPanels";
 
 // This client is bundled into each export. It never reads the Studio database.
 const data = JSON.parse(document.getElementById("data")!.textContent!);
@@ -9,6 +11,7 @@ const frame = document.querySelector("iframe")!;
 const element = (id: string) => document.getElementById(id)!;
 const seekInput = element("seek") as HTMLInputElement;
 let sequenceId = project.activeSequenceId;
+let initializing = false;
 let time = 0,
   ready = false,
   captions = true,
@@ -18,6 +21,12 @@ let time = 0,
 const history: { sequenceId: string; time: number }[] = [];
 const answered = new Map<string, number>();
 const pinned = new Set<string>();
+const flags: Record<string, boolean> = {};
+const presentation = project.presentation || defaultPresentation();
+let view =
+  presentation.views.find(
+    (v) => v.id === new URLSearchParams(location.search).get("view"),
+  ) || presentation.views.find((v) => v.id === presentation.defaultViewId)!;
 const seenQuizzes = new Set<string>();
 const sequence = () => project.sequences.find((s) => s.id === sequenceId)!;
 for (const key of Object.keys(assets))
@@ -26,8 +35,12 @@ for (const key of Object.keys(assets))
 const send = (message: unknown) =>
   frame.contentWindow!.postMessage(message, location.origin);
 function init() {
+  initializing = true;
   ready = false;
   paused = true;
+  (element("play") as HTMLButtonElement).disabled = true;
+  seekInput.disabled = true;
+  element("status").textContent = "Opening the selected scene...";
   send({
     type: "TIMETRAIL_INIT",
     project,
@@ -64,6 +77,26 @@ function chapters() {
 }
 function render() {
   const seq = sequence();
+  const state = {
+    sequenceId,
+    time,
+    answers: Object.fromEntries(answered),
+    flags,
+  };
+  renderPanels(
+    element("panels"),
+    project,
+    visiblePanels(project, view, state, presentation.panels),
+    state,
+    {
+      seek: (target, at) =>
+        target === sequenceId ? seek(at) : branch(target, at),
+      flag: (key, value) => {
+        flags[key] = value;
+        render();
+      },
+    },
+  );
   seekInput.max = String(seq.durationSeconds);
   seekInput.value = String(time);
   element("time").textContent = `${Math.floor(time)} / ${seq.durationSeconds}s`;
@@ -144,16 +177,55 @@ function render() {
             send({ type: "TIMETRAIL_PLAYBACK", action: "play" }),
           ),
         );
+        if (
+          answered.get(cue.id) !== cue.quiz.answerIndex &&
+          cue.quiz.retryTime !== undefined
+        )
+          article.append(
+            button("Review explanation", () => seek(cue.quiz!.retryTime!)),
+          );
       }
     }
     if (cue.branch)
-      article.append(
-        button(cue.branch.label, () =>
-          branch(cue.branch!.targetSequenceId, cue.branch!.targetTime),
-        ),
-      );
+      article.append(button(cue.branch.label, () => choose(cue.id)));
     element("context").append(article);
   }
+}
+function choose(cueId?: string) {
+  const cue = sequence().cues.find((c) => c.id === cueId);
+  if (!cue?.branch) return;
+  if (cue.branch.requiresFlag && !flags[cue.branch.requiresFlag]) {
+    element("status").textContent =
+      "Complete the required checklist item before choosing this path.";
+    return;
+  }
+  if (cue.branch.setsFlag) flags[cue.branch.setsFlag] = true;
+  branch(cue.branch.targetSequenceId, cue.branch.targetTime);
+}
+function views() {
+  document.body.className = `film-player view-${view.layout} theme-${view.theme}${view.aspect === "9:16" ? " portrait" : ""}`;
+  document.body.style.setProperty("--viewer-accent", view.accent);
+  document.body.style.setProperty(
+    "--viewer-aspect",
+    view.aspect.replace(":", "/"),
+  );
+  element("context").hidden = !view.context;
+  element("context-heading").hidden = !view.context;
+  element("chapters").hidden = !view.chapters;
+  element("views").replaceChildren(
+    ...presentation.views.map((v) => {
+      const b = button(v.name, () => {
+        view = v;
+        const url = new URL(location.href);
+        url.searchParams.set("view", v.id);
+        window.history.replaceState(null, "", url);
+        views();
+        render();
+      });
+      b.setAttribute("aria-pressed", String(v.id === view.id));
+      return b;
+    }),
+  );
 }
 window.addEventListener("message", (event) => {
   if (event.origin !== location.origin || event.source !== frame.contentWindow)
@@ -162,9 +234,13 @@ window.addEventListener("message", (event) => {
   if (!parsed.success) return;
   const message = parsed.data;
   if (message.type === "TIMETRAIL_READY") {
-    if (message.revision === undefined) init();
-    else {
+    if (message.revision === undefined) {
+      if (!initializing) init();
+    } else {
+      initializing = false;
       ready = true;
+      (element("play") as HTMLButtonElement).disabled = false;
+      seekInput.disabled = false;
       element("status").textContent =
         "Ready. Your project stays in this viewer.";
       render();
@@ -178,8 +254,10 @@ window.addEventListener("message", (event) => {
     paused = message.paused;
     render();
   }
-  if (message.type === "TIMETRAIL_LINK_ACTIVATED")
-    branch(message.sequenceId, message.timeSeconds);
+  if (message.type === "TIMETRAIL_LINK_ACTIVATED") {
+    if (message.cueId) choose(message.cueId);
+    else branch(message.sequenceId, message.timeSeconds);
+  }
   if (message.type === "TIMETRAIL_QUIZ_ANSWERED") {
     answered.set(message.cueId, message.answerIndex);
     render();
@@ -190,6 +268,8 @@ window.addEventListener("message", (event) => {
 element("play").onclick = () => {
   if (ready) send({ type: "TIMETRAIL_PLAYBACK", action: "play" });
 };
+(element("play") as HTMLButtonElement).disabled = !ready;
+seekInput.disabled = !ready;
 element("pause").onclick = () =>
   send({ type: "TIMETRAIL_PLAYBACK", action: "pause" });
 seekInput.oninput = () => seek(Number(seekInput.value));
@@ -216,8 +296,42 @@ element("narrate").onclick = () => {
   if (!narration) speechSynthesis.cancel();
   render();
 };
-element("full").onclick = () => void frame.requestFullscreen();
+element("full").onclick = () =>
+  void document.documentElement.requestFullscreen();
+element("restart").onclick = () => {
+  for (const key of Object.keys(flags)) delete flags[key];
+  answered.clear();
+  seenQuizzes.clear();
+  pinned.clear();
+  history.length = 0;
+  sequenceId = project.activeSequenceId;
+  time = 0;
+  init();
+};
+window.addEventListener("keydown", (event) => {
+  if (
+    (event.target as HTMLElement).closest("input,textarea,select,button,a") ||
+    !ready ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey
+  )
+    return;
+  if (event.key === " ") {
+    event.preventDefault();
+    send({ type: "TIMETRAIL_PLAYBACK", action: paused ? "play" : "pause" });
+  }
+  if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+    event.preventDefault();
+    seek(time + (event.key === "ArrowRight" ? 5 : -5));
+  }
+});
+views();
 chapters();
+// A large embedded asset payload can delay this script until after iframe READY.
+// Probe both now and at load; the runtime handshake is idempotent.
+frame.addEventListener("load", () => send({ type: "TIMETRAIL_PING" }));
+if (location.protocol !== "file:") send({ type: "TIMETRAIL_PING" });
 if (location.protocol === "file:")
   element("status").textContent =
     "Serve this HTML with a static HTTP server to enable the isolated player.";

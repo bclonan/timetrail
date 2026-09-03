@@ -11,6 +11,7 @@ import {
 } from "./frameTrailMapper";
 import { escapeHtml } from "./generatedCard";
 import type { Project } from "../domain/model";
+import { MediaLoadMonitor } from "./MediaLoadMonitor";
 interface FrameTrailPlayer {
   play(): void;
   pause(): void;
@@ -35,6 +36,80 @@ let nativeReady = false;
 let nativePlaying = false;
 let activeMedia = "";
 let playing = false;
+let mediaMonitor: MediaLoadMonitor | undefined;
+let mediaState: "loading" | "ready" | "error" = "ready";
+let resumeAfterLoad = false;
+const mediaStatus = document.createElement("section");
+mediaStatus.id = "media-status";
+mediaStatus.hidden = true;
+mediaStatus.setAttribute("aria-live", "polite");
+document.body.append(mediaStatus);
+function stopForMedia() {
+  resumeAfterLoad ||= playing;
+  playing = false;
+  instance?.pause();
+  if (nativeReady) native?.pause();
+}
+function recoverMedia(action: "retry-media" | "skip-media") {
+  const seq = project.sequences.find((s) => s.id === sequenceId)!;
+  const clip = seq.clips.find((c) => c.id === activeMedia);
+  if (!clip || !instance) return;
+  resumeAfterLoad = false;
+  playing = false;
+  instance.pause();
+  if (action === "skip-media")
+    instance.currentTime = Math.min(
+      seq.durationSeconds,
+      clip.timelineStart + clip.durationSeconds,
+    );
+  else activeMedia = "";
+  report();
+}
+function showMediaStatus(
+  state: typeof mediaState,
+  name: string,
+  message?: string,
+  source?: string,
+) {
+  mediaState = state;
+  mediaStatus.hidden = state === "ready";
+  if (state === "ready") {
+    const resume = resumeAfterLoad;
+    resumeAfterLoad = false;
+    if (resume) {
+      playing = true;
+      instance?.play();
+    }
+    report();
+    return;
+  }
+  stopForMedia();
+  const heading = document.createElement("strong");
+  heading.textContent =
+    state === "loading" ? "Loading footage" : "This clip could not load";
+  const detail = document.createElement("p");
+  detail.textContent =
+    state === "loading"
+      ? `${name}. Playback is paused until the source is ready.`
+      : `${name}. ${message}`;
+  const actions = document.createElement("div");
+  const retry = document.createElement("button");
+  retry.textContent = "Retry clip";
+  retry.onclick = () => recoverMedia("retry-media");
+  const skip = document.createElement("button");
+  skip.textContent = "Skip clip";
+  skip.onclick = () => recoverMedia("skip-media");
+  actions.append(retry, skip);
+  if (source) {
+    const link = document.createElement("a");
+    link.href = source;
+    link.textContent = "Open source";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    actions.append(link);
+  }
+  mediaStatus.replaceChildren(heading, detail, actions);
+}
 const generatedUrls: string[] = [];
 function resolveInlineData<T>(data: T): T {
   if (typeof data === "string" && /^data:(image|video|audio)\//.test(data)) {
@@ -66,6 +141,7 @@ function onOverlayClick(event: CustomEvent<{ name: string }>) {
   if (cue?.branch)
     send({
       type: "TIMETRAIL_LINK_ACTIVATED",
+      cueId: cue.id,
       sequenceId: cue.branch.targetSequenceId,
       timeSeconds: cue.branch.targetTime,
     });
@@ -108,6 +184,11 @@ function syncVideo(time: number, isPlaying: boolean) {
   const m = project.media.find((m) => m.id === clip?.mediaId);
   let container = document.getElementById("media-player")!;
   if (!clip || !m || !["video", "youtube", "vimeo", "audio"].includes(m.type)) {
+    mediaMonitor?.destroy();
+    mediaMonitor = undefined;
+    mediaState = "ready";
+    mediaStatus.hidden = true;
+    resumeAfterLoad = false;
     document.getElementById("offline")!.hidden = true;
     container.hidden = true;
     if (nativeReady) native?.pause();
@@ -125,6 +206,8 @@ function syncVideo(time: number, isPlaying: boolean) {
     Math.min(clip.sourceStart + time - clip.timelineStart, sourceEnd - 0.05),
   );
   if (activeMedia !== clip.id) {
+    mediaMonitor?.destroy();
+    mediaMonitor = undefined;
     // FrameTrail exposes one base clip per public player. The null-video player keeps sequence time.
     if (native) {
       if (nativeReady) native.pause();
@@ -174,7 +257,7 @@ function syncVideo(time: number, isPlaying: boolean) {
         ],
       },
     };
-    native = FrameTrail.init(
+    const mediaInstance = FrameTrail.init(
       {
         target: "#media-player",
         startID: "0",
@@ -183,11 +266,28 @@ function syncVideo(time: number, isPlaying: boolean) {
         resources: resolveInlineData(toFrameTrailResources(project, assets)),
         events: {
           onReady: () => {
-            nativeReady = true;
-            if (native) {
-              native.currentTime = sourceTime;
-              if (playing && sourceTime < sourceEnd - 0.05) native.play();
-            }
+            // FrameTrail resets time after ready, and metadata alone may not allow seeking.
+            const synchronize = () => {
+              if (native !== mediaInstance || activeMedia !== clip.id) return;
+              nativeReady = true;
+              mediaInstance.currentTime = sourceTime;
+              syncVideo(instance?.currentTime ?? time, playing);
+            };
+            setTimeout(() => {
+              if (native !== mediaInstance) return;
+              const video =
+                m.type === "video" || m.type === "audio"
+                  ? container.querySelector("video")
+                  : null;
+              if (video && video.readyState < 2) {
+                video.addEventListener("loadeddata", synchronize, {
+                  once: true,
+                });
+                video.preload = "auto";
+              }
+              synchronize();
+              mediaMonitor?.inspect();
+            }, 20);
           },
           onPlay: () => (nativePlaying = true),
           onPause: () => (nativePlaying = false),
@@ -197,19 +297,43 @@ function syncVideo(time: number, isPlaying: boolean) {
       },
       "PlayerLauncher",
     );
+    native = mediaInstance;
+    mediaMonitor = new MediaLoadMonitor(
+      container,
+      () => nativeReady,
+      (state, message) => {
+        if (activeMedia !== clip.id) return;
+        showMediaStatus(
+          state,
+          m.name,
+          message,
+          m.source.kind === "remote" ? m.source.url : undefined,
+        );
+      },
+    );
   } else if (native && nativeReady) {
     if (Math.abs(native.currentTime - sourceTime) > 1.1)
       native.currentTime = Math.max(
         0,
         Math.min(sourceTime, (m.durationSeconds || Infinity) - 0.05),
       );
-    if (isPlaying && !nativePlaying && sourceTime < sourceEnd - 0.05)
+    if (
+      isPlaying &&
+      mediaState === "ready" &&
+      !nativePlaying &&
+      sourceTime < sourceEnd - 0.05
+    )
       native.play();
     if (sourceTime >= sourceEnd - 0.05 && nativePlaying) native.pause();
     if (!isPlaying && nativePlaying) native.pause();
   }
 }
 function init(start: number) {
+  mediaMonitor?.destroy();
+  mediaMonitor = undefined;
+  mediaState = "ready";
+  mediaStatus.hidden = true;
+  resumeAfterLoad = false;
   runtimeReady = false;
   instance?.pause();
   if (instance) {
@@ -278,6 +402,12 @@ function init(start: number) {
 }
 window.addEventListener("message", (event) => {
   if (!validBridgeEvent(event, parent, origin)) return;
+  // Browser integrations may also message the iframe. Only parse our protocol.
+  if (
+    typeof event.data?.type !== "string" ||
+    !event.data.type.startsWith("TIMETRAIL_")
+  )
+    return;
   const result = parentMessage.safeParse(event.data);
   if (!result.success) {
     send({
@@ -312,6 +442,10 @@ window.addEventListener("message", (event) => {
       init(m.startTime);
     } else if (m.type === "TIMETRAIL_PLAYBACK") {
       if (!instance) return;
+      if (m.action === "retry-media" || m.action === "skip-media") {
+        recoverMedia(m.action);
+        return;
+      }
       if (m.action === "seek") {
         const duration = project.sequences.find(
           (s) => s.id === sequenceId,
@@ -320,6 +454,11 @@ window.addEventListener("message", (event) => {
           throw new Error("Seek is outside the sequence.");
         instance.currentTime = m.timeSeconds;
       } else {
+        resumeAfterLoad = m.action === "play" && mediaState === "loading";
+        if (m.action === "play" && mediaState !== "ready") {
+          report();
+          return;
+        }
         playing = m.action === "play";
         instance[m.action]();
       }
@@ -328,6 +467,7 @@ window.addEventListener("message", (event) => {
       if (m.cueId)
         send({ type: "TIMETRAIL_SELECTION_CHANGED", cueId: m.cueId });
     } else if (m.type === "TIMETRAIL_DESTROY") {
+      mediaMonitor?.destroy();
       instance?.pause();
       if (nativeReady) native?.pause();
       generatedUrls.forEach((url) => URL.revokeObjectURL(url));

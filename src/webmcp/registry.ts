@@ -7,6 +7,7 @@ import {
   clone,
   id,
   now,
+  mediaSchema,
   type Media,
   type Operation,
 } from "../domain/model";
@@ -26,6 +27,10 @@ import {
   type ModelContextPort,
 } from "./ToolRegistry";
 import { createEditorTools } from "./editorTools";
+import { createProductionTools } from "./productionTools";
+import { createExampleTools } from "./exampleTools";
+import { videoSourcing, videoSourcingRule } from "../services/VideoSourcing";
+import { createQualityTools } from "./qualityTools";
 export type Tool = ToolDefinition;
 declare global {
   interface Window {
@@ -142,9 +147,12 @@ export function createTools(router: Router): Tool[] {
   };
   return [
     ...createEditorTools(router, tool),
+    ...createProductionTools(router, tool, available),
+    ...createExampleTools(tool),
+    ...createQualityTools(tool),
     tool(
       "timetrail.project.inspect",
-      "Inspect current project IDs, timeline counts, media, and proposals.",
+      "Inspect current project IDs, timeline counts, media, proposals and whether video sourcing is needed.",
       z.object({
         include: z
           .array(
@@ -166,6 +174,7 @@ export function createTools(router: Router): Tool[] {
           playhead: w.time,
           cues: w.sequence?.cues.length,
           clips: w.sequence?.clips.length,
+          videoSourcing: videoSourcing(available(), w.approved.topic),
           media: include?.includes("media")
             ? available()
                 .slice(0, 8)
@@ -194,10 +203,11 @@ export function createTools(router: Router): Tool[] {
             : undefined,
         };
       },
+      2500,
     ),
     tool(
       "timetrail.project.create",
-      "Create an empty local project and open its studio.",
+      "Create an empty local project and open its studio. " + videoSourcingRule,
       createSchema,
       false,
       false,
@@ -208,6 +218,7 @@ export function createTools(router: Router): Tool[] {
           projectId: p.id,
           sequenceId: p.activeSequenceId,
           route: `/project/${p.id}`,
+          videoSourcing: videoSourcing(p.media, p.topic),
         };
       },
     ),
@@ -220,6 +231,7 @@ export function createTools(router: Router): Tool[] {
             z.object({
               url: z.string().max(3000),
               label: z.string().max(300).optional(),
+              attribution: mediaSchema.shape.attribution,
               typeHint: z
                 .enum([
                   "youtube",
@@ -238,9 +250,10 @@ export function createTools(router: Router): Tool[] {
       }),
       false,
       true,
-      async ({ items }, corr) => {
+      async ({ items }, corr, signal) => {
         const r = w.requireRecord();
         const imported = await importUrls(items, available(), "agent");
+        signal?.throwIfAborted();
         const operations: Operation[] = imported.media.map((value) => ({
           type: "upsert_media",
           value,
@@ -266,14 +279,16 @@ export function createTools(router: Router): Tool[] {
           status: "staged_for_review",
         };
       },
+      12000,
     ),
     tool(
       "timetrail.build.propose",
-      "Compile ordered segments into a complete storyboard proposal. Human review commits it.",
+      "Compile ordered segments into a complete storyboard proposal. Human review commits it. " +
+        videoSourcingRule,
       storyboardSchema,
       false,
       true,
-      async (input, corr) => {
+      async (input, corr, signal) => {
         const r = w.requireRecord();
         const urls = input.segments
           .filter((s) => s.mediaUrl)
@@ -285,6 +300,7 @@ export function createTools(router: Router): Tool[] {
           ...available(),
           ...imported.media,
         ]);
+        signal?.throwIfAborted();
         const p = await proposals.create(
           r,
           input.title,
@@ -342,9 +358,16 @@ export function createTools(router: Router): Tool[] {
     ),
     tool(
       "timetrail.playback.control",
-      "Play, pause, seek, or jump to an approved chapter in the active preview.",
+      "Play, pause, seek, jump to a chapter, retry a failed media source or skip its clip in the active preview. Recovery changes playback only, not the saved film.",
       z.object({
-        action: z.enum(["play", "pause", "seek", "jump-to-chapter"]),
+        action: z.enum([
+          "play",
+          "pause",
+          "seek",
+          "jump-to-chapter",
+          "retry-media",
+          "skip-media",
+        ]),
         timeSeconds: z.number().nonnegative().optional(),
         chapterId: short.optional(),
       }),
@@ -401,10 +424,26 @@ export function createTools(router: Router): Tool[] {
         if (selected.some((p) => !p)) throw new Error("Proposal not found.");
         if (input.operationIndexes && input.proposalIds.length !== 1)
           throw new Error("Select one proposal for item review.");
-        const count = selected.reduce((n, p) => n + p!.operations.length, 0);
+        const indexes = input.operationIndexes
+          ? await proposals.plan(
+              r,
+              selected[0]!,
+              input.decision,
+              input.operationIndexes,
+            )
+          : undefined;
+        const count =
+          indexes?.length ??
+          selected.reduce(
+            (n, p) =>
+              n +
+              p!.operations.filter((_, i) => !p!.reviewedOperations[String(i)])
+                .length,
+            0,
+          );
         const yes = await w.ask(
           `${input.decision === "accept" ? "Accept" : "Reject"} agent changes?`,
-          `${selected.map((p) => p!.title).join(", ")}. ${count} operations. Approval applies to revision ${r.revision}.`,
+          `${selected.map((p) => p!.title).join(", ")}. ${count} unreviewed changes${indexes ? `, items ${indexes.map((i) => i + 1).join(", ")}, including required dependencies` : ""}. Approval applies to revision ${r.revision}.`,
           input.decision === "accept" ? "Accept changes" : "Reject changes",
           signal,
         );
@@ -414,7 +453,7 @@ export function createTools(router: Router): Tool[] {
           input.proposalIds,
           input.decision,
           r.revision,
-          input.operationIndexes,
+          indexes,
         );
         await w.refresh();
         w.previewProject = undefined;
@@ -552,20 +591,25 @@ export function installRegistry(router: Router) {
     const path = router.currentRoute.value.path;
     const w = useWorkspace();
     const projectRoute =
-      /^\/(project|watch|demo)/.test(path) ||
+      /^\/(project|watch|player|demo)/.test(path) ||
       (path === "/webmcp" && Boolean(w.approved));
     const selected = tools.filter(
       (t) =>
         t.name === "timetrail.project.create" ||
         t.name === "timetrail.project.inspect" ||
+        t.name.startsWith("timetrail.examples.") ||
         (t.name.startsWith("timetrail.gallery.")
           ? path === "/discover"
           : projectRoute &&
-            (!w.ephemeral ||
+            ((!w.ephemeral && !/^\/(player|watch)\//.test(path)) ||
               [
                 "timetrail.playback.control",
                 "timetrail.export.prepare",
                 "timetrail.share.prepare",
+                "timetrail.player.control",
+                "timetrail.views.inspect",
+                "timetrail.checks.run",
+                "timetrail.quality.review",
               ].includes(t.name))),
     );
     window.__TIMETRAIL_TOOLS__ = Object.fromEntries(
@@ -578,7 +622,8 @@ export function installRegistry(router: Router) {
     );
     if (status) nativeStatus.value = status;
   }
-  router.afterEach(() => {
+  router.afterEach((to, from) => {
+    if (to.path === from.path && to.hash === from.hash) return;
     useWorkspace().confirmation?.resolve(false);
     void register();
   });

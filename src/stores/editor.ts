@@ -331,11 +331,12 @@ export const useEditor = defineStore("editor", () => {
         value.id = id();
         value.title = (value.title || "Cue") + " copy";
       }
-      value.provenance = {
-        ...value.provenance,
-        createdBy: actor,
-        createdAt: now(),
-      };
+      if (fresh.value || action === "duplicate")
+        value.provenance = {
+          ...value.provenance,
+          createdBy: actor,
+          createdAt: now(),
+        };
       return [
         {
           type:

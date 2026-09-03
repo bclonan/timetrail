@@ -67,7 +67,31 @@ resource events, and custom CSS remain empty. Branch destinations come from
 validated sequence IDs, not JavaScript or imported action strings. Remote
 hotspot links open through TimeTrail's safe click handler.
 
+Hotspot and branch styles map through `domain/hotspots.ts` into FrameTrail's
+existing `color`, `textColor`, `backgroundColor`, `shape`, `borderWidth` and
+`radius` attributes. Colors are six-digit hex values; shapes and presets are
+allowlisted. Filled, outline and marker presets apply in Studio, Player and
+standalone exports through the same mapper. The `group` field is authoring
+metadata. It does not change activation behavior. No vendor changes or arbitrary
+CSS are required.
+
+The native video's ready event occurs before FrameTrail resets its source time.
+The bridge defers its initial source seek until after that reset, checks the
+active instance and resynchronizes to the sequence clock. A regression checks
+paused seeks and return from the end using a real video with clickable hotspots.
+When only metadata has loaded, the bridge requests frame data and repeats the
+seek when it arrives. The offline cache handles single byte-range requests with
+206 responses, so cached video remains seekable without starting playback first.
+
 ## Message protocol
+
+TimeTrail monitors the actual media element until a frame is available. Source
+errors and a 20-second timeout pause the sequence and display Retry clip, Skip
+clip and Open source. Waiting, stalled and seeking events can re-enter this state.
+The monitor disconnects on clip replacement. The status panel replaces the native
+source-loading modal in the wrapper stylesheet; vendor code stays unchanged.
+The shared runtime includes this behavior in portable exports. The Vue host also
+times out interface startup and offers Retry preview.
 
 Parent messages are `TIMETRAIL_INIT`, `TIMETRAIL_SYNC`, `TIMETRAIL_PLAYBACK`,
 `TIMETRAIL_SELECT`, `TIMETRAIL_PING`, and `TIMETRAIL_DESTROY`. Runtime messages are
@@ -76,6 +100,8 @@ Parent messages are `TIMETRAIL_INIT`, `TIMETRAIL_SYNC`, `TIMETRAIL_PLAYBACK`,
 `TIMETRAIL_QUIZ_ANSWERED`.
 
 Both sides compare `event.source` and `event.origin` and parse message schemas.
+The runtime ignores unrelated browser messages outside the `TIMETRAIL_` protocol.
+Malformed messages inside the protocol still report an error.
 The iframe must be served on the same origin. `srcdoc` exports use their inherited
 origin. A `file:` launch shows a static-server instruction instead of claiming
 working playback.
@@ -91,3 +117,15 @@ FrameTrail is dual licensed. TimeTrail uses its MIT option. The copied runtime
 retains the upstream license and included library notices. The standalone
 runtime includes the upstream license as a comment. No claim is made that
 TimeTrail authored FrameTrail or its libraries.
+
+## Player panels and exported startup
+
+Player layouts and side panels stay outside the pinned FrameTrail vendor
+checkout. Vue and the standalone client share the same validated panel renderer.
+Branch messages include the cue ID so both hosts enforce the same viewer flag
+requirements. Those flags and quiz answers are transient viewing state.
+
+The standalone client pings the iframe when its listener starts and on iframe
+load. An initialization guard makes repeated Ready replies harmless. Play and
+seeking stay disabled until the new scene confirms readiness, including after
+a branch change. This also covers HTML files containing large embedded assets.

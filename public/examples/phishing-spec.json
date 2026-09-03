@@ -1,0 +1,285 @@
+{
+  "media": [],
+  "spec": {
+    "title": "The email at 4:59",
+    "description": "A fictional security exercise. Investigate an urgent email, choose a response and see the consequences.",
+    "presentation": {
+      "defaultViewId": "classroom",
+      "views": [
+        {
+          "id": "cinema",
+          "name": "Cinema",
+          "layout": "cinema",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": []
+        },
+        {
+          "id": "research",
+          "name": "Research",
+          "layout": "research",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "investigation",
+            "evidence",
+            "transcript"
+          ]
+        },
+        {
+          "id": "classroom",
+          "name": "Classroom",
+          "layout": "classroom",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "investigation",
+            "evidence",
+            "score"
+          ]
+        }
+      ],
+      "panels": [
+        {
+          "id": "transcript",
+          "title": "Transcript",
+          "kind": "transcript",
+          "entries": []
+        },
+        {
+          "id": "score",
+          "title": "Your progress",
+          "kind": "score",
+          "entries": []
+        },
+        {
+          "id": "investigation",
+          "kind": "checklist",
+          "title": "Your investigation",
+          "body": "Training scenario. Inspect the sender before deciding.",
+          "entries": [
+            {
+              "id": "sender_checked",
+              "label": "I checked the sender address",
+              "detail": "The display name says IT. The sender is reset@helpdesk-example.invalid."
+            }
+          ]
+        },
+        {
+          "id": "evidence",
+          "kind": "text",
+          "title": "Evidence notebook",
+          "requiresFlag": "sender_checked",
+          "body": "The sender domain differs from the organization's example.com domain. The urgent password-reset request needs independent verification.",
+          "entries": []
+        }
+      ]
+    },
+    "sequences": [
+      {
+        "key": "main",
+        "storyboard": {
+          "title": "The message",
+          "topic": "The message",
+          "targetSeconds": 30,
+          "segments": [
+            {
+              "title": "One minute before you leave",
+              "summary": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+              "narration": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+              "card": {
+                "layout": "title",
+                "heading": "One minute before you leave",
+                "body": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            }
+          ]
+        },
+        "cues": [
+          {
+            "kind": "branch",
+            "title": "Inspect the link",
+            "start": 0,
+            "end": 30,
+            "position": {
+              "x": 55,
+              "y": 45,
+              "width": 40,
+              "height": 12
+            },
+            "branch": {
+              "label": "Inspect the link",
+              "targetSequenceId": "inspect"
+            }
+          },
+          {
+            "kind": "branch",
+            "title": "Enter your password",
+            "start": 0,
+            "end": 30,
+            "position": {
+              "x": 55,
+              "y": 62,
+              "width": 40,
+              "height": 12
+            },
+            "branch": {
+              "label": "Enter your password",
+              "targetSequenceId": "credential_failure"
+            }
+          },
+          {
+            "kind": "branch",
+            "title": "Report after checking sender",
+            "start": 0,
+            "end": 30,
+            "position": {
+              "x": 55,
+              "y": 79,
+              "width": 40,
+              "height": 12
+            },
+            "branch": {
+              "label": "Report after checking sender",
+              "targetSequenceId": "safe",
+              "requiresFlag": "sender_checked"
+            }
+          }
+        ]
+      },
+      {
+        "key": "inspect",
+        "storyboard": {
+          "title": "Inspect without visiting",
+          "topic": "Inspect without visiting",
+          "targetSeconds": 30,
+          "segments": [
+            {
+              "title": "Read the destination",
+              "summary": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+              "narration": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+              "card": {
+                "layout": "concept",
+                "heading": "Read the destination",
+                "body": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            }
+          ]
+        },
+        "cues": [
+          {
+            "kind": "branch",
+            "title": "Download the attachment",
+            "start": 0,
+            "end": 30,
+            "position": {
+              "x": 55,
+              "y": 55,
+              "width": 40,
+              "height": 12
+            },
+            "branch": {
+              "label": "Download the attachment",
+              "targetSequenceId": "attachment_failure"
+            }
+          },
+          {
+            "kind": "branch",
+            "title": "Report and verify independently",
+            "start": 0,
+            "end": 30,
+            "position": {
+              "x": 55,
+              "y": 73,
+              "width": 40,
+              "height": 12
+            },
+            "branch": {
+              "label": "Report and verify independently",
+              "targetSequenceId": "safe"
+            }
+          }
+        ]
+      },
+      {
+        "key": "safe",
+        "storyboard": {
+          "title": "A safer response",
+          "topic": "A safer response",
+          "targetSeconds": 20,
+          "segments": [
+            {
+              "title": "You stopped the chain",
+              "summary": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+              "narration": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+              "card": {
+                "layout": "recap",
+                "heading": "You stopped the chain",
+                "body": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "credential_failure",
+        "storyboard": {
+          "title": "Credential trap",
+          "topic": "Credential trap",
+          "targetSeconds": 20,
+          "segments": [
+            {
+              "title": "A password went to the wrong place",
+              "summary": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+              "narration": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+              "card": {
+                "layout": "concept",
+                "heading": "A password went to the wrong place",
+                "body": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "attachment_failure",
+        "storyboard": {
+          "title": "Attachment trap",
+          "topic": "Attachment trap",
+          "targetSeconds": 20,
+          "segments": [
+            {
+              "title": "The attachment was the trap",
+              "summary": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+              "narration": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+              "card": {
+                "layout": "concept",
+                "heading": "The attachment was the trap",
+                "body": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

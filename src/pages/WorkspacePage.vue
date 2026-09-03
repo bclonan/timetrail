@@ -28,6 +28,8 @@ import CueInspector from "../components/context/CueInspector.vue";
 import MediaLibrary from "../components/media/MediaLibrary.vue";
 import Timeline from "../components/timeline/Timeline.vue";
 import ProposalReview from "../components/proposals/ProposalReview.vue";
+import ProductionControls from "../components/editor/ProductionControls.vue";
+import QualityReview from "../components/editor/QualityReview.vue";
 const w = useWorkspace();
 const route = useRoute();
 const router = useRouter();
@@ -188,6 +190,8 @@ async function share() {
           </button>
         </div>
       </header>
+      <ProductionControls />
+      <QualityReview />
       <div class="editor-layout" :class="{ 'library-closed': !w.mediaOpen }">
         <MediaLibrary v-if="w.mediaOpen" />
         <div class="preview-column">

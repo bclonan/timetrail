@@ -1,0 +1,170 @@
+{
+  "media": [],
+  "spec": {
+    "title": "Pizza · A little order before the oven",
+    "description": "A cook-along demonstration with an ingredient checklist and a playhead-based timer. Text-led sample recipe.",
+    "presentation": {
+      "defaultViewId": "research",
+      "views": [
+        {
+          "id": "cinema",
+          "name": "Cinema",
+          "layout": "cinema",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": []
+        },
+        {
+          "id": "research",
+          "name": "Cook along",
+          "layout": "research",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "ingredients",
+            "timer",
+            "transcript"
+          ]
+        },
+        {
+          "id": "classroom",
+          "name": "Classroom",
+          "layout": "classroom",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "score",
+            "transcript"
+          ]
+        }
+      ],
+      "panels": [
+        {
+          "id": "transcript",
+          "title": "Transcript",
+          "kind": "transcript",
+          "entries": []
+        },
+        {
+          "id": "score",
+          "title": "Your progress",
+          "kind": "score",
+          "entries": []
+        },
+        {
+          "id": "ingredients",
+          "kind": "checklist",
+          "title": "One sample pizza",
+          "body": "Illustrative home recipe. Oven settings and cooking time depend on your dough and equipment.",
+          "entries": [
+            {
+              "id": "dough",
+              "label": "250 g prepared dough"
+            },
+            {
+              "id": "sauce",
+              "label": "60 g tomato sauce"
+            },
+            {
+              "id": "cheese",
+              "label": "80 g mozzarella"
+            },
+            {
+              "id": "basil",
+              "label": "A few basil leaves"
+            }
+          ]
+        },
+        {
+          "id": "timer",
+          "kind": "timer",
+          "title": "Film countdown",
+          "body": "This follows the film playhead. It is not a kitchen timer.",
+          "entries": [],
+          "end": 90
+        }
+      ]
+    },
+    "sequences": [
+      {
+        "key": "main",
+        "storyboard": {
+          "title": "One pizza",
+          "topic": "One pizza",
+          "targetSeconds": 90,
+          "segments": [
+            {
+              "title": "Start with the ingredients",
+              "summary": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+              "narration": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+              "card": {
+                "layout": "title",
+                "heading": "Start with the ingredients",
+                "body": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            },
+            {
+              "title": "Give the dough room",
+              "summary": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+              "narration": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+              "card": {
+                "layout": "concept",
+                "heading": "Give the dough room",
+                "body": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            },
+            {
+              "title": "Less sauce, more control",
+              "summary": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+              "narration": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+              "card": {
+                "layout": "concept",
+                "heading": "Less sauce, more control",
+                "body": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            },
+            {
+              "title": "Build a balanced topping",
+              "summary": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+              "narration": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+              "card": {
+                "layout": "concept",
+                "heading": "Build a balanced topping",
+                "body": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            },
+            {
+              "title": "Bake, then look closely",
+              "summary": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+              "narration": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+              "card": {
+                "layout": "recap",
+                "heading": "Bake, then look closely",
+                "body": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

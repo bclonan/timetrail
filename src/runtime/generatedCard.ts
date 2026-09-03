@@ -20,7 +20,8 @@ function lines(text: string, width: number, max: number) {
   if (line) result.push(line);
   return result.slice(0, max);
 }
-export function illustration(kind = "dna") {
+export function illustration(kind = "none") {
+  if (kind === "none") return "";
   if (kind === "protein")
     return Array.from(
       { length: 13 },

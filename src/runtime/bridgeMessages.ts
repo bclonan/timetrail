@@ -12,7 +12,7 @@ export const parentMessage = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("TIMETRAIL_PLAYBACK"),
-    action: z.enum(["play", "pause", "seek"]),
+    action: z.enum(["play", "pause", "seek", "retry-media", "skip-media"]),
     timeSeconds: z.number().nonnegative().optional(),
   }),
   z.object({
@@ -40,6 +40,7 @@ export const runtimeMessage = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("TIMETRAIL_LINK_ACTIVATED"),
+    cueId: z.string().optional(),
     sequenceId: z.string(),
     timeSeconds: z.number().nonnegative().optional(),
   }),

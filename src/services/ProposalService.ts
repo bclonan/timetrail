@@ -6,12 +6,19 @@ import {
   summarize,
   type Operation,
   type ProjectRecord,
+  type Project,
   type Proposal,
 } from "../domain/model";
 import {
   BrowserWorkspaceStore,
   storage,
 } from "../storage/BrowserWorkspaceStore";
+import {
+  rebaseProposal,
+  planPreparedReview,
+  conflictingOperations,
+  reviewIndexes,
+} from "./ProposalReviewPlan";
 export class ProposalService {
   constructor(public storage: BrowserWorkspaceStore) {}
   async create(
@@ -30,6 +37,18 @@ export class ProposalService {
         JSON.stringify(p.operations) === JSON.stringify(operations),
     );
     if (duplicate) return duplicate;
+    // Revision zero was not stored by early releases. Keep the exact proposal
+    // baseline so later human edits and undo do not invalidate unrelated work.
+    const db = await this.storage.db();
+    const revisionId = `${record.project.id}_${record.revision}`;
+    const snapshotTx = db.transaction("projectRevisions", "readwrite");
+    if (!(await snapshotTx.store.get(revisionId)))
+      await snapshotTx.store.put({
+        id: revisionId,
+        project: clone(record.project),
+        revision: record.revision,
+      });
+    await snapshotTx.done;
     const p: Proposal = {
       id: id(),
       projectId: record.project.id,
@@ -54,10 +73,55 @@ export class ProposalService {
     });
     return p;
   }
-  preview(record: ProjectRecord, p: Proposal) {
+  private baseline(
+    record: ProjectRecord,
+    p: Proposal,
+    snapshot?: { project: Project },
+  ) {
+    if (p.baseRevision === record.revision) return record.project;
+    if (snapshot) return snapshot.project;
+    // Legacy projects with a complete, unbroken undo history still have the
+    // original revision. A shorter stack cannot prove which revision it holds.
+    if (record.past.length === record.revision)
+      return record.past[p.baseRevision];
+    return undefined;
+  }
+  async prepare(record: ProjectRecord, p: Proposal) {
+    if (p.projectId !== record.project.id)
+      throw new Error("Proposal does not belong to this project.");
+    if (p.baseRevision === record.revision)
+      return { proposal: clone(p), conflicts: new Map<number, string>() };
+    const snapshot = await (
+      await this.storage.db()
+    ).get("projectRevisions", `${p.projectId}_${p.baseRevision}`);
+    return rebaseProposal(
+      this.baseline(record, p, snapshot),
+      record.project,
+      p,
+    );
+  }
+  async plan(
+    record: ProjectRecord,
+    p: Proposal,
+    decision: "accept" | "reject",
+    indexes?: number[],
+  ) {
+    return decision === "reject"
+      ? reviewIndexes(record.project, p, decision, indexes)
+      : planPreparedReview(
+          record.project,
+          await this.prepare(record, p),
+          indexes,
+        );
+  }
+  async preview(record: ProjectRecord, p: Proposal) {
+    const prepared = await this.prepare(record, p);
+    planPreparedReview(record.project, prepared);
     return applyOperations(
       record.project,
-      p.operations.filter((_, i) => !p.reviewedOperations[String(i)]),
+      prepared.proposal.operations.filter(
+        (_, i) => !p.reviewedOperations[String(i)],
+      ),
     );
   }
   async review(
@@ -87,23 +151,59 @@ export class ProposalService {
         );
       const selected: Proposal[] = [];
       const ops: Operation[] = [];
+      const writes: { proposalId: string; operation: Operation }[] = [];
+      if (operationIndexes && proposalIds.length !== 1)
+        throw new Error("Select one proposal for item review.");
       for (const pid of [...new Set(proposalIds)]) {
         const p: Proposal = await tx.objectStore("proposals").get(pid);
         if (!p || p.projectId !== projectId)
           throw new Error("Proposal does not belong to this project.");
         if (p.status !== "pending") continue;
-        if (decision === "accept" && p.baseRevision !== r.revision)
-          throw new Error(
-            "This proposal is stale. Create a fresh proposal against the current revision.",
-          );
-        p.operations.forEach((op, i) => {
+        const prepared =
+          decision === "accept" && p.baseRevision !== r.revision
+            ? rebaseProposal(
+                this.baseline(
+                  r,
+                  p,
+                  await tx
+                    .objectStore("projectRevisions")
+                    .get(`${projectId}_${p.baseRevision}`),
+                ),
+                r.project,
+                p,
+              )
+            : { proposal: clone(p), conflicts: new Map<number, string>() };
+        const plan =
+          decision === "accept"
+            ? planPreparedReview(r.project, prepared, operationIndexes)
+            : reviewIndexes(r.project, p, decision, operationIndexes);
+        if (operationIndexes) {
+          if (plan.some((i) => !operationIndexes.includes(i)))
+            throw new Error(
+              `This item requires related changes. Review items ${plan.map((i) => i + 1).join(", ")} together.`,
+            );
+        }
+        prepared.proposal.operations.forEach((op, i) => {
           if (
             !p.reviewedOperations[String(i)] &&
             (!operationIndexes || operationIndexes.includes(i))
           ) {
             p.reviewedOperations[String(i)] =
               decision === "accept" ? "accepted" : "rejected";
-            if (decision === "accept") ops.push(op);
+            if (decision === "accept") {
+              if (
+                writes.some(
+                  (w) =>
+                    w.proposalId !== p.id &&
+                    conflictingOperations(w.operation, op),
+                )
+              )
+                throw new Error(
+                  "Selected proposals contain conflicting changes. Accept the intended proposal separately and regenerate the conflicting draft.",
+                );
+              writes.push({ proposalId: p.id, operation: op });
+              ops.push(op);
+            }
           }
         });
         if (Object.keys(p.reviewedOperations).length === p.operations.length)
@@ -131,7 +231,6 @@ export class ProposalService {
           .put({ id: projectId, title: r.project.title, tags: r.project.tags });
       }
       for (const p of selected) {
-        if (p.status === "pending") p.baseRevision = r.revision;
         await tx.objectStore("proposals").put(p);
       }
       await tx.objectStore("toolEvents").put({
@@ -154,6 +253,36 @@ export class ProposalService {
       tx.abort();
       await tx.done.catch(() => {});
       throw e;
+    }
+  }
+  async restoreItem(
+    projectId: string,
+    proposalId: string,
+    index: number,
+    expectedRevision: number,
+  ) {
+    const db = await this.storage.db();
+    const tx = db.transaction(["projects", "proposals"], "readwrite");
+    try {
+      const r: ProjectRecord = await tx.objectStore("projects").get(projectId);
+      const p: Proposal = await tx.objectStore("proposals").get(proposalId);
+      if (
+        !r ||
+        r.revision !== expectedRevision ||
+        !p ||
+        p.projectId !== projectId
+      )
+        throw new Error("Project changed. Review the latest proposal.");
+      if (p.reviewedOperations[String(index)] !== "rejected")
+        throw new Error("Only rejected items can be restored.");
+      delete p.reviewedOperations[String(index)];
+      p.status = "pending";
+      await tx.objectStore("proposals").put(p);
+      await tx.done;
+    } catch (error) {
+      tx.abort();
+      await tx.done.catch(() => {});
+      throw error;
     }
   }
 }

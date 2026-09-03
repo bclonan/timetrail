@@ -1,5 +1,6 @@
 import { id, now, safeUrl, type Media } from "../domain/model";
 import { storage } from "../storage/BrowserWorkspaceStore";
+import DOMPurify from "dompurify";
 export function detectUrl(raw: string): Media["type"] {
   const u = new URL(safeUrl(raw));
   const host = u.hostname.replace(/^www\./, "");
@@ -36,12 +37,18 @@ export function mediaFromUrl(
   };
 }
 export async function importUrls(
-  items: { url: string; label?: string; typeHint?: string }[],
+  items: {
+    url: string;
+    label?: string;
+    typeHint?: string;
+    attribution?: Media["attribution"];
+  }[],
   existing: Media[],
   by: Media["importedBy"] = "human",
 ) {
   const media: Media[] = [];
   const warnings: string[] = [];
+  const probe: Media[] = [];
   for (const item of items) {
     try {
       const url = safeUrl(item.url);
@@ -53,20 +60,14 @@ export async function importUrls(
         continue;
       }
       const m = mediaFromUrl(url, item.label, by);
+      if (item.attribution) m.attribution = item.attribution;
       if (
         m.type === "webpage" &&
         item.typeHint &&
         ["video", "image", "audio", "pdf"].includes(item.typeHint)
       )
         m.type = item.typeHint as Media["type"];
-      if (["video", "audio", "image"].includes(m.type)) {
-        const duration = await probeMetadata(url, m.type);
-        if (duration) m.durationSeconds = duration;
-        else
-          warnings.push(
-            `${m.name}: metadata unavailable; review estimated timing.`,
-          );
-      }
+      if (["video", "audio", "image"].includes(m.type)) probe.push(m);
       media.push(m);
     } catch (e) {
       warnings.push(
@@ -74,29 +75,57 @@ export async function importUrls(
       );
     }
   }
+  for (let i = 0; i < probe.length; i += 4)
+    await Promise.all(
+      probe.slice(i, i + 4).map(async (m) => {
+        const result = await probeMetadata(
+          m.source.kind === "remote" ? m.source.url : "",
+          m.type,
+        );
+        if (result.duration) m.durationSeconds = result.duration;
+        if (!result.ok)
+          warnings.push(
+            `${m.name}: source could not be loaded; check its URL and playback before accepting.`,
+          );
+      }),
+    );
   return { media, warnings };
 }
-function probeMetadata(url: string, type: string): Promise<number | undefined> {
+export function probeMetadata(
+  url: string,
+  type: string,
+  options: { signal?: AbortSignal; timeoutMs?: number } = {},
+): Promise<{ duration?: number; ok: boolean; reason?: string }> {
+  options.signal?.throwIfAborted();
   return new Promise((resolve) => {
     const el = document.createElement(
       type === "image" ? "img" : type === "audio" ? "audio" : "video",
     );
     let done = false;
-    const finish = (value?: number) => {
+    const finish = (duration?: number, ok = false, reason?: string) => {
       if (done) return;
       done = true;
       clearTimeout(timer);
+      options.signal?.removeEventListener("abort", abort);
+      el.onerror = null;
+      if (el instanceof HTMLMediaElement) el.onloadedmetadata = null;
+      else el.onload = null;
       el.removeAttribute("src");
       if (el instanceof HTMLMediaElement) el.load();
-      resolve(value);
+      resolve({ duration, ok, reason });
     };
-    const timer = setTimeout(() => finish(), 1800);
-    el.onerror = () => finish();
+    const abort = () => finish(undefined, false, "aborted");
+    const timer = setTimeout(
+      () => finish(undefined, false, "timeout"),
+      options.timeoutMs ?? 1800,
+    );
+    options.signal?.addEventListener("abort", abort, { once: true });
+    el.onerror = () => finish(undefined, false, "load_error");
     if (el instanceof HTMLMediaElement) {
       el.preload = "metadata";
       el.onloadedmetadata = () =>
-        finish(Number.isFinite(el.duration) ? el.duration : undefined);
-    } else el.onload = () => finish();
+        finish(Number.isFinite(el.duration) ? el.duration : undefined, true);
+    } else el.onload = () => finish(undefined, true);
     el.src = url;
   });
 }
@@ -125,7 +154,12 @@ export function parseVtt(text: string) {
     ];
   });
 }
-export async function importFile(file: File): Promise<Media> {
+export async function importFile(
+  file: File,
+  by: Media["importedBy"] = "human",
+): Promise<Media> {
+  if (!file.size || file.size > 100 * 1024 * 1024)
+    throw new Error("Choose a nonempty file smaller than 100 MB.");
   const ext = file.name.split(".").pop()?.toLowerCase();
   const allowed: Record<string, Media["type"]> = {
     mp4: "video",
@@ -161,6 +195,15 @@ export async function importFile(file: File): Promise<Media> {
   )
     throw new Error(`File type does not match ${file.name}.`);
   let blob: Blob = file;
+  if (ext === "svg") {
+    const clean = DOMPurify.sanitize(await file.text(), {
+      USE_PROFILES: { svg: true },
+      FORBID_TAGS: ["foreignObject", "script"],
+    });
+    if (!clean.includes("<svg"))
+      throw new Error("The SVG contains no valid image.");
+    blob = new Blob([clean], { type: "image/svg+xml" });
+  }
   if (ext === "srt")
     blob = new Blob([srtToVtt(await file.text())], { type: "text/vtt" });
   const meta = await storage.putAsset(blob, file.name);
@@ -168,7 +211,7 @@ export async function importFile(file: File): Promise<Media> {
   if (type === "video" || type === "audio") {
     const url = URL.createObjectURL(blob);
     try {
-      duration = await probeMetadata(url, type);
+      duration = (await probeMetadata(url, type)).duration;
     } finally {
       URL.revokeObjectURL(url);
     }
@@ -183,6 +226,6 @@ export async function importFile(file: File): Promise<Media> {
     sizeBytes: blob.size,
     tags: [],
     importedAt: now(),
-    importedBy: "human",
+    importedBy: by,
   };
 }

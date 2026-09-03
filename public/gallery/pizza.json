@@ -1,0 +1,435 @@
+{
+  "schemaVersion": "1.0",
+  "id": "example_pizza",
+  "title": "Pizza · A little order before the oven",
+  "slug": "pizza-a-little-order-before-the-oven",
+  "description": "A cook-along demonstration with an ingredient checklist and a playhead-based timer. Text-led sample recipe.",
+  "topic": "One pizza",
+  "tags": [
+    "Example",
+    "pizza"
+  ],
+  "createdAt": "2026-09-02T12:00:00.000Z",
+  "updatedAt": "2026-09-02T12:00:00.000Z",
+  "activeSequenceId": "example_pizza_main",
+  "sequences": [
+    {
+      "id": "example_pizza_main",
+      "title": "One pizza",
+      "description": "One pizza",
+      "durationSeconds": 90,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_w6ngwo_0_clip",
+          "mediaId": "build_w6ngwo_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 18,
+          "durationSeconds": 18,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_w6ngwo_1_clip",
+          "mediaId": "build_w6ngwo_1_media",
+          "timelineStart": 18,
+          "sourceStart": 0,
+          "sourceEnd": 18,
+          "durationSeconds": 18,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_w6ngwo_2_clip",
+          "mediaId": "build_w6ngwo_2_media",
+          "timelineStart": 36,
+          "sourceStart": 0,
+          "sourceEnd": 18,
+          "durationSeconds": 18,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_w6ngwo_3_clip",
+          "mediaId": "build_w6ngwo_3_media",
+          "timelineStart": 54,
+          "sourceStart": 0,
+          "sourceEnd": 18,
+          "durationSeconds": 18,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_w6ngwo_4_clip",
+          "mediaId": "build_w6ngwo_4_media",
+          "timelineStart": 72,
+          "sourceStart": 0,
+          "sourceEnd": 18,
+          "durationSeconds": 18,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 18,
+          "title": "Start with the ingredients",
+          "body": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+          "id": "build_w6ngwo_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 18,
+          "body": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+          "id": "build_w6ngwo_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 18,
+          "body": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+          "id": "build_w6ngwo_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 18,
+          "end": 36,
+          "title": "Give the dough room",
+          "body": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+          "id": "build_w6ngwo_1_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 18,
+          "end": 36,
+          "body": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+          "id": "build_w6ngwo_1_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 18,
+          "end": 36,
+          "body": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+          "id": "build_w6ngwo_1_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 36,
+          "end": 54,
+          "title": "Less sauce, more control",
+          "body": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+          "id": "build_w6ngwo_2_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 36,
+          "end": 54,
+          "body": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+          "id": "build_w6ngwo_2_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 36,
+          "end": 54,
+          "body": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+          "id": "build_w6ngwo_2_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 54,
+          "end": 72,
+          "title": "Build a balanced topping",
+          "body": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+          "id": "build_w6ngwo_3_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 54,
+          "end": 72,
+          "body": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+          "id": "build_w6ngwo_3_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 54,
+          "end": 72,
+          "body": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+          "id": "build_w6ngwo_3_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 72,
+          "end": 90,
+          "title": "Bake, then look closely",
+          "body": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+          "id": "build_w6ngwo_4_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 72,
+          "end": 90,
+          "body": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+          "id": "build_w6ngwo_4_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 72,
+          "end": 90,
+          "body": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+          "id": "build_w6ngwo_4_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "build_w6ngwo_0_media",
+      "name": "Start with the ingredients",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "title",
+          "heading": "Start with the ingredients",
+          "body": "Prepare the dough, sauce and cheese before you shape anything. Check off ingredients in Cook along view.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_w6ngwo_1_media",
+      "name": "Give the dough room",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Give the dough room",
+          "body": "Work on a lightly floured surface. Stretch prepared dough gently and keep the rim a little thicker.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_w6ngwo_2_media",
+      "name": "Less sauce, more control",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Less sauce, more control",
+          "body": "Spread a thin layer of tomato sauce. Leave a small border so the rim can rise.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_w6ngwo_3_media",
+      "name": "Build a balanced topping",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Build a balanced topping",
+          "body": "Distribute mozzarella without burying the dough. Keep toppings light enough for the base to bake.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_w6ngwo_4_media",
+      "name": "Bake, then look closely",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "recap",
+          "heading": "Bake, then look closely",
+          "body": "Follow the dough recipe and your oven's instructions. Look for a baked base and melted cheese, then finish with basil.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    }
+  ],
+  "presentation": {
+    "defaultViewId": "research",
+    "views": [
+      {
+        "id": "cinema",
+        "name": "Cinema",
+        "layout": "cinema",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": []
+      },
+      {
+        "id": "research",
+        "name": "Cook along",
+        "layout": "research",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "ingredients",
+          "timer",
+          "transcript"
+        ]
+      },
+      {
+        "id": "classroom",
+        "name": "Classroom",
+        "layout": "classroom",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "score",
+          "transcript"
+        ]
+      }
+    ],
+    "panels": [
+      {
+        "id": "transcript",
+        "title": "Transcript",
+        "kind": "transcript",
+        "entries": []
+      },
+      {
+        "id": "score",
+        "title": "Your progress",
+        "kind": "score",
+        "entries": []
+      },
+      {
+        "id": "ingredients",
+        "title": "One sample pizza",
+        "kind": "checklist",
+        "body": "Illustrative home recipe. Oven settings and cooking time depend on your dough and equipment.",
+        "entries": [
+          {
+            "id": "dough",
+            "label": "250 g prepared dough"
+          },
+          {
+            "id": "sauce",
+            "label": "60 g tomato sauce"
+          },
+          {
+            "id": "cheese",
+            "label": "80 g mozzarella"
+          },
+          {
+            "id": "basil",
+            "label": "A few basil leaves"
+          }
+        ]
+      },
+      {
+        "id": "timer",
+        "title": "Film countdown",
+        "kind": "timer",
+        "body": "This follows the film playhead. It is not a kitchen timer.",
+        "entries": [],
+        "end": 90
+      }
+    ]
+  },
+  "settings": {
+    "captions": true,
+    "narration": false,
+    "targetSeconds": 90
+  },
+  "provenance": {
+    "creator": "TimeTrail examples",
+    "license": "MIT for project; media credits apply"
+  }
+}

@@ -48,6 +48,7 @@ available. Remote videos and source pages require internet access.
 
 If a video refuses embedding, keep its source URL for context and use generated
 cards or a locally supplied clip. If timing is estimated, show its warning and
-edit the clip. If a proposal becomes stale after a manual edit, request a new
-proposal against the latest revision. If a share code is too large or has local
+edit the clip. Older proposals preserve compatible manual edits during preview
+and acceptance. If review names a conflicting item, inspect the latest version
+and request a replacement for that item. If a share code is too large or has local
 files, download ZIP instead. None of these steps requires a backend or API key.

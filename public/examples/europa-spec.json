@@ -1,0 +1,430 @@
+{
+  "media": [
+    {
+      "id": "europa_orbit",
+      "name": "Europa from orbit, artist concept",
+      "type": "image",
+      "source": {
+        "kind": "remote",
+        "url": "https://timetrail-studio-bclonan.netlify.app/example-assets/europa-orbit.png"
+      },
+      "importedBy": "demo",
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "tags": [
+        "example"
+      ],
+      "attribution": {
+        "creator": "Generated with OpenAI image generation for TimeTrail",
+        "title": "Europa orbital artist concept",
+        "license": "Original generated artwork; not spacecraft photography"
+      }
+    },
+    {
+      "id": "europa_ocean",
+      "name": "Beneath the ice, speculative artist concept",
+      "type": "image",
+      "source": {
+        "kind": "remote",
+        "url": "https://timetrail-studio-bclonan.netlify.app/example-assets/europa-ocean.png"
+      },
+      "importedBy": "demo",
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "tags": [
+        "example"
+      ],
+      "attribution": {
+        "creator": "Generated with OpenAI image generation for TimeTrail",
+        "title": "Speculative Europa ocean",
+        "license": "Original generated artwork; environment is speculative"
+      }
+    },
+    {
+      "id": "europa_nasa",
+      "name": "What You Need to Know About Europa",
+      "type": "video",
+      "source": {
+        "kind": "remote",
+        "url": "https://timetrail-studio-bclonan.netlify.app/example-assets/europa-nasa.mp4"
+      },
+      "importedBy": "demo",
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "tags": [
+        "example"
+      ],
+      "attribution": {
+        "creator": "NASA",
+        "title": "What You Need to Know About Europa",
+        "sourceUrl": "https://images.nasa.gov/details/What%20You%20Need%20to%20Know%20About%20Europa",
+        "license": "NASA media usage guidelines; NASA credits retained"
+      }
+    },
+    {
+      "id": "europa_cutaway",
+      "name": "Europa layers, schematic",
+      "type": "image",
+      "source": {
+        "kind": "remote",
+        "url": "https://timetrail-studio-bclonan.netlify.app/example-assets/europa-cutaway.svg"
+      },
+      "importedBy": "demo",
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "tags": [
+        "example"
+      ],
+      "attribution": {
+        "creator": "TimeTrail",
+        "sourceUrl": "https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/",
+        "license": "MIT; schematic, not to scale"
+      }
+    }
+  ],
+  "spec": {
+    "title": "Europa · Beneath the silence",
+    "description": "An ocean world, a sheet of ice, and questions we are learning how to ask. NASA footage with original artist concepts and a schematic cutaway.",
+    "presentation": {
+      "defaultViewId": "cinema",
+      "views": [
+        {
+          "id": "cinema",
+          "name": "Cinema",
+          "layout": "cinema",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "regions"
+          ]
+        },
+        {
+          "id": "research",
+          "name": "Research",
+          "layout": "research",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "facts",
+            "layers",
+            "regions",
+            "transcript"
+          ]
+        },
+        {
+          "id": "classroom",
+          "name": "Classroom",
+          "layout": "classroom",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "score",
+            "transcript"
+          ]
+        }
+      ],
+      "panels": [
+        {
+          "id": "transcript",
+          "title": "Transcript",
+          "kind": "transcript",
+          "entries": []
+        },
+        {
+          "id": "score",
+          "title": "Your progress",
+          "kind": "score",
+          "entries": []
+        },
+        {
+          "id": "facts",
+          "title": "Evidence, not a discovery of life",
+          "kind": "facts",
+          "entries": [
+            {
+              "id": "ice",
+              "label": "Surface",
+              "detail": "Europa's visible surface is mostly water ice, crossed by dark fractures.",
+              "url": "https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/"
+            },
+            {
+              "id": "ocean",
+              "label": "Hidden ocean",
+              "detail": "Magnetic and geological evidence supports a salty ocean below the ice. This film does not depict an observed seafloor.",
+              "url": "https://europa.nasa.gov/europa/ocean/"
+            },
+            {
+              "id": "mission",
+              "label": "Mission question",
+              "detail": "Europa Clipper investigates whether Europa has conditions suitable for life.",
+              "url": "https://science.nasa.gov/mission/europa-clipper/"
+            }
+          ]
+        },
+        {
+          "id": "layers",
+          "title": "A layered world",
+          "kind": "map",
+          "body": "Schematic cutaway. Positions illustrate layers, not geography or scale.",
+          "entries": [
+            {
+              "id": "shell",
+              "label": "Ice shell",
+              "x": 25,
+              "y": 20,
+              "sequenceId": "ice",
+              "timeSeconds": 0
+            },
+            {
+              "id": "water",
+              "label": "Ocean",
+              "x": 55,
+              "y": 50,
+              "sequenceId": "ocean",
+              "timeSeconds": 0
+            },
+            {
+              "id": "rock",
+              "label": "Rocky interior",
+              "x": 65,
+              "y": 80,
+              "sequenceId": "main",
+              "timeSeconds": 75
+            }
+          ]
+        },
+        {
+          "id": "regions",
+          "title": "Choose your next question",
+          "kind": "facts",
+          "entries": [
+            {
+              "id": "ice",
+              "label": "Read the fractured ice",
+              "detail": "What can the surface tell us?",
+              "sequenceId": "ice",
+              "timeSeconds": 0
+            },
+            {
+              "id": "ocean",
+              "label": "Explore the hidden ocean",
+              "detail": "Which parts are evidence, and which are imagined?",
+              "sequenceId": "ocean",
+              "timeSeconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    "sequences": [
+      {
+        "key": "main",
+        "storyboard": {
+          "title": "Beneath the silence",
+          "topic": "Beneath the silence",
+          "targetSeconds": 150,
+          "segments": [
+            {
+              "title": "A world of ice",
+              "mediaId": "europa_orbit",
+              "narration": "Far from Earth, Jupiter's moon Europa wears a shell of ice. Its fractured surface is the beginning of a much deeper story.",
+              "cards": [
+                {
+                  "kind": "note",
+                  "title": "Artist's concept",
+                  "body": "The orbital artwork was generated for this film. It is not a spacecraft photograph."
+                }
+              ]
+            },
+            {
+              "title": "Follow the evidence",
+              "mediaId": "europa_nasa",
+              "narration": "Spacecraft observations give scientists clues. The surface and Europa's response to Jupiter's magnetic field point toward liquid water hidden below the ice.",
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "NASA footage and evidence",
+                  "body": "NASA video introduces Europa. Magnetic measurements are one line of evidence for a salty ocean.",
+                  "url": "https://europa.nasa.gov/europa/ocean/"
+                }
+              ]
+            },
+            {
+              "title": "An unseen ocean",
+              "mediaId": "europa_ocean",
+              "narration": "We have not visited this seafloor. This imagined scene makes the question tangible: could water, chemistry and energy meet in an environment that supports life?",
+              "cards": [
+                {
+                  "kind": "warning",
+                  "title": "Speculative visualization",
+                  "body": "The ocean interior is an artist's concept. No life has been discovered on Europa."
+                }
+              ]
+            },
+            {
+              "title": "Read the layers",
+              "mediaId": "europa_cutaway",
+              "narration": "Separate the visible ice shell from the inferred ocean and the rocky interior. This diagram is a schematic, not a measurement of their relative thickness.",
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "Europa's structure",
+                  "body": "Compare the diagram with NASA's overview and the uncertainties it describes.",
+                  "url": "https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/"
+                }
+              ]
+            },
+            {
+              "title": "Ask better questions",
+              "mediaId": "europa_nasa",
+              "narration": "Europa Clipper is designed to study this ocean world. Its investigation connects the ice, chemistry and geology to a broader question about habitability.",
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "Mission purpose",
+                  "body": "Habitability means conditions that could support life. It is different from detecting living organisms.",
+                  "url": "https://science.nasa.gov/mission/europa-clipper/"
+                }
+              ]
+            },
+            {
+              "title": "Where will you look next?",
+              "summary": "Follow the ice fractures or explore the ocean hypothesis. Change views to keep the evidence beside the picture.",
+              "narration": "Follow the ice fractures or explore the ocean hypothesis. Change views to keep the evidence beside the picture.",
+              "card": {
+                "layout": "recap",
+                "heading": "Where will you look next?",
+                "body": "Follow the ice fractures or explore the ocean hypothesis. Change views to keep the evidence beside the picture.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "quiz": {
+                "question": "What does an artist's concept show here?",
+                "options": [
+                  "An observed Europa seafloor",
+                  "A visual interpretation of an uncertain environment"
+                ],
+                "answerIndex": 1,
+                "explanation": "The interior artwork illustrates a possibility, not direct observation.",
+                "retryTime": 50
+              }
+            }
+          ]
+        },
+        "cues": [
+          {
+            "kind": "branch",
+            "title": "Explore the ice",
+            "start": 125,
+            "end": 150,
+            "position": {
+              "x": 8,
+              "y": 69,
+              "width": 38,
+              "height": 12
+            },
+            "branch": {
+              "label": "Explore the ice",
+              "targetSequenceId": "ice",
+              "setsFlag": "visited_ice"
+            }
+          },
+          {
+            "kind": "branch",
+            "title": "Explore the ocean",
+            "start": 125,
+            "end": 150,
+            "position": {
+              "x": 54,
+              "y": 69,
+              "width": 38,
+              "height": 12
+            },
+            "branch": {
+              "label": "Explore the ocean",
+              "targetSequenceId": "ocean",
+              "setsFlag": "visited_ocean"
+            }
+          }
+        ]
+      },
+      {
+        "key": "ice",
+        "storyboard": {
+          "title": "The ice remembers",
+          "topic": "The ice remembers",
+          "targetSeconds": 30,
+          "segments": [
+            {
+              "title": "Fractures as clues",
+              "mediaId": "europa_orbit",
+              "narration": "Europa's fractured ice records a changing surface. Scientists study its patterns to understand the relationship between the shell and the ocean below.",
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "Read the evidence",
+                  "body": "Explore NASA's account of Europa's ice and geology.",
+                  "url": "https://science.nasa.gov/jupiter/jupiter-moons/europa/europa-facts/"
+                }
+              ]
+            }
+          ]
+        },
+        "cues": [
+          {
+            "kind": "branch",
+            "start": 0,
+            "end": 30,
+            "title": "Return to the main film",
+            "branch": {
+              "label": "Return to the main film",
+              "targetSequenceId": "main",
+              "targetTime": 125
+            }
+          }
+        ]
+      },
+      {
+        "key": "ocean",
+        "storyboard": {
+          "title": "The ocean hypothesis",
+          "topic": "The ocean hypothesis",
+          "targetSeconds": 30,
+          "segments": [
+            {
+              "title": "Evidence below the surface",
+              "mediaId": "europa_ocean",
+              "narration": "The case for a hidden ocean comes from multiple observations. Its depth, chemistry and exchange with the surface remain research questions.",
+              "cards": [
+                {
+                  "kind": "source",
+                  "title": "What supports an ocean?",
+                  "body": "Read the magnetic and geological evidence rather than treating this visualization as a photograph.",
+                  "url": "https://europa.nasa.gov/europa/ocean/"
+                }
+              ]
+            }
+          ]
+        },
+        "cues": [
+          {
+            "kind": "branch",
+            "start": 0,
+            "end": 30,
+            "title": "Return to the main film",
+            "branch": {
+              "label": "Return to the main film",
+              "targetSequenceId": "main",
+              "targetTime": 125
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

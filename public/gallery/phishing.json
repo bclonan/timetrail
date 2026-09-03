@@ -1,0 +1,575 @@
+{
+  "schemaVersion": "1.0",
+  "id": "example_phishing",
+  "title": "The email at 4:59",
+  "slug": "the-email-at-4-59",
+  "description": "A fictional security exercise. Investigate an urgent email, choose a response and see the consequences.",
+  "topic": "The message",
+  "tags": [
+    "Example",
+    "phishing"
+  ],
+  "createdAt": "2026-09-02T12:00:00.000Z",
+  "updatedAt": "2026-09-02T12:00:00.000Z",
+  "activeSequenceId": "example_phishing_main",
+  "sequences": [
+    {
+      "id": "example_phishing_main",
+      "title": "The message",
+      "description": "The message",
+      "durationSeconds": 30,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_51lhjo_0_clip",
+          "mediaId": "build_51lhjo_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 30,
+          "durationSeconds": 30,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 30,
+          "title": "One minute before you leave",
+          "body": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+          "id": "build_51lhjo_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 30,
+          "body": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+          "id": "build_51lhjo_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 30,
+          "body": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+          "id": "build_51lhjo_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "branch",
+          "start": 0,
+          "end": 30,
+          "title": "Inspect the link",
+          "position": {
+            "x": 55,
+            "y": 45,
+            "width": 40,
+            "height": 12
+          },
+          "branch": {
+            "label": "Inspect the link",
+            "targetSequenceId": "film_example_phishing_inspect"
+          },
+          "id": "film_example_phishing_0_cue_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "branch",
+          "start": 0,
+          "end": 30,
+          "title": "Enter your password",
+          "position": {
+            "x": 55,
+            "y": 62,
+            "width": 40,
+            "height": 12
+          },
+          "branch": {
+            "label": "Enter your password",
+            "targetSequenceId": "film_example_phishing_credential_failure"
+          },
+          "id": "film_example_phishing_0_cue_1",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "branch",
+          "start": 0,
+          "end": 30,
+          "title": "Report after checking sender",
+          "position": {
+            "x": 55,
+            "y": 79,
+            "width": 40,
+            "height": 12
+          },
+          "branch": {
+            "label": "Report after checking sender",
+            "targetSequenceId": "film_example_phishing_safe",
+            "requiresFlag": "sender_checked"
+          },
+          "id": "film_example_phishing_0_cue_2",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "film_example_phishing_inspect",
+      "title": "Inspect without visiting",
+      "description": "Inspect without visiting",
+      "durationSeconds": 30,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_iymjxr_0_clip",
+          "mediaId": "build_iymjxr_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 30,
+          "durationSeconds": 30,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 30,
+          "title": "Read the destination",
+          "body": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+          "id": "build_iymjxr_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 30,
+          "body": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+          "id": "build_iymjxr_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 30,
+          "body": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+          "id": "build_iymjxr_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "branch",
+          "start": 0,
+          "end": 30,
+          "title": "Download the attachment",
+          "position": {
+            "x": 55,
+            "y": 55,
+            "width": 40,
+            "height": 12
+          },
+          "branch": {
+            "label": "Download the attachment",
+            "targetSequenceId": "film_example_phishing_attachment_failure"
+          },
+          "id": "film_example_phishing_1_cue_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "branch",
+          "start": 0,
+          "end": 30,
+          "title": "Report and verify independently",
+          "position": {
+            "x": 55,
+            "y": 73,
+            "width": 40,
+            "height": 12
+          },
+          "branch": {
+            "label": "Report and verify independently",
+            "targetSequenceId": "film_example_phishing_safe"
+          },
+          "id": "film_example_phishing_1_cue_1",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "film_example_phishing_safe",
+      "title": "A safer response",
+      "description": "A safer response",
+      "durationSeconds": 20,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_o1784s_0_clip",
+          "mediaId": "build_o1784s_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 20,
+          "durationSeconds": 20,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 20,
+          "title": "You stopped the chain",
+          "body": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+          "id": "build_o1784s_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 20,
+          "body": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+          "id": "build_o1784s_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 20,
+          "body": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+          "id": "build_o1784s_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "film_example_phishing_credential_failure",
+      "title": "Credential trap",
+      "description": "Credential trap",
+      "durationSeconds": 20,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_upurrh_0_clip",
+          "mediaId": "build_upurrh_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 20,
+          "durationSeconds": 20,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 20,
+          "title": "A password went to the wrong place",
+          "body": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+          "id": "build_upurrh_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 20,
+          "body": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+          "id": "build_upurrh_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 20,
+          "body": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+          "id": "build_upurrh_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "film_example_phishing_attachment_failure",
+      "title": "Attachment trap",
+      "description": "Attachment trap",
+      "durationSeconds": 20,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_1d977g9_0_clip",
+          "mediaId": "build_1d977g9_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 20,
+          "durationSeconds": 20,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 20,
+          "title": "The attachment was the trap",
+          "body": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+          "id": "build_1d977g9_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 20,
+          "body": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+          "id": "build_1d977g9_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 20,
+          "body": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+          "id": "build_1d977g9_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "build_51lhjo_0_media",
+      "name": "One minute before you leave",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "title",
+          "heading": "One minute before you leave",
+          "body": "From: IT Support\nSubject: Your account closes today\nReset your password immediately using the link below.\n\nThis email is fictional.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_iymjxr_0_media",
+      "name": "Read the destination",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Read the destination",
+          "body": "The displayed link says company.example.com. Its destination is login-company.example.invalid. No external page is opened in this exercise.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_o1784s_0_media",
+      "name": "You stopped the chain",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "recap",
+          "heading": "You stopped the chain",
+          "body": "You reported the message and checked with IT through a known contact. Suspicion became a question to verify, not a link to follow.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_upurrh_0_media",
+      "name": "A password went to the wrong place",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "A password went to the wrong place",
+          "body": "In this fictional route, the attacker receives a password. Report the incident and follow your organization's account recovery process. Start again to choose a different response.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_1d977g9_0_media",
+      "name": "The attachment was the trap",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "The attachment was the trap",
+          "body": "In this fictional route, opening the attachment causes an incident. Stop interacting and contact your security team through a known channel. Replay to investigate safely.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    }
+  ],
+  "presentation": {
+    "defaultViewId": "classroom",
+    "views": [
+      {
+        "id": "cinema",
+        "name": "Cinema",
+        "layout": "cinema",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": []
+      },
+      {
+        "id": "research",
+        "name": "Research",
+        "layout": "research",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "investigation",
+          "evidence",
+          "transcript"
+        ]
+      },
+      {
+        "id": "classroom",
+        "name": "Classroom",
+        "layout": "classroom",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "investigation",
+          "evidence",
+          "score"
+        ]
+      }
+    ],
+    "panels": [
+      {
+        "id": "transcript",
+        "title": "Transcript",
+        "kind": "transcript",
+        "entries": []
+      },
+      {
+        "id": "score",
+        "title": "Your progress",
+        "kind": "score",
+        "entries": []
+      },
+      {
+        "id": "investigation",
+        "title": "Your investigation",
+        "kind": "checklist",
+        "body": "Training scenario. Inspect the sender before deciding.",
+        "entries": [
+          {
+            "id": "sender_checked",
+            "label": "I checked the sender address",
+            "detail": "The display name says IT. The sender is reset@helpdesk-example.invalid."
+          }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence notebook",
+        "kind": "text",
+        "body": "The sender domain differs from the organization's example.com domain. The urgent password-reset request needs independent verification.",
+        "entries": [],
+        "requiresFlag": "sender_checked"
+      }
+    ]
+  },
+  "settings": {
+    "captions": true,
+    "narration": false,
+    "targetSeconds": 30
+  },
+  "provenance": {
+    "creator": "TimeTrail examples",
+    "license": "MIT for project; media credits apply"
+  }
+}

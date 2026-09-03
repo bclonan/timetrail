@@ -24,8 +24,19 @@ const src = ref("/runtime.html");
 watch(src, () => {
   initializing = false;
   generation++;
+  failure.value = "";
+  waitForInterface();
 });
 const failure = ref("");
+let readyTimeout: ReturnType<typeof setTimeout>;
+function waitForInterface() {
+  clearTimeout(readyTimeout);
+  readyTimeout = setTimeout(() => {
+    if (!w.playerReady)
+      failure.value =
+        "The player interface could not start. Check your connection and retry the preview.";
+  }, 20000);
+}
 const caption = ref("");
 let spoken = "";
 async function initialize() {
@@ -33,6 +44,7 @@ async function initialize() {
   initializing = true;
   const token = ++generation;
   const next = new FrameTrailAdapter();
+  waitForInterface();
   try {
     const assets = await next.resolveAssetUrls(clone(w.current));
     if (token !== generation) {
@@ -56,12 +68,14 @@ async function initialize() {
   }
 }
 onMounted(() => {
+  waitForInterface();
   bridge = new FrameTrailBridge(frame.value!, (m) => {
     if (m.type === "TIMETRAIL_READY") {
       if (m.revision === undefined) void initialize();
       else {
-        w.playerReady = true;
+        clearTimeout(readyTimeout);
         failure.value = "";
+        w.playerReady = true;
         void storage.log({
           toolName: "preview.synchronized",
           projectId: w.approved?.id,
@@ -78,8 +92,11 @@ onMounted(() => {
       failure.value = m.message;
       w.playerReady = false;
     }
-    if (m.type === "TIMETRAIL_LINK_ACTIVATED")
-      w.branch(m.sequenceId, m.timeSeconds);
+    if (m.type === "TIMETRAIL_LINK_ACTIVATED") {
+      const cue = w.sequence?.cues.find((c) => c.id === m.cueId);
+      if (cue?.branch) w.choose(cue);
+      else w.branch(m.sequenceId, m.timeSeconds);
+    }
     if (m.type === "TIMETRAIL_SELECTION_CHANGED" && m.cueId)
       w.selectedCue = m.cueId;
     if (m.type === "TIMETRAIL_QUIZ_ANSWERED")
@@ -93,6 +110,7 @@ watch(
     w.playerReady = false;
     w.paused = true;
     failure.value = "";
+    waitForInterface();
     src.value = "/runtime.html?revision=" + Date.now();
   },
   { flush: "post" },
@@ -135,6 +153,7 @@ watch(
     if ((!w.narration || w.paused) && "speechSynthesis" in window)
       speechSynthesis.cancel();
   },
+  { immediate: true },
 );
 function narration() {
   if (!("speechSynthesis" in window)) {
@@ -149,6 +168,7 @@ function narration() {
   }
 }
 onBeforeUnmount(() => {
+  clearTimeout(readyTimeout);
   generation++;
   w.playerReady = false;
   w.paused = true;

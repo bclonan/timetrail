@@ -156,7 +156,7 @@ export function createEditorTools(router: Router, tool: ToolBuilder) {
             ...("title" in i ? { title: i.title } : {}),
             ...("name" in i ? { name: i.name, type: i.type } : {}),
             ...("kind" in i
-              ? { kind: i.kind, start: i.start, end: i.end }
+              ? { kind: i.kind, start: i.start, end: i.end, group: i.group }
               : {}),
             ...("mediaId" in i
               ? {
@@ -404,14 +404,12 @@ export function createEditorTools(router: Router, tool: ToolBuilder) {
       }),
       false,
       true,
-      (input) => {
+      async (input) => {
         if (input.action === "restore") w.restore();
         else {
           const p = w.pending.find((p) => p.id === input.proposalId);
           if (!p) throw new Error("Pending proposal not found.");
-          if (p.baseRevision !== w.record?.revision)
-            throw new Error("Proposal is stale. Generate it again.");
-          w.preview(p);
+          await w.preview(p);
         }
         return {
           status:

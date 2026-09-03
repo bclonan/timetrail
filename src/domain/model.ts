@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { ulid } from "ulid";
+import { presentationSchema } from "./presentation";
+import { hotspotStyleSchema } from "./hotspots";
 
 export const id = () => ulid();
 export const now = () => new Date().toISOString();
@@ -51,6 +53,7 @@ export const quizSchema = z
     options: z.array(z.string().max(500)).min(2).max(8),
     answerIndex: z.number().int().min(0),
     explanation: text.optional(),
+    retryTime: z.number().min(0).max(86400).optional(),
   })
   .refine(
     (q) => q.answerIndex < q.options.length,
@@ -121,6 +124,7 @@ export const cueInputSchema = z.object({
   body: text.optional(),
   resourceId: key.optional(),
   url: urlSchema.optional(),
+  group: z.string().max(80).optional(),
   position: z
     .object({
       x: z.number().min(0).max(100),
@@ -129,11 +133,8 @@ export const cueInputSchema = z.object({
       height: z.number().positive().max(100),
     })
     .optional(),
-  style: z
-    .record(
-      z.string().max(50),
-      z.union([z.string().max(300), z.number(), z.boolean()]),
-    )
+  style: hotspotStyleSchema
+    .catchall(z.union([z.string().max(300), z.number(), z.boolean()]))
     .optional(),
   quiz: quizSchema.optional(),
   branch: z
@@ -141,6 +142,8 @@ export const cueInputSchema = z.object({
       label: z.string().max(300),
       targetSequenceId: key,
       targetTime: z.number().nonnegative().optional(),
+      requiresFlag: key.optional(),
+      setsFlag: key.optional(),
     })
     .optional(),
 });
@@ -189,6 +192,7 @@ export const projectShape = z.object({
   activeSequenceId: key,
   sequences: z.array(sequenceSchema).min(1).max(50),
   media: z.array(mediaSchema).max(500),
+  presentation: presentationSchema.optional(),
   settings: z.object({
     captions: z.boolean(),
     narration: z.boolean(),
@@ -213,6 +217,21 @@ export const projectSchema = projectShape.superRefine((p, ctx) => {
   const media = new Map(p.media.map((m) => [m.id, m]));
   const sequences = new Map(p.sequences.map((s) => [s.id, s]));
   if (!sequences.has(p.activeSequenceId)) err("Active sequence is missing.");
+  for (const panel of p.presentation?.panels || []) {
+    const sequence = sequences.get(panel.sequenceId || p.activeSequenceId);
+    if (!sequence) err("Panel sequence is missing.");
+    if (sequence && (panel.start ?? 0) > sequence.durationSeconds)
+      err("Panel start exceeds sequence duration.");
+    if (sequence && (panel.end ?? 0) > sequence.durationSeconds)
+      err("Panel end exceeds sequence duration.");
+    for (const entry of panel.entries) {
+      const target = sequences.get(
+        entry.sequenceId || panel.sequenceId || p.activeSequenceId,
+      );
+      if (!target || (entry.timeSeconds ?? 0) > target.durationSeconds)
+        err("Panel entry destination is invalid.");
+    }
+  }
   p.sequences.forEach((s) => {
     unique(s.id);
     let until = 0;
@@ -241,6 +260,8 @@ export const projectSchema = projectShape.superRefine((p, ctx) => {
         err("Cue resource is missing.");
       if (c.kind === "quiz" && !c.quiz)
         err("A quiz needs a question and answers.");
+      if ((c.quiz?.retryTime ?? 0) > s.durationSeconds)
+        err("Quiz retry time exceeds sequence duration.");
       if (c.kind === "branch" && !c.branch)
         err("A branch needs a destination.");
       if (
@@ -266,6 +287,7 @@ export type Cue = z.infer<typeof cueSchema>;
 export type Clip = z.infer<typeof clipSchema>;
 export type GeneratedCard = z.infer<typeof cardSchema>;
 export type Operation =
+  | { type: "set_presentation"; value: z.infer<typeof presentationSchema> }
   | {
       type: "set_project_meta";
       value: Partial<
@@ -403,6 +425,8 @@ export function applyOperations(
           .partial()
           .parse(op.value),
       );
+    else if (op.type === "set_presentation")
+      draft.presentation = presentationSchema.parse(op.value);
     else if (op.type === "upsert_media")
       upsert(draft.media, mediaSchema.parse(op.value));
     else if (op.type === "remove_media")

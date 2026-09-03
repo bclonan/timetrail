@@ -4,6 +4,7 @@ import { X, Copy, Trash2 } from "lucide-vue-next";
 import { useWorkspace } from "../../stores/workspace";
 import { useEditor } from "../../stores/editor";
 import { kinds } from "../../domain/model";
+import { hotspotAppearance } from "../../domain/hotspots";
 const w = useWorkspace();
 const e = useEditor();
 const draft = computed(() => e.cue);
@@ -90,6 +91,71 @@ const changeKind = () => e.changeKind();
           /></label>
         </div>
       </details>
+      <details v-if="draft.kind === 'hotspot' || draft.kind === 'branch'">
+        <summary>Hotspot style and group</summary>
+        <label
+          >Group<input
+            v-model="draft.group"
+            maxlength="80"
+            placeholder="e.g. Spec labels"
+        /></label>
+        <button
+          type="button"
+          class="small"
+          @click="
+            draft.style = {
+              ...hotspotAppearance(draft.style),
+              backgroundColor:
+                hotspotAppearance(draft.style).backgroundColor || '#c5ef91',
+              preset: 'filled',
+            }
+          "
+        >
+          Customize style
+        </button>
+        <template v-if="draft.style">
+          <label
+            >Appearance<select v-model="draft.style.preset">
+              <option value="filled">Filled button</option>
+              <option value="outline">Outline</option>
+              <option value="marker">Pulsing marker</option>
+            </select></label
+          >
+          <label
+            >Shape<select v-model="draft.style.shape">
+              <option value="rounded">Rounded</option>
+              <option value="rectangle">Rectangle</option>
+              <option value="circle">Circle</option>
+            </select></label
+          >
+          <label
+            >Border color<input v-model="draft.style.color" type="color"
+          /></label>
+          <label
+            >Text color<input v-model="draft.style.textColor" type="color"
+          /></label>
+          <label
+            >Fill color<input
+              v-model="draft.style.backgroundColor"
+              type="color"
+          /></label>
+          <label
+            >Border width<input
+              v-model.number="draft.style.borderWidth"
+              type="number"
+              min="0"
+              max="10"
+              step=".5"
+          /></label>
+          <label
+            >Corner radius<input
+              v-model.number="draft.style.borderRadius"
+              type="number"
+              min="0"
+              max="48"
+          /></label>
+        </template>
+      </details>
       <template v-if="draft.kind === 'quiz' && draft.quiz"
         ><label>Question<input v-model="draft.quiz.question" /></label
         ><label
@@ -99,10 +165,19 @@ const changeKind = () => e.changeKind();
             v-model.number="draft.quiz.answerIndex"
             type="number"
             min="0" /></label
+        ><label>Explanation<textarea v-model="draft.quiz.explanation" /></label
         ><label
-          >Explanation<textarea
-            v-model="draft.quiz.explanation"
-          /></label></template
+          >Explanation replay time<input
+            type="number"
+            min="0"
+            :max="w.sequence?.durationSeconds"
+            :value="draft.quiz.retryTime"
+            @input="
+              draft.quiz.retryTime =
+                ($event.target as HTMLInputElement).value === ''
+                  ? undefined
+                  : Number(($event.target as HTMLInputElement).value)
+            " /></label></template
       ><template v-if="draft.kind === 'branch' && draft.branch"
         ><label>Button label<input v-model="draft.branch.label" /></label
         ><label
@@ -111,8 +186,21 @@ const changeKind = () => e.changeKind();
               {{ s.title }}
             </option>
           </select></label
-        ></template
-      >
+        ><label
+          >Required checklist item ID<input
+            :value="draft.branch.requiresFlag"
+            @input="
+              draft.branch.requiresFlag =
+                ($event.target as HTMLInputElement).value || undefined
+            " /></label
+        ><label
+          >Set viewer flag<input
+            :value="draft.branch.setsFlag"
+            @input="
+              draft.branch.setsFlag =
+                ($event.target as HTMLInputElement).value || undefined
+            " /></label
+      ></template>
       <p v-if="e.agentDraft" class="small-text">
         Agent-filled draft. Check these fields before saving.
       </p>

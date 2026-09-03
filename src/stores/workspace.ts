@@ -9,6 +9,7 @@ import {
   type Proposal,
   type Operation,
   type AuditEvent,
+  type Cue,
 } from "../domain/model";
 import { storage } from "../storage/BrowserWorkspaceStore";
 import { projects } from "../services/ProjectService";
@@ -41,6 +42,8 @@ export const useWorkspace = defineStore("workspace", () => {
   const shareLink = ref("");
   const shareVersion = ref(0);
   const quizAnswers = ref<Record<string, number>>({});
+  const viewerFlags = ref<Record<string, boolean>>({});
+  const playerViewId = ref("");
   const pinnedCues = ref<string[]>([]);
   const mediaOpen = ref(true);
   const captions = ref(true);
@@ -60,7 +63,7 @@ export const useWorkspace = defineStore("workspace", () => {
     proposals.value.filter((p) => p.status === "pending"),
   );
   const command = shallowRef<{
-    action: "play" | "pause" | "seek";
+    action: "play" | "pause" | "seek" | "retry-media" | "skip-media";
     timeSeconds?: number;
     nonce: number;
   }>();
@@ -114,6 +117,8 @@ export const useWorkspace = defineStore("workspace", () => {
       selectedCue.value = "";
       history.value = [];
       quizAnswers.value = {};
+      viewerFlags.value = {};
+      playerViewId.value = r.project.presentation?.defaultViewId || "cinema";
       pinnedCues.value = [];
       await storage.setSetting("lastProject", projectId);
       await refresh();
@@ -136,6 +141,9 @@ export const useWorkspace = defineStore("workspace", () => {
     time.value = 0;
     history.value = [];
     quizAnswers.value = {};
+    viewerFlags.value = {};
+    playerViewId.value = p.presentation?.defaultViewId || "cinema";
+    paused.value = true;
     pinnedCues.value = [];
   }
   async function create(input: unknown) {
@@ -195,9 +203,17 @@ export const useWorkspace = defineStore("workspace", () => {
     notify("Sample proposal ready. Approved timeline is unchanged.");
     return p;
   }
-  function preview(p: Proposal) {
+  async function preview(p: Proposal) {
     const r = requireRecord();
-    previewProject.value = proposalService.preview(r, p);
+    const project = await proposalService.preview(r, p);
+    if (
+      record.value?.project.id !== r.project.id ||
+      record.value.revision !== r.revision
+    )
+      throw new Error(
+        "Project changed during preview. Open the preview again.",
+      );
+    previewProject.value = project;
     time.value = 0;
     notify("Previewing proposed version. Nothing has been saved.");
   }
@@ -212,6 +228,22 @@ export const useWorkspace = defineStore("workspace", () => {
     indexes?: number[],
   ) {
     const r = requireRecord();
+    if (indexes) {
+      const p = pending.value.find((p) => p.id === ids[0]);
+      if (!p) throw new Error("Pending proposal not found.");
+      const planned = await proposalService.plan(r, p, decision, indexes);
+      if (planned.some((i) => !indexes!.includes(i))) {
+        if (
+          !(await ask(
+            "Accept related changes?",
+            `This item needs items ${planned.map((i) => i + 1).join(", ")} from ${p.title}. Review them together to keep media and scene references valid.`,
+            "Accept related changes",
+          ))
+        )
+          return;
+        indexes = planned;
+      }
+    }
     record.value = await proposalService.review(
       r.project.id,
       ids,
@@ -227,6 +259,16 @@ export const useWorkspace = defineStore("workspace", () => {
         : "Proposal rejected. Approved version is unchanged.",
     );
   }
+  async function restoreProposalItem(proposalId: string, index: number) {
+    const r = requireRecord();
+    await proposalService.restoreItem(
+      r.project.id,
+      proposalId,
+      index,
+      r.revision,
+    );
+    await refresh();
+  }
   async function undo(direction: "undo" | "redo") {
     const r = requireRecord();
     record.value = await projects.travel(r.project.id, direction, r.revision);
@@ -234,7 +276,13 @@ export const useWorkspace = defineStore("workspace", () => {
     await refresh();
   }
   function playback(
-    action: "play" | "pause" | "seek" | "jump-to-chapter",
+    action:
+      | "play"
+      | "pause"
+      | "seek"
+      | "jump-to-chapter"
+      | "retry-media"
+      | "skip-media",
     value?: number,
     chapterId?: string,
   ) {
@@ -256,7 +304,8 @@ export const useWorkspace = defineStore("workspace", () => {
       )
         throw new Error("Seek is outside the active sequence.");
       time.value = value;
-    } else paused.value = action === "pause";
+    } else if (action === "play" || action === "pause")
+      paused.value = action === "pause";
     command.value = {
       action,
       timeSeconds: value,
@@ -271,6 +320,18 @@ export const useWorkspace = defineStore("workspace", () => {
     sequenceId.value = target;
     time.value = targetTime;
     paused.value = true;
+  }
+  function choose(cue: Cue) {
+    if (!cue.branch) throw new Error("This cue has no branch.");
+    if (
+      cue.branch.requiresFlag &&
+      !viewerFlags.value[cue.branch.requiresFlag]
+    ) {
+      notify("Complete the required checklist item before choosing this path.");
+      return;
+    }
+    if (cue.branch.setsFlag) viewerFlags.value[cue.branch.setsFlag] = true;
+    branch(cue.branch.targetSequenceId, cue.branch.targetTime);
   }
   function back() {
     const previous = history.value.pop();
@@ -296,7 +357,7 @@ export const useWorkspace = defineStore("workspace", () => {
   async function prepareShare() {
     if (!approved.value) throw new Error("Open a project first.");
     shareCode.value = shares.encode(clone(approved.value));
-    shareLink.value = `${location.origin}/#/watch?tt=${shareCode.value}`;
+    shareLink.value = `${location.origin}/player/shared?view=${encodeURIComponent(playerViewId.value || approved.value.presentation?.defaultViewId || "cinema")}#/watch?tt=${shareCode.value}`;
     shareVersion.value++;
     await storage.log({
       projectId: approved.value.id,
@@ -367,6 +428,9 @@ export const useWorkspace = defineStore("workspace", () => {
     shareLink,
     shareVersion,
     quizAnswers,
+    viewerFlags,
+    playerViewId,
+    choose,
     mediaOpen,
     pinnedCues,
     captions,
@@ -386,6 +450,7 @@ export const useWorkspace = defineStore("workspace", () => {
     preview,
     restore,
     review,
+    restoreProposalItem,
     undo,
     playback,
     branch,

@@ -57,6 +57,12 @@ export class ProjectService {
           c.branch.targetSequenceId = remap(c.branch.targetSequenceId);
       });
     });
+    p.presentation?.panels.forEach((panel) => {
+      if (panel.sequenceId) panel.sequenceId = remap(panel.sequenceId);
+      panel.entries.forEach((entry) => {
+        if (entry.sequenceId) entry.sequenceId = remap(entry.sequenceId);
+      });
+    });
     await this.storage.save({
       project: projectSchema.parse(p),
       revision: 0,

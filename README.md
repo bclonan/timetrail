@@ -10,6 +10,11 @@ The application runs without an account, API key, PHP server, or backend.
 Projects stay in this browser until you download or share them.
 
 Live site: [TimeTrail Studio](https://timetrail-studio-bclonan.netlify.app/demo).
+Try the [prompt library](https://timetrail-studio-bclonan.netlify.app/examples)
+or [Europa Player](https://timetrail-studio-bclonan.netlify.app/player/example_europa).
+The [WebMCP hackathon page](https://timetrail-studio-bclonan.netlify.app/hackathon)
+has the submission answers, illustrated tool workflows and a complete 2:40 demo
+video prompt. A public YouTube recording is still required for submission.
 
 ## Start
 
@@ -27,6 +32,20 @@ support for that invocation. Do not disable certificate verification.
 
 ## What works
 
+- Browse 41 creation and smoke-test prompts with explicit acceptance checks.
+  Five authored films demonstrate documentaries, branching training, product
+  concepts, quizzes and cook-along panels.
+- Search NASA and Wikimedia Commons, resolve real files with credits, download
+  them locally, or ingest generated images through chunked WebMCP uploads.
+- Compile a complete film with named sequences and custom Player views in one
+  reviewed proposal. Image generation comes from the calling agent's tools.
+- Watch films in a dedicated Player with Cinema, Research, Classroom or Explorer
+  layouts, portrait presentation, persistent fact/chart/map panels, checklists,
+  conditional branches, transcripts, scores and replay. View switching preserves
+  playback. The same layouts and panels run in exported viewers.
+- Failed footage pauses playback and offers retry, skip and a source link.
+  The same recovery actions are available through the WebMCP playback tool.
+
 - Create, rename, reopen, and remix local projects. Undo and redo preserve history.
 - Import multiple URLs or local video, audio, images, PDFs, VTT, and SRT files.
   Import TimeTrail JSON, ZIP, and self-contained HTML. A constrained FrameTrail
@@ -39,6 +58,12 @@ support for that invocation. Do not disable certificate verification.
   Mouse, touch, keyboard, snapping, cancellation and Undo are supported.
 - Edit clip timing and cue content. Timed context can be pinned. Quizzes have
   answer feedback. Branches retain a return point.
+- Create and group hotspots with custom colors, shapes and filled, outline or
+  marker styles. Arrange selected groups in rows, grids or a right-hand stack.
+- Review every screen for timeline gaps, blocked controls, unreadable labels,
+  duplicate annotations, missing branch flags and failed media loads. Prepare
+  selected fixes as a proposal, preview and accept, then review again. Picture
+  and sound still need playback review.
 - Review agent proposals by batch or item. The ghost track and proposed preview
   are separate from the approved project. Acceptance is atomic.
 - Export JSON, a portable project ZIP, self-contained HTML, or a static hosting ZIP.
@@ -49,6 +74,11 @@ support for that invocation. Do not disable certificate verification.
 - Discover local projects and static gallery manifests. The bundled DNA example
   is available offline after the application cache finishes installing.
 - Inspect registered tools and the durable activity log in WebMCP Lab.
+
+Read [the smoke prompts](docs/SMOKE_PROMPTS.md) and [release bug log](docs/BUG_LOG.md)
+for coverage and limits. Exports are interactive webpages, not flattened MP4 files.
+Uploaded files need a portable HTML or ZIP/static pack; device-local project URLs
+are not public share links.
 
 ## Test and build
 
@@ -145,3 +175,9 @@ unsupported overlays are omitted. The source project is preserved.
 TimeTrail is MIT licensed. FrameTrail is used under its MIT option, with its
 upstream notices and bundled library licenses preserved. Original demo SVGs
 and the seeded project are included under the TimeTrail license.
+
+When no usable video is supplied and the calling agent is not generating video,
+the creation workflow directs it to find source footage, preserve credits,
+import it and use it in clips. Generated still images do not satisfy that step.
+Creation and inspection tools report available video candidates. Empty searches
+include instructions to retry with another query, provider or browser research.

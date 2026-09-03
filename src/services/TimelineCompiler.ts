@@ -3,6 +3,7 @@ import {
   applyOperations,
   clone,
   quizSchema,
+  cardSchema,
   urlSchema,
   type Project,
   type Operation,
@@ -28,6 +29,8 @@ export const storyboardSchema = z.object({
         durationWeight: z.number().positive().max(100).default(1),
         mediaId: z.string().optional(),
         mediaUrl: urlSchema.optional(),
+        card: cardSchema.optional(),
+        sourceStart: z.number().min(0).max(86400).default(0),
         cards: z
           .array(
             z.object({
@@ -82,7 +85,7 @@ function hash(text: string): string {
 export class TimelineCompiler {
   compile(project: Project, raw: unknown, available: Media[] = project.media) {
     const plan = storyboardSchema.parse(raw);
-    const prefix = `build_${hash(JSON.stringify(plan))}`;
+    const prefix = `build_${hash(project.activeSequenceId + JSON.stringify(plan))}`;
     const stamp = project.createdAt;
     const seq: Sequence = {
       id: project.activeSequenceId,
@@ -125,7 +128,7 @@ export class TimelineCompiler {
           type: "generated-card",
           source: {
             kind: "generated",
-            document: {
+            document: s.card || {
               layout:
                 i === 0
                   ? "title"
@@ -143,7 +146,9 @@ export class TimelineCompiler {
                   ? "rna"
                   : /protein|translat|ribosome/i.test(s.title)
                     ? "protein"
-                    : "dna",
+                    : /dna|gene|chromosom/i.test(s.title)
+                      ? "dna"
+                      : "none",
               narration: s.narration,
             },
           },
@@ -167,10 +172,10 @@ export class TimelineCompiler {
         id: `${sid}_clip`,
         mediaId: m.id,
         timelineStart: start,
-        sourceStart: 0,
+        sourceStart: s.sourceStart,
         sourceEnd: m.durationSeconds
-          ? Math.min(duration, m.durationSeconds)
-          : duration,
+          ? Math.min(s.sourceStart + duration, m.durationSeconds)
+          : s.sourceStart + duration,
         durationSeconds: duration,
         timingEstimated: estimated,
       });
@@ -213,7 +218,7 @@ export class TimelineCompiler {
               heading: s.branch.targetTitle,
               body: s.branch.targetSummary || "",
               background: "ink",
-              illustration: "mutation",
+              illustration: "none",
             },
           },
           tags: [],

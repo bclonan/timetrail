@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onBeforeUnmount } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import {
   ArrowUpRight,
   Download,
@@ -16,6 +16,8 @@ import { useWorkspace } from "./stores/workspace";
 import { nativeStatus } from "./webmcp/registry";
 import Modal from "./components/common/Modal.vue";
 const w = useWorkspace();
+const route = useRoute();
+const playerMode = computed(() => /^\/(player|watch)\//.test(route.path));
 const exportOpen = ref(false);
 const shareOpen = ref(false);
 const downloadUrl = ref("");
@@ -60,7 +62,7 @@ async function folderExport() {
 </script>
 <template>
   <a class="skip" href="#main">Skip to content</a>
-  <header class="app-header">
+  <header v-if="!playerMode" class="app-header">
     <RouterLink to="/" class="brand"
       ><span class="brand-mark"><Film :size="20" /></span>TimeTrail<span
         class="beta"
@@ -68,6 +70,8 @@ async function folderExport() {
       ></RouterLink
     >
     <nav aria-label="Main navigation">
+      <RouterLink to="/hackathon">WebMCP + hackathon</RouterLink>
+      <RouterLink to="/examples">Prompt library</RouterLink>
       <RouterLink to="/discover"><Compass :size="16" />Discover</RouterLink
       ><RouterLink to="/demo"><Play :size="15" />Demo</RouterLink
       ><RouterLink to="/webmcp"
@@ -148,7 +152,7 @@ async function folderExport() {
         :href="w.shareLink"
         target="_blank"
         rel="noopener noreferrer"
-        >Open Watch<ArrowUpRight :size="16"
+        >Open Player<ArrowUpRight :size="16"
       /></a></div
   ></Modal>
 </template>

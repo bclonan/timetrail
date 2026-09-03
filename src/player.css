@@ -1,0 +1,536 @@
+.film-player {
+  --viewer-accent: #96d9ef;
+  --viewer-aspect: 16/9;
+  background: #101820;
+  color: #e9eff3;
+  min-height: 100vh;
+  padding: 0 clamp(18px, 4vw, 64px) 24px;
+  color-scheme: dark;
+}
+.film-player.theme-paper {
+  background: #f2eee5;
+  color: #18232a;
+  color-scheme: light;
+}
+.film-player.theme-forest {
+  background: #14231e;
+  color: #e5ede3;
+}
+.film-player button,
+.film-player .button {
+  background: transparent;
+  color: inherit;
+  border: 1px solid #8996a34d;
+}
+.film-player button:hover {
+  border-color: var(--viewer-accent);
+}
+.film-player a {
+  color: inherit;
+}
+.film-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 76px;
+  border-bottom: 1px solid #8996a330;
+}
+.film-topbar .eyebrow {
+  margin: 0;
+  color: inherit;
+  opacity: 0.6;
+}
+.film-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.film-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 36px 0 28px;
+}
+.film-heading h1 {
+  font:
+    clamp(32px, 4vw, 58px)/1.1 Georgia,
+    serif;
+  letter-spacing: -0.035em;
+  margin: 10px 0;
+  color: inherit;
+}
+.film-heading p {
+  max-width: 700px;
+  color: inherit;
+  opacity: 0.75;
+  line-height: 1.6;
+  margin: 0;
+}
+.view-switcher {
+  display: flex;
+  gap: 4px;
+  border: 1px solid #8996a340;
+  padding: 4px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.view-switcher button {
+  font-size: 13px;
+  border: 0;
+  padding: 9px 14px;
+  border-radius: 8px;
+}
+.view-switcher button[aria-pressed="true"] {
+  background: var(--viewer-accent);
+  color: #10202b;
+}
+.film-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(290px, 1fr);
+  gap: 28px;
+}
+.film-stage {
+  min-width: 0;
+}
+.film-player .screen,
+.film-player iframe {
+  aspect-ratio: var(--viewer-aspect);
+}
+.film-player .screen iframe {
+  height: 100%;
+}
+.film-player .player-shell {
+  background: #070d13;
+  border: 1px solid #8996a330;
+  box-shadow: 0 12px 40px #0003;
+}
+.film-player .player-controls {
+  background: #17232c;
+  color: #f0f3f5;
+  padding: 12px;
+}
+.film-player .player-controls button {
+  color: inherit;
+}
+.film-player .now-chapter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+  color: inherit;
+}
+.film-player .now-chapter h2 {
+  font-size: 22px;
+  margin: 5px 0 0;
+  color: inherit;
+}
+.film-player .watch-chapters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+.film-player .watch-chapters button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px;
+  height: auto;
+  text-align: left;
+}
+.film-player .watch-chapters button.current {
+  background: #8acadd15;
+  border-color: var(--viewer-accent);
+}
+.film-player .watch-chapters strong {
+  font-size: 14px;
+  color: inherit;
+}
+.film-player .watch-chapters span {
+  color: inherit !important;
+  font-size: 11px;
+  opacity: 0.7;
+}
+.film-player .film-sidebar {
+  min-width: 0;
+}
+.film-player .context-stack {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.film-player .section-heading,
+.film-player .context-intro,
+.film-player .context-empty,
+.film-player .context-empty p {
+  color: inherit;
+}
+.film-player .context-card {
+  background: #809bb512;
+  border-color: #8996a340;
+  color: inherit;
+}
+.film-player .context-card h3,
+.film-player .context-card p,
+.film-player .context-card a {
+  color: inherit;
+}
+.film-player .context-card .quiz-choices button {
+  color: inherit;
+  background: #8aa4bd10;
+}
+.film-player .watch-footer {
+  color: inherit;
+  opacity: 0.7;
+  border-color: #8996a330;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.view-cinema .film-layout {
+  display: block;
+}
+.view-cinema .film-stage {
+  max-width: 1300px;
+  margin: auto;
+}
+.view-cinema .film-sidebar {
+  max-width: 1300px;
+  margin: 28px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.view-classroom .film-layout {
+  grid-template-columns: minmax(0, 2fr) minmax(330px, 1fr);
+}
+.view-explorer .film-layout {
+  grid-template-columns: minmax(300px, 1fr) minmax(0, 2fr);
+}
+.view-explorer .film-stage {
+  grid-column: 2;
+  grid-row: 1;
+}
+.view-explorer .film-sidebar {
+  grid-column: 1;
+  grid-row: 1;
+}
+.portrait .film-stage {
+  max-width: 460px;
+  width: 100%;
+  justify-self: center;
+}
+.viewer-panel {
+  padding: 20px;
+  border: 1px solid #8996a340;
+  border-radius: 12px;
+  background: #8aa4bd0c;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.viewer-panel h3 {
+  font-size: 17px;
+  margin: 0 0 12px;
+  color: inherit;
+}
+.viewer-panel p {
+  color: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+.panel-entry {
+  padding: 10px 0;
+  border-bottom: 1px solid #8996a325;
+  font-size: 13px;
+}
+.panel-entry:last-child {
+  border: 0;
+}
+.panel-entry button {
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  justify-content: flex-start;
+}
+.viewer-panel button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.panel-entry a {
+  display: inline-block;
+  font-size: 11px;
+  margin-top: 8px;
+}
+.panel-entry label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  font-size: 13px;
+}
+.panel-entry input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--viewer-accent);
+}
+.chart-bar {
+  height: 7px;
+  background: var(--viewer-accent);
+  margin: 10px 0;
+  border-radius: 4px;
+  min-width: 2px;
+}
+.viewer-map {
+  height: 210px;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 35% 45%, #9dcccf24 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0 29px, #91c7db20 30px),
+    repeating-linear-gradient(90deg, transparent 0 29px, #91c7db20 30px);
+  border-radius: 8px;
+  border: 1px solid #8996a340;
+}
+.viewer-map .map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  max-width: 130px;
+  padding: 6px 8px;
+  font-size: 11px;
+  border: 1px solid var(--viewer-accent);
+  background: #15242a;
+  color: #eef4f8;
+  border-radius: 6px;
+}
+.transcript-line {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 6px 0;
+  font-size: 12px;
+  padding: 10px;
+  line-height: 1.5;
+}
+.transcript-line[aria-current="true"] {
+  border-left: 3px solid var(--viewer-accent);
+}
+.film-player progress {
+  width: 100%;
+  accent-color: var(--viewer-accent);
+}
+.film-player:fullscreen {
+  overflow: auto;
+}
+.prompt-page {
+  padding-top: 48px;
+  padding-bottom: 60px;
+}
+.prompt-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 36px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.prompt-hero h1 {
+  font: clamp(32px, 4vw, 56px)/1.1 Georgia;
+  max-width: 650px;
+  margin: 15px 0;
+}
+.prompt-feature {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  display: block;
+  background: #111e29;
+}
+.prompt-feature img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+.prompt-feature span {
+  position: absolute;
+  bottom: 20px;
+  left: 22px;
+  color: #fff;
+  font: 24px Georgia;
+}
+.prompt-toolbar {
+  display: flex;
+  gap: 12px;
+  margin: 22px 0;
+}
+.prompt-toolbar input {
+  flex: 1;
+}
+.prompt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.prompt-card {
+  padding: 24px;
+  background: var(--panel, #fff);
+  border: 1px solid var(--line, #ddd);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.prompt-card h2 {
+  font-size: 19px;
+  margin: 0;
+}
+.prompt-card p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+.prompt-card footer {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.prompt-card details {
+  width: 100%;
+}
+.prompt-card details p {
+  padding-top: 12px;
+}
+.creation-actions {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+.source-results {
+  max-height: 55vh;
+  overflow: auto;
+}
+.source-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid #ddd;
+}
+.source-result img {
+  width: 100px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.source-result h3 {
+  margin: 0 0 7px;
+  font-size: 16px;
+}
+.source-result p {
+  font-size: 12px;
+}
+.view-editor-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
+}
+@media (max-width: 1000px) {
+  .film-heading {
+    display: block;
+  }
+  .view-switcher {
+    display: inline-flex;
+    margin-top: 20px;
+  }
+  .film-layout,
+  .view-classroom .film-layout,
+  .view-explorer .film-layout {
+    grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+  }
+  .view-explorer .film-stage,
+  .view-explorer .film-sidebar {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .prompt-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .film-player {
+    padding: 0 14px 20px;
+  }
+  .film-topbar {
+    flex-wrap: wrap;
+    padding: 14px 0;
+  }
+  .film-topbar > .eyebrow {
+    display: none;
+  }
+  .film-layout,
+  .view-classroom .film-layout,
+  .view-explorer .film-layout,
+  .view-cinema .film-sidebar {
+    display: block;
+  }
+  .film-heading {
+    padding: 25px 0;
+  }
+  .film-sidebar {
+    margin-top: 24px;
+  }
+  .film-player .context-stack {
+    display: block;
+  }
+  .film-player .player-controls {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .film-player .scrubber {
+    min-width: 90px;
+  }
+  .film-player .watch-chapters {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .film-player .watch-chapters button {
+    flex: 0 0 155px;
+    scroll-snap-align: start;
+  }
+  .view-switcher button {
+    min-height: 44px;
+  }
+  .portrait .film-stage {
+    margin: auto;
+  }
+  .prompt-hero {
+    display: block;
+  }
+  .prompt-feature {
+    margin-top: 24px;
+  }
+  .prompt-grid {
+    grid-template-columns: 1fr;
+  }
+  .prompt-toolbar {
+    flex-wrap: wrap;
+  }
+  .film-player .watch-footer {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .film-player * {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

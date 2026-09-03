@@ -1,0 +1,401 @@
+{
+  "schemaVersion": "1.0",
+  "id": "example_atlas",
+  "title": "Atlas · Carry the next idea",
+  "slug": "atlas-carry-the-next-idea",
+  "description": "A fictional expedition backpack concept, with original product artwork and interactive specifications.",
+  "topic": "Atlas",
+  "tags": [
+    "Example",
+    "atlas"
+  ],
+  "createdAt": "2026-09-02T12:00:00.000Z",
+  "updatedAt": "2026-09-02T12:00:00.000Z",
+  "activeSequenceId": "example_atlas_main",
+  "sequences": [
+    {
+      "id": "example_atlas_main",
+      "title": "Atlas",
+      "description": "Atlas",
+      "durationSeconds": 60,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_bouvkc_0_clip",
+          "mediaId": "atlas_hero",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 15,
+          "durationSeconds": 15,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_bouvkc_1_clip",
+          "mediaId": "build_bouvkc_1_media",
+          "timelineStart": 15,
+          "sourceStart": 0,
+          "sourceEnd": 15,
+          "durationSeconds": 15,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_bouvkc_2_clip",
+          "mediaId": "atlas_hero",
+          "timelineStart": 30,
+          "sourceStart": 0,
+          "sourceEnd": 15,
+          "durationSeconds": 15,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_bouvkc_3_clip",
+          "mediaId": "build_bouvkc_3_media",
+          "timelineStart": 45,
+          "sourceStart": 0,
+          "sourceEnd": 15,
+          "durationSeconds": 15,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 15,
+          "title": "Carry the next idea",
+          "id": "build_bouvkc_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 15,
+          "body": "Meet Atlas, a fictional backpack concept for a day spent exploring. Every feature in this film is an idea, not a product promise.",
+          "id": "build_bouvkc_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 15,
+          "body": "Meet Atlas, a fictional backpack concept for a day spent exploring. Every feature in this film is an idea, not a product promise.",
+          "id": "build_bouvkc_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 15,
+          "end": 30,
+          "title": "Power, packed",
+          "body": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+          "id": "build_bouvkc_1_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 15,
+          "end": 30,
+          "body": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+          "id": "build_bouvkc_1_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 15,
+          "end": 30,
+          "body": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+          "id": "build_bouvkc_1_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 30,
+          "end": 45,
+          "title": "Follow the light",
+          "id": "build_bouvkc_2_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 30,
+          "end": 45,
+          "body": "An integrated solar panel suggests a way to collect energy along the route. Real output would depend on sunlight, angle and conditions.",
+          "id": "build_bouvkc_2_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 30,
+          "end": 45,
+          "body": "An integrated solar panel suggests a way to collect energy along the route. Real output would depend on sunlight, angle and conditions.",
+          "id": "build_bouvkc_2_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 45,
+          "end": 60,
+          "title": "A quieter kind of navigation",
+          "body": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+          "id": "build_bouvkc_3_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "note",
+          "start": 46,
+          "end": 60,
+          "title": "Concept only",
+          "body": "All specifications and energy allocations are fictional.",
+          "id": "build_bouvkc_3_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 45,
+          "end": 60,
+          "body": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+          "id": "build_bouvkc_3_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 45,
+          "end": 60,
+          "body": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+          "id": "build_bouvkc_3_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "hotspot",
+          "start": 45,
+          "end": 60,
+          "title": "Explore the concept",
+          "body": "Open Specifications above to inspect the design assumptions.",
+          "url": "https://example.com/atlas-concept",
+          "id": "film_example_atlas_0_cue_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "atlas_hero",
+      "name": "Atlas backpack, fictional product concept",
+      "type": "image",
+      "source": {
+        "kind": "remote",
+        "url": "https://timetrail-studio-bclonan.netlify.app/example-assets/atlas.png"
+      },
+      "tags": [
+        "example"
+      ],
+      "attribution": {
+        "creator": "Generated with OpenAI image generation for TimeTrail",
+        "license": "Original generated artwork; fictional product"
+      },
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "demo"
+    },
+    {
+      "id": "build_bouvkc_1_media",
+      "name": "Power, packed",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Power, packed",
+          "body": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_bouvkc_3_media",
+      "name": "A quieter kind of navigation",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "recap",
+          "heading": "A quieter kind of navigation",
+          "body": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    }
+  ],
+  "presentation": {
+    "defaultViewId": "cinema",
+    "views": [
+      {
+        "id": "cinema",
+        "name": "Cinema",
+        "layout": "cinema",
+        "theme": "midnight",
+        "accent": "#f3bd83",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": []
+      },
+      {
+        "id": "research",
+        "name": "Specifications",
+        "layout": "research",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "specs",
+          "power"
+        ]
+      },
+      {
+        "id": "classroom",
+        "name": "Classroom",
+        "layout": "classroom",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "score",
+          "transcript"
+        ]
+      }
+    ],
+    "panels": [
+      {
+        "id": "transcript",
+        "title": "Transcript",
+        "kind": "transcript",
+        "entries": []
+      },
+      {
+        "id": "score",
+        "title": "Your progress",
+        "kind": "score",
+        "entries": []
+      },
+      {
+        "id": "specs",
+        "title": "Fictional specifications",
+        "kind": "facts",
+        "body": "These numbers describe a concept, not a product for sale.",
+        "entries": [
+          {
+            "id": "capacity",
+            "label": "Capacity",
+            "value": 24,
+            "unit": "L"
+          },
+          {
+            "id": "battery",
+            "label": "Battery",
+            "value": 40,
+            "unit": "Wh"
+          },
+          {
+            "id": "panel",
+            "label": "Solar panel",
+            "value": 8,
+            "unit": "W rated concept"
+          }
+        ]
+      },
+      {
+        "id": "power",
+        "title": "Illustrative battery budget",
+        "kind": "chart",
+        "body": "Synthetic demonstration data in watt-hours. No product performance claim.",
+        "entries": [
+          {
+            "id": "phone",
+            "label": "Phone charging",
+            "value": 18,
+            "unit": "Wh",
+            "timeSeconds": 15
+          },
+          {
+            "id": "navigation",
+            "label": "Navigation",
+            "value": 6,
+            "unit": "Wh",
+            "timeSeconds": 45
+          },
+          {
+            "id": "reserve",
+            "label": "Reserve",
+            "value": 16,
+            "unit": "Wh",
+            "timeSeconds": 0
+          }
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "captions": true,
+    "narration": false,
+    "targetSeconds": 60
+  },
+  "provenance": {
+    "creator": "TimeTrail examples",
+    "license": "MIT for project; media credits apply"
+  }
+}

@@ -1,8 +1,11 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import { makeDemo } from "../src/demo/demoProject";
 import { z } from "zod";
 import { projectShape } from "../src/domain/model";
 import { gallerySchema } from "../src/services/GalleryService";
+import { makeExample, recipeIds, recipe } from "../src/demo/exampleRecipes";
+import { smokeScenarios, fullPrompt } from "../src/demo/smokePrompts";
+import { submissionText, demoVideoPrompt } from "../src/demo/hackathon";
 mkdirSync("public/schemas", { recursive: true });
 writeFileSync(
   "public/schemas/project.schema.json",
@@ -49,3 +52,49 @@ const svg =
   }).join("") +
   "</svg>";
 writeFileSync("public/demo-assets/dna.svg", svg);
+mkdirSync("public/examples", { recursive: true });
+const origin =
+  process.env.TIMETRAIL_PUBLIC_ORIGIN ||
+  "https://timetrail-studio-bclonan.netlify.app";
+const catalog = JSON.parse(readFileSync("public/gallery/catalog.json", "utf8"));
+for (const id of recipeIds) {
+  const example = makeExample(id, origin);
+  writeFileSync(`public/gallery/${id}.json`, JSON.stringify(example, null, 2));
+  writeFileSync(
+    `public/examples/${id}-spec.json`,
+    JSON.stringify(recipe(id, origin), null, 2),
+  );
+  catalog.items.push({
+    id: example.id,
+    title: example.title,
+    summary: example.description,
+    creator: example.provenance.creator,
+    tags: example.tags,
+    durationSeconds: example.sequences[0]!.durationSeconds,
+    thumbnail:
+      id === "europa"
+        ? "/example-assets/europa-orbit.png"
+        : id === "atlas"
+          ? "/example-assets/atlas.png"
+          : undefined,
+    projectUrl: `/gallery/${id}.json`,
+    watchUrl: `/player/${example.id}`,
+    license: example.provenance.license,
+  });
+}
+writeFileSync("public/gallery/catalog.json", JSON.stringify(catalog, null, 2));
+const promptDoc =
+  "# TimeTrail creation smoke tests\n\n41 prompts. Five authored example films accompany the library. A prompt is not a passed test. See BUG_LOG.md for measured verification and limits.\n\n" +
+  smokeScenarios
+    .map(
+      (s) =>
+        `## ${s.id}. ${s.title}\n\n${fullPrompt(s)}\n${s.recipe ? `\nAuthored example: ${origin}/player/example_${s.recipe}\n` : ""}`,
+    )
+    .join("\n");
+writeFileSync("docs/SMOKE_PROMPTS.md", promptDoc);
+writeFileSync("public/examples/smoke-prompts.md", promptDoc);
+writeFileSync("public/examples/hackathon-submission.md", submissionText);
+writeFileSync("public/examples/demo-video-prompt.txt", demoVideoPrompt);
+writeFileSync("docs/HACKATHON_SUBMISSION.md", submissionText);
+if (existsSync("docs/BUG_LOG.md"))
+  writeFileSync("public/examples/bug-log.md", readFileSync("docs/BUG_LOG.md"));

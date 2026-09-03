@@ -15,6 +15,7 @@ import {
 } from "../services/GalleryService";
 import { useWorkspace } from "../stores/workspace";
 const w = useWorkspace();
+const shared = computed(() => (w.ephemeral ? w.approved : undefined));
 const router = useRouter();
 const query = ref("");
 const tag = ref("");
@@ -33,6 +34,10 @@ onMounted(() =>
 async function remix(item: GalleryItem) {
   const p = await gallery.open(item);
   w.loadEphemeral(p);
+  const copy = await w.remix();
+  await router.push("/project/" + copy.id);
+}
+async function saveShared() {
   const copy = await w.remix();
   await router.push("/project/" + copy.id);
 }
@@ -64,6 +69,16 @@ async function remix(item: GalleryItem) {
     <p v-for="warning in warnings" :key="warning" class="warning-text">
       {{ warning }}
     </p>
+    <section
+      v-if="shared"
+      class="proposal-card"
+      aria-label="Film from the Player"
+    >
+      <p class="eyebrow">FROM THE PLAYER</p>
+      <h2>{{ shared.title }}</h2>
+      <p>Save your own copy to edit this shared film.</p>
+      <button @click="w.run(saveShared)">Save shared copy</button>
+    </section>
     <section
       v-for="source in ['local', 'published']"
       :key="source"

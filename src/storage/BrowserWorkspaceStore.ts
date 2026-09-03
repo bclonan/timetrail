@@ -52,10 +52,18 @@ export class BrowserWorkspaceStore implements StorageProvider {
   }
   async save(record: ProjectRecord) {
     const db = await this.db();
-    const tx = db.transaction(["projects", "localGalleryIndex"], "readwrite");
+    const tx = db.transaction(
+      ["projects", "projectRevisions", "localGalleryIndex"],
+      "readwrite",
+    );
     await tx
       .objectStore("projects")
       .put({ ...clone(record), id: record.project.id });
+    await tx.objectStore("projectRevisions").put({
+      id: `${record.project.id}_${record.revision}`,
+      project: clone(record.project),
+      revision: record.revision,
+    });
     await tx.objectStore("localGalleryIndex").put({
       id: record.project.id,
       title: record.project.title,

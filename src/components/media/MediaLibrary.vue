@@ -22,6 +22,7 @@ import { exportsService } from "../../services/ExportService";
 import { projects } from "../../services/ProjectService";
 import { clone, id, now, type Media, type Operation } from "../../domain/model";
 import Modal from "../common/Modal.vue";
+import MediaSearch from "./MediaSearch.vue";
 import { storage } from "../../storage/BrowserWorkspaceStore";
 import { cardSvg } from "../../runtime/generatedCard";
 const w = useWorkspace();
@@ -173,6 +174,7 @@ async function createCard() {
     ><button class="text-button" @click="cardOpen = true">
       <Sparkles :size="14" />Create a card
     </button>
+    <MediaSearch />
     <div class="media-list">
       <article v-for="m in resources" :key="m.id" class="media-item">
         <div class="media-icon" :class="m.type">

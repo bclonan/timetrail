@@ -20,10 +20,14 @@ timetrail/
   vite.config.ts
   docs/
     ARCHITECTURE.md
+    ASSET_CREDITS.md
+    BUG_LOG.md
     DECISIONS.md
     DEMO_SCRIPT.md
     FILE_TREE.md
     FRAME_TRAIL_INTEGRATION.md
+    HACKATHON_SUBMISSION.md
+    SMOKE_PROMPTS.md
     VERIFICATION.md
     WEBMCP.md
     demo.png
@@ -34,9 +38,16 @@ timetrail/
     runtime.html
     demo-assets/
       dna.svg
+    example-assets/            Generated images, credited footage, cutaway
+    examples/                  Full prompts, authored production specs, bug log
     gallery/
       catalog.json
       dna.json
+      europa.json
+      phishing.json
+      atlas.json
+      mars.json
+      pizza.json
     schemas/
       gallery.schema.json
       project.schema.json
@@ -49,23 +60,35 @@ timetrail/
     App.vue
     main.ts
     style.css
+    player.css
     components/
       common/Modal.vue
       context/ContextStack.vue
       context/CueInspector.vue
       editor/EditorForms.vue
+      editor/ProductionControls.vue
+      editor/QualityReview.vue
       media/MediaLibrary.vue
+      media/MediaSearch.vue
       player/Player.vue
+      player/PlayerPanels.vue
       proposals/ProposalReview.vue
       timeline/Timeline.vue
       timeline/TimelineItem.vue
       timeline/useTimelineDrag.ts
     demo/
       demoProject.ts
+      exampleRecipes.ts
+      hackathon.ts
+      smokePrompts.ts
     domain/
       model.ts
+      presentation.ts
+      hotspots.ts
     pages/
       DiscoverPage.vue
+      ExamplesPage.vue
+      HackathonPage.vue
       HomePage.vue
       NewProjectPage.vue
       WatchPage.vue
@@ -76,18 +99,27 @@ timetrail/
       frame.ts
       FrameTrailAdapter.ts
       FrameTrailBridge.ts
+      MediaLoadMonitor.ts
       frameTrailMapper.ts
       generatedCard.ts
+      playerPanels.ts
       standaloneClient.ts
     services/
+      AssetTransferService.ts
       ExportService.ts
       GalleryService.ts
+      HotspotService.ts
       MediaImportService.ts
+      MediaSearchService.ts
+      ProductionService.ts
       ProjectService.ts
       ProposalService.ts
+      ProposalReviewPlan.ts
+      QualityService.ts
       ShareService.ts
       TimelineCompiler.ts
       TimelineEditing.ts
+      VideoSourcing.ts
     storage/
       BrowserWorkspaceStore.ts
     stores/
@@ -95,18 +127,27 @@ timetrail/
       workspace.ts
     webmcp/
       editorTools.ts
+      exampleTools.ts
+      productionTools.ts
+      qualityTools.ts
       registry.ts
       ToolRegistry.ts
   tests/
     setup.ts
     e2e/
+      hackathon.spec.ts
       editor.spec.ts
       exports.spec.ts
       media.spec.ts
+      production.spec.ts
+      quality.spec.ts
       studio.spec.ts
       timeline.spec.ts
     unit/
+      media-load.test.ts
       editor.test.ts
+      production.test.ts
+      quality.test.ts
       timeline.test.ts
       domain.test.ts
 ```

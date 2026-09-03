@@ -88,7 +88,11 @@ async function saveClip(remove = false) {
     <div v-if="w.pending.length" class="ghost-lane">
       <span>Agent proposal</span>
       <div>
-        <button v-for="p in w.pending" :key="p.id" @click="w.preview(p)">
+        <button
+          v-for="p in w.pending"
+          :key="p.id"
+          @click="w.run(() => w.preview(p))"
+        >
           <span class="ghost-dot" />{{ p.title }} · +{{ p.summary.cuesAdded }}
           cues
         </button>

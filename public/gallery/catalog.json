@@ -17,6 +17,79 @@
       "projectUrl": "/gallery/dna.json",
       "watchUrl": "/watch/published_dna",
       "license": "MIT"
+    },
+    {
+      "id": "example_europa",
+      "title": "Europa · Beneath the silence",
+      "summary": "An ocean world, a sheet of ice, and questions we are learning how to ask. NASA footage with original artist concepts and a schematic cutaway.",
+      "creator": "TimeTrail examples",
+      "tags": [
+        "Space",
+        "Documentary",
+        "Interactive"
+      ],
+      "durationSeconds": 150,
+      "thumbnail": "/example-assets/europa-orbit.png",
+      "projectUrl": "/gallery/europa.json",
+      "watchUrl": "/player/example_europa",
+      "license": "MIT for project; media credits apply"
+    },
+    {
+      "id": "example_phishing",
+      "title": "The email at 4:59",
+      "summary": "A fictional security exercise. Investigate an urgent email, choose a response and see the consequences.",
+      "creator": "TimeTrail examples",
+      "tags": [
+        "Example",
+        "phishing"
+      ],
+      "durationSeconds": 30,
+      "projectUrl": "/gallery/phishing.json",
+      "watchUrl": "/player/example_phishing",
+      "license": "MIT for project; media credits apply"
+    },
+    {
+      "id": "example_atlas",
+      "title": "Atlas · Carry the next idea",
+      "summary": "A fictional expedition backpack concept, with original product artwork and interactive specifications.",
+      "creator": "TimeTrail examples",
+      "tags": [
+        "Example",
+        "atlas"
+      ],
+      "durationSeconds": 60,
+      "thumbnail": "/example-assets/atlas.png",
+      "projectUrl": "/gallery/atlas.json",
+      "watchUrl": "/player/example_atlas",
+      "license": "MIT for project; media credits apply"
+    },
+    {
+      "id": "example_mars",
+      "title": "Mars · Five decisions before sunrise",
+      "summary": "A classroom exercise about the systems a crew would need. Generated title cards, five questions and a transcript.",
+      "creator": "TimeTrail examples",
+      "tags": [
+        "Example",
+        "mars"
+      ],
+      "durationSeconds": 120,
+      "projectUrl": "/gallery/mars.json",
+      "watchUrl": "/player/example_mars",
+      "license": "MIT for project; media credits apply"
+    },
+    {
+      "id": "example_pizza",
+      "title": "Pizza · A little order before the oven",
+      "summary": "A cook-along demonstration with an ingredient checklist and a playhead-based timer. Text-led sample recipe.",
+      "creator": "TimeTrail examples",
+      "tags": [
+        "Example",
+        "pizza"
+      ],
+      "durationSeconds": 90,
+      "projectUrl": "/gallery/pizza.json",
+      "watchUrl": "/player/example_pizza",
+      "license": "MIT for project; media credits apply"
     }
   ]
 }

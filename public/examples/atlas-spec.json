@@ -1,0 +1,202 @@
+{
+  "media": [
+    {
+      "id": "atlas_hero",
+      "name": "Atlas backpack, fictional product concept",
+      "type": "image",
+      "source": {
+        "kind": "remote",
+        "url": "https://timetrail-studio-bclonan.netlify.app/example-assets/atlas.png"
+      },
+      "importedBy": "demo",
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "tags": [
+        "example"
+      ],
+      "attribution": {
+        "creator": "Generated with OpenAI image generation for TimeTrail",
+        "license": "Original generated artwork; fictional product"
+      }
+    }
+  ],
+  "spec": {
+    "title": "Atlas · Carry the next idea",
+    "description": "A fictional expedition backpack concept, with original product artwork and interactive specifications.",
+    "presentation": {
+      "defaultViewId": "cinema",
+      "views": [
+        {
+          "id": "cinema",
+          "name": "Cinema",
+          "layout": "cinema",
+          "theme": "midnight",
+          "accent": "#f3bd83",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": []
+        },
+        {
+          "id": "research",
+          "name": "Specifications",
+          "layout": "research",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "specs",
+            "power"
+          ]
+        },
+        {
+          "id": "classroom",
+          "name": "Classroom",
+          "layout": "classroom",
+          "theme": "midnight",
+          "accent": "#96d9ef",
+          "aspect": "16:9",
+          "context": true,
+          "chapters": true,
+          "panels": [
+            "score",
+            "transcript"
+          ]
+        }
+      ],
+      "panels": [
+        {
+          "id": "transcript",
+          "title": "Transcript",
+          "kind": "transcript",
+          "entries": []
+        },
+        {
+          "id": "score",
+          "title": "Your progress",
+          "kind": "score",
+          "entries": []
+        },
+        {
+          "id": "specs",
+          "kind": "facts",
+          "title": "Fictional specifications",
+          "body": "These numbers describe a concept, not a product for sale.",
+          "entries": [
+            {
+              "id": "capacity",
+              "label": "Capacity",
+              "value": 24,
+              "unit": "L"
+            },
+            {
+              "id": "battery",
+              "label": "Battery",
+              "value": 40,
+              "unit": "Wh"
+            },
+            {
+              "id": "panel",
+              "label": "Solar panel",
+              "value": 8,
+              "unit": "W rated concept"
+            }
+          ]
+        },
+        {
+          "id": "power",
+          "kind": "chart",
+          "title": "Illustrative battery budget",
+          "body": "Synthetic demonstration data in watt-hours. No product performance claim.",
+          "entries": [
+            {
+              "id": "phone",
+              "label": "Phone charging",
+              "value": 18,
+              "unit": "Wh",
+              "timeSeconds": 15
+            },
+            {
+              "id": "navigation",
+              "label": "Navigation",
+              "value": 6,
+              "unit": "Wh",
+              "timeSeconds": 45
+            },
+            {
+              "id": "reserve",
+              "label": "Reserve",
+              "value": 16,
+              "unit": "Wh",
+              "timeSeconds": 0
+            }
+          ]
+        }
+      ]
+    },
+    "sequences": [
+      {
+        "key": "main",
+        "storyboard": {
+          "title": "Atlas",
+          "topic": "Atlas",
+          "targetSeconds": 60,
+          "segments": [
+            {
+              "title": "Carry the next idea",
+              "mediaId": "atlas_hero",
+              "narration": "Meet Atlas, a fictional backpack concept for a day spent exploring. Every feature in this film is an idea, not a product promise."
+            },
+            {
+              "title": "Power, packed",
+              "summary": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+              "narration": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+              "card": {
+                "layout": "concept",
+                "heading": "Power, packed",
+                "body": "A fictional 40 Wh battery gives this concept a simple design brief: keep small devices ready without turning a backpack into a power station.",
+                "background": "ink",
+                "illustration": "none"
+              }
+            },
+            {
+              "title": "Follow the light",
+              "mediaId": "atlas_hero",
+              "narration": "An integrated solar panel suggests a way to collect energy along the route. Real output would depend on sunlight, angle and conditions."
+            },
+            {
+              "title": "A quieter kind of navigation",
+              "summary": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+              "narration": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+              "card": {
+                "layout": "recap",
+                "heading": "A quieter kind of navigation",
+                "body": "A small directional cue keeps attention on the trail. Open Specifications to explore the concept. This is a design demonstration, not a checkout.",
+                "background": "ink",
+                "illustration": "none"
+              },
+              "cards": [
+                {
+                  "kind": "note",
+                  "title": "Concept only",
+                  "body": "All specifications and energy allocations are fictional."
+                }
+              ]
+            }
+          ]
+        },
+        "cues": [
+          {
+            "kind": "hotspot",
+            "title": "Explore the concept",
+            "start": 45,
+            "end": 60,
+            "body": "Open Specifications above to inspect the design assumptions.",
+            "url": "https://example.com/atlas-concept"
+          }
+        ]
+      }
+    ]
+  }
+}

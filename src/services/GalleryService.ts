@@ -2,6 +2,7 @@ import Fuse from "fuse.js";
 import { z } from "zod";
 import { projectSchema, safeUrl, type Project } from "../domain/model";
 import { storage } from "../storage/BrowserWorkspaceStore";
+import { recipeIds, makeExample, type RecipeId } from "../demo/exampleRecipes";
 export const gallerySchema = z.object({
   version: z.literal(1),
   updatedAt: z.string(),
@@ -118,6 +119,14 @@ export class GalleryService {
       if (!r) throw new Error("Local project not found.");
       return r.project;
     }
+    if (
+      recipeIds.some((id) => item.id === `example_${id}`) &&
+      new URL(item.projectUrl!).origin === location.origin
+    )
+      return makeExample(
+        item.id.replace("example_", "") as RecipeId,
+        location.origin,
+      );
     const r = await fetch(safeUrl(item.projectUrl!), {
       signal: AbortSignal.timeout(8000),
       credentials: "omit",

@@ -1,0 +1,571 @@
+{
+  "schemaVersion": "1.0",
+  "id": "example_mars",
+  "title": "Mars · Five decisions before sunrise",
+  "slug": "mars-five-decisions-before-sunrise",
+  "description": "A classroom exercise about the systems a crew would need. Generated title cards, five questions and a transcript.",
+  "topic": "Five decisions",
+  "tags": [
+    "Example",
+    "mars"
+  ],
+  "createdAt": "2026-09-02T12:00:00.000Z",
+  "updatedAt": "2026-09-02T12:00:00.000Z",
+  "activeSequenceId": "example_mars_main",
+  "sequences": [
+    {
+      "id": "example_mars_main",
+      "title": "Five decisions",
+      "description": "Five decisions",
+      "durationSeconds": 120,
+      "baseMode": "generated-canvas",
+      "clips": [
+        {
+          "id": "build_1rxs9y6_0_clip",
+          "mediaId": "build_1rxs9y6_0_media",
+          "timelineStart": 0,
+          "sourceStart": 0,
+          "sourceEnd": 24,
+          "durationSeconds": 24,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_1rxs9y6_1_clip",
+          "mediaId": "build_1rxs9y6_1_media",
+          "timelineStart": 24,
+          "sourceStart": 0,
+          "sourceEnd": 24,
+          "durationSeconds": 24,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_1rxs9y6_2_clip",
+          "mediaId": "build_1rxs9y6_2_media",
+          "timelineStart": 48,
+          "sourceStart": 0,
+          "sourceEnd": 24,
+          "durationSeconds": 24,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_1rxs9y6_3_clip",
+          "mediaId": "build_1rxs9y6_3_media",
+          "timelineStart": 72,
+          "sourceStart": 0,
+          "sourceEnd": 24,
+          "durationSeconds": 24,
+          "timingEstimated": false
+        },
+        {
+          "id": "build_1rxs9y6_4_clip",
+          "mediaId": "build_1rxs9y6_4_media",
+          "timelineStart": 96,
+          "sourceStart": 0,
+          "sourceEnd": 24,
+          "durationSeconds": 24,
+          "timingEstimated": false
+        }
+      ],
+      "cues": [
+        {
+          "kind": "chapter",
+          "start": 0,
+          "end": 24,
+          "title": "Air",
+          "body": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+          "id": "build_1rxs9y6_0_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 1,
+          "end": 24,
+          "title": "NASA Mars overview",
+          "body": "Background reading on the Martian environment.",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "id": "build_1rxs9y6_0_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 0,
+          "end": 24,
+          "body": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+          "id": "build_1rxs9y6_0_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 0,
+          "end": 24,
+          "body": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+          "id": "build_1rxs9y6_0_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "quiz",
+          "start": 16,
+          "end": 24,
+          "title": "Check your understanding",
+          "quiz": {
+            "question": "What provides breathable air?",
+            "options": [
+              "A life-support system",
+              "The open Martian atmosphere"
+            ],
+            "answerIndex": 0,
+            "explanation": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+            "retryTime": 0
+          },
+          "id": "build_1rxs9y6_0_quiz",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 24,
+          "end": 48,
+          "title": "Shelter",
+          "body": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+          "id": "build_1rxs9y6_1_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 25,
+          "end": 48,
+          "title": "NASA Mars overview",
+          "body": "Background reading on the Martian environment.",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "id": "build_1rxs9y6_1_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 24,
+          "end": 48,
+          "body": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+          "id": "build_1rxs9y6_1_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 24,
+          "end": 48,
+          "body": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+          "id": "build_1rxs9y6_1_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "quiz",
+          "start": 40,
+          "end": 48,
+          "title": "Check your understanding",
+          "quiz": {
+            "question": "Which shelter function matters?",
+            "options": [
+              "Maintaining pressure",
+              "Having an open roof"
+            ],
+            "answerIndex": 0,
+            "explanation": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+            "retryTime": 24
+          },
+          "id": "build_1rxs9y6_1_quiz",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 48,
+          "end": 72,
+          "title": "Water",
+          "body": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+          "id": "build_1rxs9y6_2_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 49,
+          "end": 72,
+          "title": "NASA Mars overview",
+          "body": "Background reading on the Martian environment.",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "id": "build_1rxs9y6_2_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 48,
+          "end": 72,
+          "body": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+          "id": "build_1rxs9y6_2_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 48,
+          "end": 72,
+          "body": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+          "id": "build_1rxs9y6_2_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "quiz",
+          "start": 64,
+          "end": 72,
+          "title": "Check your understanding",
+          "quiz": {
+            "question": "What makes water usable?",
+            "options": [
+              "Verification and treatment",
+              "Its appearance in a picture"
+            ],
+            "answerIndex": 0,
+            "explanation": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+            "retryTime": 48
+          },
+          "id": "build_1rxs9y6_2_quiz",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 72,
+          "end": 96,
+          "title": "Power",
+          "body": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+          "id": "build_1rxs9y6_3_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 73,
+          "end": 96,
+          "title": "NASA Mars overview",
+          "body": "Background reading on the Martian environment.",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "id": "build_1rxs9y6_3_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 72,
+          "end": 96,
+          "body": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+          "id": "build_1rxs9y6_3_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 72,
+          "end": 96,
+          "body": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+          "id": "build_1rxs9y6_3_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "quiz",
+          "start": 88,
+          "end": 96,
+          "title": "Check your understanding",
+          "quiz": {
+            "question": "Why keep an energy reserve?",
+            "options": [
+              "To handle interruptions",
+              "To replace all maintenance"
+            ],
+            "answerIndex": 0,
+            "explanation": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+            "retryTime": 72
+          },
+          "id": "build_1rxs9y6_3_quiz",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "chapter",
+          "start": 96,
+          "end": 120,
+          "title": "Communication",
+          "body": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+          "id": "build_1rxs9y6_4_chapter",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "source",
+          "start": 97,
+          "end": 120,
+          "title": "NASA Mars overview",
+          "body": "Background reading on the Martian environment.",
+          "url": "https://science.nasa.gov/mars/facts/",
+          "id": "build_1rxs9y6_4_card_0",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "caption",
+          "start": 96,
+          "end": 120,
+          "body": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+          "id": "build_1rxs9y6_4_caption",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "narration",
+          "start": 96,
+          "end": 120,
+          "body": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+          "id": "build_1rxs9y6_4_narration",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        },
+        {
+          "kind": "quiz",
+          "start": 112,
+          "end": 120,
+          "title": "Check your understanding",
+          "quiz": {
+            "question": "How should crews plan decisions?",
+            "options": [
+              "Allow for communication delays",
+              "Assume instant replies"
+            ],
+            "answerIndex": 0,
+            "explanation": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+            "retryTime": 96
+          },
+          "id": "build_1rxs9y6_4_quiz",
+          "provenance": {
+            "createdBy": "agent",
+            "createdAt": "2026-09-02T12:00:00.000Z"
+          }
+        }
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "build_1rxs9y6_0_media",
+      "name": "Air",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Air",
+          "body": "A spacesuit is an independent life-support system. Mars' thin atmosphere cannot supply breathable air.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_1rxs9y6_1_media",
+      "name": "Shelter",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Shelter",
+          "body": "A habitat must manage pressure and temperature. A beautiful view does not replace those systems.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_1rxs9y6_2_media",
+      "name": "Water",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Water",
+          "body": "A mission needs a verified water supply and recycling plan. A photograph alone cannot establish safe drinking water.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_1rxs9y6_3_media",
+      "name": "Power",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Power",
+          "body": "Life support needs dependable energy and reserves. Plan for interruptions rather than assuming constant generation.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    },
+    {
+      "id": "build_1rxs9y6_4_media",
+      "name": "Communication",
+      "type": "generated-card",
+      "source": {
+        "kind": "generated",
+        "document": {
+          "layout": "concept",
+          "heading": "Communication",
+          "body": "Communication across interplanetary distances takes time. Astronauts need procedures they can carry out without instant replies.",
+          "illustration": "none",
+          "background": "ink"
+        }
+      },
+      "tags": [],
+      "importedAt": "2026-09-02T12:00:00.000Z",
+      "importedBy": "agent"
+    }
+  ],
+  "presentation": {
+    "defaultViewId": "classroom",
+    "views": [
+      {
+        "id": "cinema",
+        "name": "Cinema",
+        "layout": "cinema",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": []
+      },
+      {
+        "id": "research",
+        "name": "Research",
+        "layout": "research",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "transcript"
+        ]
+      },
+      {
+        "id": "classroom",
+        "name": "Classroom",
+        "layout": "classroom",
+        "theme": "midnight",
+        "accent": "#96d9ef",
+        "aspect": "16:9",
+        "context": true,
+        "chapters": true,
+        "panels": [
+          "score",
+          "transcript"
+        ]
+      }
+    ],
+    "panels": [
+      {
+        "id": "transcript",
+        "title": "Transcript",
+        "kind": "transcript",
+        "entries": []
+      },
+      {
+        "id": "score",
+        "title": "Your progress",
+        "kind": "score",
+        "entries": []
+      }
+    ]
+  },
+  "settings": {
+    "captions": true,
+    "narration": false,
+    "targetSeconds": 120
+  },
+  "provenance": {
+    "creator": "TimeTrail examples",
+    "license": "MIT for project; media credits apply"
+  }
+}

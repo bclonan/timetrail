@@ -179,7 +179,9 @@ describe("transactional storage and proposals", () => {
     const { db, proposal, r, p } = await setup();
     const prop = await proposal.create(r, "Draft", [note(p.activeSequenceId)]);
     expect((await db.record(p.id))?.revision).toBe(0);
-    expect(proposal.preview(r, prop).sequences[0]!.cues).toHaveLength(1);
+    expect((await proposal.preview(r, prop)).sequences[0]!.cues).toHaveLength(
+      1,
+    );
     expect((await db.record(p.id))?.project.sequences[0]!.cues).toHaveLength(0);
   });
   it("accepts an entire proposal atomically and once", async () => {
@@ -228,13 +230,14 @@ describe("transactional storage and proposals", () => {
       "1": "rejected",
     });
   });
-  it("rejects stale proposals and concurrent commits", async () => {
+  it("accepts an unrelated older proposal but rejects concurrent commits", async () => {
     const { proposal, r, p, ps } = await setup();
     const prop = await proposal.create(r, "Draft", [note(p.activeSequenceId)]);
     await ps.commit(p.id, [note(p.activeSequenceId)], 0);
-    await expect(proposal.review(p.id, [prop.id], "accept", 1)).rejects.toThrow(
-      "stale",
-    );
+    expect(
+      (await proposal.review(p.id, [prop.id], "accept", 1)).project
+        .sequences[0]!.cues,
+    ).toHaveLength(2);
     await expect(
       ps.commit(p.id, [note(p.activeSequenceId)], 0),
     ).rejects.toThrow("changed");

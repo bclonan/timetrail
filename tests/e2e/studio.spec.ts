@@ -84,7 +84,10 @@ test("human and agent workflow, persistence, share, remix, gallery, and lab", as
   await expect(
     watch.getByRole("heading", { name: "DNA field notes", exact: true }),
   ).toBeVisible();
-  await watch.getByRole("button", { name: "Remix & save locally" }).click();
+  await watch.getByRole("link", { name: "Film library", exact: true }).click();
+  await watch
+    .getByRole("button", { name: "Save shared copy", exact: true })
+    .click();
   await expect(watch).toHaveURL(/\/project\//);
   await watch.getByRole("link", { name: "Discover", exact: true }).click();
   await watch.getByLabel("Search creations").fill("DNA field notes remix");
