@@ -2719,3 +2719,19 @@ code {
   outline-offset: 2px;
   z-index: 3;
 }
+.picture-controls {
+  position: absolute;
+  pointer-events: none;
+}
+.screen.has-layout-areas {
+  width: 100%;
+  aspect-ratio: auto !important;
+  height: 520px;
+  min-height: 520px;
+}
+@media (max-width: 650px) {
+  .screen.has-layout-areas {
+    height: 620px;
+    min-height: 620px;
+  }
+}

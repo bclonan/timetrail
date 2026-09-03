@@ -9,7 +9,12 @@ import {
   type Project,
   type ProjectRecord,
 } from "../domain/model";
-import { hotspotAppearance } from "../domain/hotspots";
+import {
+  hotspotAppearance,
+  positionForCue,
+  isIndicator,
+  annotationKinds,
+} from "../domain/hotspots";
 import { hotspotPosition } from "./HotspotService";
 import { probeMetadata } from "./MediaImportService";
 import { storage } from "../storage/BrowserWorkspaceStore";
@@ -45,11 +50,6 @@ export type QualityReport = {
 };
 const end = (c: Cue, seconds: number) =>
   Math.min(c.end ?? c.start + 5, seconds);
-const rect = (c: Cue) =>
-  c.position ||
-  (c.quiz
-    ? { x: 8, y: 12, width: 84, height: 74 }
-    : { x: 60, y: 72, width: 34, height: 14 });
 const luminance = (hex: string) => {
   const rgb = [1, 3, 5]
     .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
@@ -144,8 +144,9 @@ export function analyzeQuality(
         message: `No clip from ${until.toFixed(1)}s to the end at ${s.durationSeconds.toFixed(1)}s.`,
       });
     const interactive = s.cues.filter((c) =>
-      ["hotspot", "branch", "quiz"].includes(c.kind),
+      [...annotationKinds, "branch", "quiz"].includes(c.kind),
     );
+    const rect = (c: Cue) => positionForCue(c, s.cues);
     const hotspots = interactive.filter((c) => !c.quiz);
     const signatures = new Map<string, Cue>();
     const obstructed = new Set<string>();
@@ -202,8 +203,7 @@ export function analyzeQuality(
         !cue.quiz &&
         (p.width * p.height > 3000 ||
           p.y + p.height > 88 ||
-          p.width < 4 ||
-          p.height < 4)
+          (!isIndicator(cue) && (p.width < 4 || p.height < 4)))
       )
         obstructed.add(cue.id);
       if (end(cue, s.durationSeconds) - cue.start < 2)

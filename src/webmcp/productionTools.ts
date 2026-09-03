@@ -335,7 +335,10 @@ export function createProductionTools(
         const activeQuizzes =
           w.sequence?.cues.filter(
             (c) =>
-              c.quiz && w.time >= c.start && w.time < (c.end ?? c.start + 5),
+              c.quiz &&
+              !w.dismissedQuizIds.includes(c.id) &&
+              w.time >= c.start &&
+              w.time < (c.end ?? c.start + 5),
           ) || [];
         const ended = Boolean(
           w.sequence && w.time >= w.sequence.durationSeconds - 0.05,

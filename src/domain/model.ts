@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ulid } from "ulid";
 import { presentationSchema } from "./presentation";
 import { hotspotStyleSchema } from "./hotspots";
+import { layoutAreasSchema } from "./layoutAreas";
 
 export const id = () => ulid();
 export const now = () => new Date().toISOString();
@@ -183,6 +184,7 @@ export const sequenceSchema = z.object({
   clips: z.array(clipSchema).max(300),
   cues: z.array(cueSchema).max(1000),
   narrationEnabled: z.boolean().optional(),
+  layoutAreas: layoutAreasSchema.optional(),
 });
 export const projectShape = z.object({
   schemaVersion: z.literal("1.0"),

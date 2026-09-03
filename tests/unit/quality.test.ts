@@ -163,6 +163,31 @@ describe("proposal acceptance repair", () => {
   });
 });
 describe("hotspot and full-film quality review", () => {
+  it("maps plain notes to compact indicators and preserves explicit custom boxes", () => {
+    const note = {
+      ...cue("A long note title"),
+      kind: "note" as const,
+      position: undefined,
+      style: undefined,
+    };
+    const marker = interactiveContents([note], "main")[0]!;
+    expect(marker.target.selector.value).toContain("xywh=percent:6,8,4,7");
+    expect(marker.body["frametrail:attributes"]).toMatchObject({
+      text: "i",
+      shape: "circle",
+    });
+    const custom = {
+      ...note,
+      position: { x: 10, y: 20, width: 24, height: 12 },
+      style: { preset: "filled" as const, backgroundColor: "#123456" },
+    };
+    const mapped = interactiveContents([custom], "main")[0]!;
+    expect(mapped.target.selector.value).toContain("xywh=percent:10,20,24,12");
+    expect(mapped.body["frametrail:attributes"]).toMatchObject({
+      text: note.title,
+      backgroundColor: "#123456",
+    });
+  });
   it("renders validated custom styles and rejects unsafe color strings", () => {
     const c = cue("Custom");
     c.style = {

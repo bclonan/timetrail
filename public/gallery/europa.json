@@ -404,7 +404,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     },
     {
       "id": "film_example_europa_ice",
@@ -486,7 +487,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     },
     {
       "id": "film_example_europa_ocean",
@@ -568,7 +570,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     }
   ],
   "media": [

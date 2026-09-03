@@ -9,9 +9,12 @@ import {
   mediaUrl,
   interactiveContents,
 } from "./frameTrailMapper";
-import { escapeHtml } from "./generatedCard";
 import type { Project } from "../domain/model";
 import { MediaLoadMonitor } from "./MediaLoadMonitor";
+import { QuizOverlay } from "./QuizOverlay";
+import { AnnotationIndicators } from "./AnnotationIndicators";
+import { hasIndicator } from "../domain/hotspots";
+import { LayoutAreaBridge } from "./LayoutAreaBridge";
 interface FrameTrailPlayer {
   play(): void;
   pause(): void;
@@ -134,6 +137,59 @@ function resolveInlineData<T>(data: T): T {
 }
 const origin = window.origin;
 const send = (m: RuntimeMessage) => parent.postMessage(m, origin);
+const layout = new LayoutAreaBridge(send, (time) => {
+  if (instance && Number.isFinite(time)) {
+    instance.currentTime = Math.min(
+      time,
+      project.sequences.find((s) => s.id === sequenceId)!.durationSeconds,
+    );
+    report();
+  }
+});
+function resumePlayback() {
+  resumeAfterLoad = mediaState === "loading";
+  if (mediaState !== "ready") return;
+  playing = true;
+  instance?.play();
+  report();
+}
+const quizOverlay = new QuizOverlay({
+  pause: () => {
+    playing = false;
+    instance?.pause();
+    if (nativeReady) native?.pause();
+  },
+  answer: (cueId, answerIndex) =>
+    send({ type: "TIMETRAIL_QUIZ_ANSWERED", cueId, answerIndex }),
+  dismiss: (cueId) => send({ type: "TIMETRAIL_QUIZ_DISMISSED", cueId }),
+  resume: resumePlayback,
+});
+const indicators = new AnnotationIndicators((cue) =>
+  send({ type: "TIMETRAIL_SELECTION_CHANGED", cueId: cue.id }),
+);
+for (const id of [
+  "media-player",
+  "media-status",
+  "offline",
+  "timetrail-quiz",
+  "annotation-indicators",
+  "annotation-detail",
+])
+  layout.picture.append(document.getElementById(id)!);
+function runtimeContents() {
+  const contents = toFrameTrailContents(project, sequenceId, assets);
+  const indicatorIds = new Set(
+    project.sequences.flatMap((s) =>
+      s.cues.filter(hasIndicator).map((c) => c.id),
+    ),
+  );
+  // The portable mapper retains FrameTrail quizzes; this runtime renders one shared quiz layer.
+  for (const content of contents)
+    content.hypervideo.contents = content.hypervideo.contents.filter(
+      (c) => c.body["frametrail:type"] !== "quiz" && !indicatorIds.has(c.id),
+    );
+  return contents;
+}
 function onOverlayClick(event: CustomEvent<{ name: string }>) {
   const cue = project.sequences
     .find((s) => s.id === sequenceId)
@@ -145,27 +201,18 @@ function onOverlayClick(event: CustomEvent<{ name: string }>) {
       sequenceId: cue.branch.targetSequenceId,
       timeSeconds: cue.branch.targetTime,
     });
-  else if (cue?.kind === "hotspot") {
+  else if (cue) {
     send({ type: "TIMETRAIL_SELECTION_CHANGED", cueId: cue.id });
-    if (cue.url) window.open(cue.url, "_blank", "noopener,noreferrer");
+    if (cue.body) indicators.open(cue);
+    else if (cue.url) window.open(cue.url, "_blank", "noopener,noreferrer");
   }
-}
-function onQuizAnswered(
-  event: CustomEvent<{ question: string; answer: string }>,
-) {
-  const cue = project.sequences
-    .find((s) => s.id === sequenceId)
-    ?.cues.find(
-      (c) => c.quiz && escapeHtml(c.quiz.question) === event.detail.question,
-    );
-  const answerIndex = cue?.quiz?.options.indexOf(event.detail.answer);
-  if (cue && answerIndex !== undefined && answerIndex >= 0)
-    send({ type: "TIMETRAIL_QUIZ_ANSWERED", cueId: cue.id, answerIndex });
 }
 function report() {
   if (!instance || !project) return;
   const s = project.sequences.find((s) => s.id === sequenceId)!;
   const time = Math.min(instance.currentTime, s.durationSeconds);
+  indicators.update(s.cues, time);
+  quizOverlay.update(s.cues, time);
   send({
     type: "TIMETRAIL_PLAYHEAD",
     currentTime: time,
@@ -214,19 +261,22 @@ function syncVideo(time: number, isPlaying: boolean) {
       native.destroy();
       container = document.createElement("div");
       container.id = "media-player";
-      document.body.append(container);
+      layout.picture.append(container);
     }
     container.replaceChildren();
     activeMedia = clip.id;
     nativeReady = false;
     nativePlaying = false;
-    const data = toFrameTrailContents(project, sequenceId, assets)[
-      project.sequences.findIndex((s) => s.id === sequenceId)
-    ]!;
+    const data =
+      runtimeContents()[
+        project.sequences.findIndex((s) => s.id === sequenceId)
+      ]!;
     data.hypervideo.contents = interactiveContents(
       seq.cues
         .filter(
           (c) =>
+            !c.quiz &&
+            !hasIndicator(c) &&
             c.start < clip.timelineStart + clip.durationSeconds &&
             (c.end ?? c.start + 5) > clip.timelineStart,
         )
@@ -246,6 +296,15 @@ function syncVideo(time: number, isPlaying: boolean) {
       ...data,
       hypervideo: {
         ...data.hypervideo,
+        config: {
+          ...data.hypervideo.config,
+          layoutArea: {
+            areaTop: [],
+            areaBottom: [],
+            areaLeft: [],
+            areaRight: [],
+          },
+        },
         clips: [
           {
             src: mediaUrl(m, assets),
@@ -292,7 +351,6 @@ function syncVideo(time: number, isPlaying: boolean) {
           onPlay: () => (nativePlaying = true),
           onPause: () => (nativePlaying = false),
           onOverlayClick,
-          onQuizAnswered,
         },
       },
       "PlayerLauncher",
@@ -329,6 +387,21 @@ function syncVideo(time: number, isPlaying: boolean) {
   }
 }
 function init(start: number) {
+  layout.disconnect();
+  document.body.classList.toggle(
+    "has-side-areas",
+    Boolean(
+      project.sequences
+        .find((s) => s.id === sequenceId)
+        ?.layoutAreas?.some((a) => a.area === "left" || a.area === "right"),
+    ),
+  );
+  document.body.classList.toggle(
+    "has-layout-areas",
+    Boolean(
+      project.sequences.find((s) => s.id === sequenceId)?.layoutAreas?.length,
+    ),
+  );
   mediaMonitor?.destroy();
   mediaMonitor = undefined;
   mediaState = "ready";
@@ -348,7 +421,7 @@ function init(start: number) {
     const host = document.createElement("div");
     host.id = "media-player";
     host.hidden = true;
-    document.body.append(host);
+    layout.picture.append(host);
   }
   native = undefined;
   nativeReady = false;
@@ -367,15 +440,14 @@ function init(start: number) {
         autohideControls: true,
         allowFullscreen: false,
       },
-      contents: resolveInlineData(
-        toFrameTrailContents(project, sequenceId, assets),
-      ),
+      contents: resolveInlineData(runtimeContents()),
       resources: resolveInlineData(toFrameTrailResources(project, assets)),
       events: {
         onReady: () => {
           setTimeout(() => {
             if (instance) instance.currentTime = start;
             runtimeReady = true;
+            layout.mount();
             send({ type: "TIMETRAIL_READY", revision });
             report();
           }, 20);
@@ -394,7 +466,6 @@ function init(start: number) {
           report();
         },
         onOverlayClick,
-        onQuizAnswered,
       },
     },
     "PlayerLauncher",
@@ -428,6 +499,8 @@ window.addEventListener("message", (event) => {
       sequenceId = m.sequenceId;
       revision = m.revision;
       assets = m.assetUrls;
+      indicators.reset();
+      quizOverlay.reset(m.quizState || { answers: {}, dismissedCueIds: [] });
       for (const value of Object.values(assets))
         if (
           !value.startsWith(`blob:${origin}/`) &&
@@ -440,6 +513,13 @@ window.addEventListener("message", (event) => {
         )
           throw new Error("Invalid asset address.");
       init(m.startTime);
+    } else if (m.type === "TIMETRAIL_QUIZ_STATE") {
+      quizOverlay.setState(m.state);
+      if (project && instance)
+        quizOverlay.update(
+          project.sequences.find((s) => s.id === sequenceId)!.cues,
+          instance.currentTime,
+        );
     } else if (m.type === "TIMETRAIL_PLAYBACK") {
       if (!instance) return;
       if (m.action === "retry-media" || m.action === "skip-media") {
@@ -454,6 +534,7 @@ window.addEventListener("message", (event) => {
           throw new Error("Seek is outside the sequence.");
         instance.currentTime = m.timeSeconds;
       } else {
+        if (m.action === "play") quizOverlay.close(false);
         resumeAfterLoad = m.action === "play" && mediaState === "loading";
         if (m.action === "play" && mediaState !== "ready") {
           report();
@@ -467,6 +548,7 @@ window.addEventListener("message", (event) => {
       if (m.cueId)
         send({ type: "TIMETRAIL_SELECTION_CHANGED", cueId: m.cueId });
     } else if (m.type === "TIMETRAIL_DESTROY") {
+      layout.disconnect();
       mediaMonitor?.destroy();
       instance?.pause();
       if (nativeReady) native?.pause();

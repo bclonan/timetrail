@@ -1,5 +1,5 @@
 import { projectSchema } from "../domain/model";
-import { runtimeMessage } from "./bridgeMessages";
+import { runtimeMessage, type ParentMessage } from "./bridgeMessages";
 import { defaultPresentation, type PlayerView } from "../domain/presentation";
 import { renderPanels, visiblePanels } from "./playerPanels";
 
@@ -20,6 +20,7 @@ let time = 0,
   lastNarration = "";
 const history: { sequenceId: string; time: number }[] = [];
 const answered = new Map<string, number>();
+const dismissedQuizzes = new Set<string>();
 const pinned = new Set<string>();
 const flags: Record<string, boolean> = {};
 const presentation = project.presentation || defaultPresentation();
@@ -41,14 +42,34 @@ let view =
   ) ||
   (data.startInResearch ? research : undefined) ||
   presentation.views.find((v) => v.id === presentation.defaultViewId)!;
-const seenQuizzes = new Set<string>();
 const sequence = () => project.sequences.find((s) => s.id === sequenceId)!;
 for (const key of Object.keys(assets))
   if (!assets[key]!.startsWith("data:"))
     assets[key] = new URL(assets[key]!, location.href).href;
-const send = (message: unknown) =>
+function quizState() {
+  return {
+    answers: Object.fromEntries(answered),
+    dismissedCueIds: [...dismissedQuizzes],
+  };
+}
+function syncQuizzes() {
+  send({ type: "TIMETRAIL_QUIZ_STATE", state: quizState() });
+}
+function send(message: ParentMessage) {
+  if (message.type === "TIMETRAIL_PLAYBACK" && message.action === "play") {
+    for (const cue of sequence().cues)
+      if (cue.quiz && time >= cue.start && time < (cue.end ?? cue.start + 5))
+        dismissedQuizzes.add(cue.id);
+    syncQuizzes();
+    render();
+  }
   frame.contentWindow!.postMessage(message, location.origin);
+}
 function init() {
+  frame.classList.toggle(
+    "has-layout-areas",
+    Boolean(sequence().layoutAreas?.length),
+  );
   initializing = true;
   ready = false;
   paused = true;
@@ -62,6 +83,7 @@ function init() {
     revision: 0,
     startTime: time,
     assetUrls: assets,
+    quizState: quizState(),
   });
   chapters();
 }
@@ -128,13 +150,9 @@ function render() {
   const cues = seq.cues.filter(
     (c) =>
       !["caption", "narration", "chapter"].includes(c.kind) &&
+      (!c.quiz || !dismissedQuizzes.has(c.id)) &&
       ((time >= c.start && time < (c.end ?? c.start + 5)) || pinned.has(c.id)),
   );
-  const quiz = cues.find((c) => c.quiz && !seenQuizzes.has(c.id));
-  if (quiz) {
-    seenQuizzes.add(quiz.id);
-    send({ type: "TIMETRAIL_PLAYBACK", action: "pause" });
-  }
   const key = cues
     .map((c) => c.id + answered.get(c.id) + pinned.has(c.id))
     .join();
@@ -172,6 +190,7 @@ function render() {
       cue.quiz.options.forEach((option, i) => {
         const answer = button(option, () => {
           answered.set(cue.id, i);
+          syncQuizzes();
           render();
         });
         answer.disabled = answered.has(cue.id);
@@ -274,6 +293,12 @@ window.addEventListener("message", (event) => {
   }
   if (message.type === "TIMETRAIL_QUIZ_ANSWERED") {
     answered.set(message.cueId, message.answerIndex);
+    syncQuizzes();
+    render();
+  }
+  if (message.type === "TIMETRAIL_QUIZ_DISMISSED") {
+    dismissedQuizzes.add(message.cueId);
+    syncQuizzes();
     render();
   }
   if (message.type === "TIMETRAIL_RUNTIME_ERROR")
@@ -315,7 +340,7 @@ element("full").onclick = () =>
 element("restart").onclick = () => {
   for (const key of Object.keys(flags)) delete flags[key];
   answered.clear();
-  seenQuizzes.clear();
+  dismissedQuizzes.clear();
   pinned.clear();
   history.length = 0;
   sequenceId = project.activeSequenceId;

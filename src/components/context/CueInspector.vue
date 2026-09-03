@@ -4,10 +4,40 @@ import { X, Copy, Trash2 } from "lucide-vue-next";
 import { useWorkspace } from "../../stores/workspace";
 import { useEditor } from "../../stores/editor";
 import { kinds } from "../../domain/model";
-import { hotspotAppearance } from "../../domain/hotspots";
+import {
+  hotspotAppearance,
+  positionForCue,
+  annotationKinds,
+} from "../../domain/hotspots";
 const w = useWorkspace();
 const e = useEditor();
 const draft = computed(() => e.cue);
+const position = computed(() =>
+  draft.value ? positionForCue(draft.value, w.sequence?.cues || []) : undefined,
+);
+const positionFields = [
+  { key: "x", label: "X · from left" },
+  { key: "y", label: "Y · from top" },
+  { key: "width", label: "Width" },
+  { key: "height", label: "Height" },
+] as const;
+function setCoordinate(field: "x" | "y" | "width" | "height", event: Event) {
+  const value = (event.target as HTMLInputElement).valueAsNumber;
+  if (!draft.value || !position.value || !Number.isFinite(value)) return;
+  draft.value.position = { ...position.value, [field]: value };
+  e.positionEditing = true;
+}
+function smallIndicator() {
+  if (!draft.value) return;
+  draft.value.position = {
+    x: draft.value.position?.x ?? 6,
+    y: draft.value.position?.y ?? 8,
+    width: 4,
+    height: 7,
+  };
+  draft.value.style = { preset: "marker" };
+  e.positionEditing = true;
+}
 const options = computed({
   get: () => draft.value?.quiz?.options.join("\n") || "",
   set: (value) => {
@@ -52,6 +82,41 @@ const changeKind = () => e.changeKind();
           >End<input v-model.number="draft.end" type="number" min="0" step=".1"
         /></label>
       </div>
+      <details
+        v-if="!['chapter', 'caption', 'narration', 'quiz'].includes(draft.kind)"
+        open
+        class="position-controls"
+      >
+        <summary>Position in player</summary>
+        <p>Percent of the video. X and Y start at the top-left corner.</p>
+        <button
+          type="button"
+          class="small"
+          :aria-pressed="e.positionEditing"
+          @click="
+            draft.position = { ...position! };
+            e.positionEditing = !e.positionEditing;
+          "
+        >
+          {{ e.positionEditing ? "Hide position guide" : "Adjust on video" }}
+        </button>
+        <div v-if="position" class="position-fields">
+          <label v-for="field in positionFields" :key="field.key"
+            >{{ field.label }} %<input
+              :value="position[field.key]"
+              @input="setCoordinate(field.key, $event)"
+              @focus="e.positionEditing = true"
+              type="number"
+              :min="field.key === 'x' || field.key === 'y' ? 0 : 1"
+              max="100"
+              step="0.5"
+          /></label>
+        </div>
+        <p v-if="e.positionEditing">
+          Drag the box to move it. Drag its corner to resize. Arrow keys adjust
+          by 1%; Shift by 5%. Escape cancels a drag. Save cue applies the draft.
+        </p>
+      </details>
       <label>Title<input v-model="draft.title" maxlength="300" /></label
       ><label
         >Body<textarea v-model="draft.body" rows="4" maxlength="8000" /></label
@@ -69,30 +134,19 @@ const changeKind = () => e.changeKind();
           </option>
         </select></label
       >
-      <details>
-        <summary>Position in player</summary>
+
+      <details
+        v-if="annotationKinds.includes(draft.kind) || draft.kind === 'branch'"
+      >
+        <summary>Hotspot style and group</summary>
         <button
+          v-if="annotationKinds.includes(draft.kind)"
           type="button"
           class="small"
-          @click="draft.position = { x: 5, y: 5, width: 30, height: 30 }"
+          @click="smallIndicator"
         >
-          Set position
+          Use small indicator
         </button>
-        <div v-if="draft.position" class="form-row">
-          <label
-            v-for="field in ['x', 'y', 'width', 'height'] as const"
-            :key="field"
-            >{{ field
-            }}<input
-              v-model.number="draft.position[field]"
-              type="number"
-              min="0"
-              max="100"
-          /></label>
-        </div>
-      </details>
-      <details v-if="draft.kind === 'hotspot' || draft.kind === 'branch'">
-        <summary>Hotspot style and group</summary>
         <label
           >Group<input
             v-model="draft.group"
@@ -118,7 +172,7 @@ const changeKind = () => e.changeKind();
             >Appearance<select v-model="draft.style.preset">
               <option value="filled">Filled button</option>
               <option value="outline">Outline</option>
-              <option value="marker">Pulsing marker</option>
+              <option value="marker">Small info indicator</option>
             </select></label
           >
           <label
@@ -215,3 +269,35 @@ const changeKind = () => e.changeKind();
     </form>
   </aside>
 </template>
+<style scoped>
+.position-controls {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #1b261b;
+}
+.position-controls summary {
+  font-size: 12px;
+  font-weight: 600;
+}
+.position-controls p {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #c1c9bb;
+  margin: 9px 0;
+}
+.position-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.position-fields label {
+  font-size: 12px;
+}
+.position-fields input {
+  font: 14px monospace;
+  padding: 9px;
+  min-width: 0;
+}
+</style>

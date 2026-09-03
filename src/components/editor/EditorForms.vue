@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { useEditor } from "../../stores/editor";
 import { useWorkspace } from "../../stores/workspace";
 import Modal from "../common/Modal.vue";
+import LayoutAreaEditor from "./LayoutAreaEditor.vue";
 const e = useEditor();
 const w = useWorkspace();
 const tags = computed({
@@ -78,6 +79,7 @@ const tags = computed({
         ><input type="checkbox" v-model="e.sequence.narrationEnabled" />
         Narration enabled</label
       >
+      <LayoutAreaEditor v-model="e.sequence.layoutAreas" />
       <p class="small-text muted">
         Each screen has its own timeline. Use a branch cue to connect it to
         another screen.

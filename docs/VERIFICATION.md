@@ -450,3 +450,113 @@ Before release, frozen install, lint, typecheck, 106 unit tests and 37 browser
 tests passed, with the native-only Chromium case skipped. The final documentation
 update was rebuilt and passed diff checks. No application code changed after that
 complete test run. The pinned FrameTrail checkout remains unchanged.
+
+## Quiz popup dismissal release
+
+The runtime now renders one quiz over either generated scenes or real footage.
+Answers use cue IDs, including when two questions have identical text. The popup
+shows feedback and Continue film after an answer. Close question and continue,
+Skip question and Escape also dismiss it and resume playback. Dismissed questions
+stay hidden until Start again or a new viewing session. Side-panel and WebMCP
+answers share this state without changing the approved project.
+
+Frozen install, lint, typecheck, all 106 unit tests, build and diff checks passed.
+The complete browser suite passed 38 tests and skipped the native-only Chromium
+case. Focused coverage includes a single popup over real MP4 footage, repeated
+question text with punctuation, Cinema without context panels, wrong and correct
+answers, keyboard dismissal, replay, mobile controls, WebMCP answer synchronization
+and both standalone HTML and static ZIP viewers on a separate host.
+
+Native WebMCP in the in-app browser answered the local DNA quiz at 84 seconds.
+The popup showed feedback and Continue film; clicking Continue hid it and advanced
+playback to 89 seconds. Production repeated this check after deployment and cache
+refresh. Playback advanced to 88.425 seconds, activeQuizCount became zero, the
+popup was hidden and revision remained zero. Production browser error logs were
+empty. This checks quiz interaction and playback progression, not audible narration.
+
+Netlify deploy `6a98e44177cc3ece80db3fcd` was published on 2026-09-03 at 03:06 UTC
+and reported ready in production. The deployed index, runtime HTML, bridge,
+standalone runtime and viewer, service worker, bug log and main JavaScript bundle
+matched the tested local SHA-256 hashes. Each returned HTTP 200 with the expected
+content type and `tools=(self)`. The FrameTrail vendor checkout is unchanged.
+
+Already downloaded HTML and ZIP files keep their embedded player. Export a new
+copy to include this fix. A refresh loads the update on the hosted app after its
+offline cache finishes updating. Only documentation changed after deployment.
+
+## Compact annotations and position editing
+
+Plain notes, facts, sources, definitions, warnings and hotspots now render compact
+info indicators over generated scenes and real footage. A click opens the full
+text in a closable card. Explicit filled and outline styles keep their saved
+geometry. The inspector offers Use small indicator for an existing oversized cue.
+Position fields show percentages beside the video, above the content fields.
+The draft guide supports pointer movement, corner resizing, arrow keys and Escape
+to cancel a drag. Opening the guide pauses playback. Save cue or visible proposal
+acceptance remains the only path to saving these edits.
+
+The focused browser run passed all 10 annotation, export and quality tests.
+Its new regression verifies one small note over MP4 footage, numeric and keyboard
+placement, pointer movement and cancellation, resizing, draft isolation, saving,
+detail dismissal and mobile marker bounds. The export regression opens a compact
+annotation and closes its detail card in both HTML and static ZIP viewers.
+Existing custom-style and quiz tests remain in the release suite.
+
+Native WebMCP on the local preview returned effective placement with percent
+units and a top-left origin. Filling x=18, y=20, width=4, height=7 displayed the
+guide. A visible input changed x to 20. Closing the form left revision zero,
+canUndo false and the approved project unchanged. Browser error logs were empty.
+
+The final release passed frozen install, lint, typecheck, all 107 unit tests,
+build and diff checks. The complete browser suite passed 39 tests and skipped
+the native-only Chromium case. Netlify deploy `6a98e99e8c92f1385a9eb615` reported
+ready in production on 2026-09-03 at 03:29 UTC. The deployed index, runtime,
+bridge, standalone runtime/viewer, service worker, public bug log, main script
+and stylesheet matched the tested build's SHA-256 hashes. All returned HTTP 200
+with `tools=(self)`. The FrameTrail vendor checkout remains unchanged.
+
+The live in-app Player showed the two DNA info indicators at two seconds.
+Opening DNA displayed its full definition; Close annotation hid the card.
+Native Player inspection still reported revision zero and no active quizzes.
+Production browser error logs were empty. Only this verification record changed
+after deployment. Previously downloaded interactive files need a new export.
+
+## FrameTrail sidebars and layout areas
+
+Screens now retain left, right, top and bottom ContentViews. The visible Edit
+screen form and WebMCP share the same bounded layoutAreas schema. Native tabs
+open, close and respond to Enter or Space. Timed transcript and chapter buttons
+seek the sequence clock. Source footage, compact indicators, captions and the
+position guide follow the picture bounds when areas change size. Side areas
+move below the picture on phones. Interactive ZIP keeps them in its Research
+viewer; Cinema still allows the areas. The separate TimeTrail context panels
+continue to work.
+
+The new browser regression uses actual MP4 footage and checks all four areas,
+multiple right-side tabs, scrolling, native timeline rows, desktop and phone
+bounds, Player navigation and a downloaded Research ZIP on another HTTP origin.
+Unit tests cover escaped text, bounded inputs, portable data and production
+proposal isolation. The first complete run passed 110 unit tests and 40 browser
+tests, with one native-only Chromium test skipped. A later focused run also
+passed after correcting native timeline grouping and video fitting.
+
+The in-app browser separately used native WebMCP to open the screen form, fill
+three areas, submit and preview the proposal. Closing and reopening the right
+area worked. The initially closed chapter area opened. Clicking the transcript
+sought to 22.5 seconds. Player inspection reported ready, paused and revision
+zero. Restoring the approved version left it unchanged. Error logs were empty.
+
+The repeated full gate passed lint, typecheck, 110 unit tests and 40 browser
+tests, with the native-only Chromium test skipped. Final visual review found a
+zero-height native timeline scroll container. A scoped CSS correction restored
+its height; the rebuilt focused test confirmed that the row intersects the
+visible area. That final test passed locally in 19.9 seconds and on production
+in 17.7 seconds, including the downloaded Research viewer on a separate host.
+
+Netlify production deployment `6a98f2e672f6122470495d57` is live at
+https://timetrail-studio-bclonan.netlify.app. All ten checked files matched the
+local build by SHA-256 and returned HTTP 200 with `tools=(self)`: the index,
+app JS/CSS, both runtime documents, bridge, standalone client, service worker,
+project schema and public bug log. The vendor checkout and diff whitespace check
+were clean. Only this documentation changed after deployment. Existing tabs may
+need a reload; previously downloaded HTML/ZIP files need a new export.

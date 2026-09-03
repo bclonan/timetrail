@@ -215,7 +215,7 @@ async function share() {
               New screen</button
             ><span class="preview-engine">FrameTrail</span>
           </div>
-          <Player />
+          <Player editable />
           <div class="chapter-strip" aria-label="Chapter navigation">
             <button
               v-for="(c, i) in w.sequence?.cues.filter(

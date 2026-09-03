@@ -6,6 +6,7 @@ import { useWorkspace } from "../stores/workspace";
 import { clone, id, type Operation } from "../domain/model";
 import { proposals } from "../services/ProposalService";
 import { editTimeline } from "../services/TimelineEditing";
+import { positionForCue } from "../domain/hotspots";
 
 export type ToolBuilder = <T extends z.ZodType>(
   name: string,
@@ -126,6 +127,16 @@ export function createEditorTools(router: Router, tool: ToolBuilder) {
             itemId: e.entityId,
             isNew: e.fresh,
             fields: e.values(),
+            ...(e.active === "cue" && e.cue
+              ? {
+                  placement: {
+                    ...positionForCue(e.cue, w.sequence?.cues || []),
+                    unit: "percent",
+                    origin: "top-left",
+                    guideVisible: e.positionEditing,
+                  },
+                }
+              : {}),
           };
         const seq = p.sequences.find(
           (s) => s.id === (input.sequenceId || w.sequenceId),
@@ -225,7 +236,7 @@ export function createEditorTools(router: Router, tool: ToolBuilder) {
     ),
     tool(
       "timetrail.editor.fill",
-      "Fill fields in the open visible form. Partial fields preserve other values; nested objects replace their previous value. Does not save. Read editor.inspect form first.",
+      "Fill fields in the open visible form. Sequence layoutAreas configure FrameTrail left/right/top/bottom tabs with notes, transcript, chapters, timelines or custom text. Partial fields preserve other values; nested objects replace their previous value. Does not save. Read editor.inspect form first.",
       z.object({ expectedRevision: revision, input: fillSchema }),
       false,
       true,

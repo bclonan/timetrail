@@ -49,6 +49,14 @@ export const useWorkspace = defineStore("workspace", () => {
   const shareLink = ref("");
   const shareVersion = ref(0);
   const quizAnswers = ref<Record<string, number>>({});
+  const dismissedQuizIds = ref<string[]>([]);
+  watch(
+    quizAnswers,
+    (answers) => {
+      if (!Object.keys(answers).length) dismissedQuizIds.value = [];
+    },
+    { flush: "sync" },
+  );
   const viewerFlags = ref<Record<string, boolean>>({});
   const playerViewId = ref("");
   const pinnedCues = ref<string[]>([]);
@@ -282,6 +290,13 @@ export const useWorkspace = defineStore("workspace", () => {
     previewProject.value = undefined;
     await refresh();
   }
+  function dismissQuiz(cueId: string) {
+    if (
+      sequence.value?.cues.some((c) => c.id === cueId && c.quiz) &&
+      !dismissedQuizIds.value.includes(cueId)
+    )
+      dismissedQuizIds.value.push(cueId);
+  }
   function playback(
     action:
       | "play"
@@ -294,6 +309,16 @@ export const useWorkspace = defineStore("workspace", () => {
     chapterId?: string,
   ) {
     if (!sequence.value) throw new Error("No active sequence.");
+    if (action === "play") {
+      for (const cue of sequence.value.cues) {
+        if (
+          cue.quiz &&
+          time.value >= cue.start &&
+          time.value < (cue.end ?? cue.start + 5)
+        )
+          dismissQuiz(cue.id);
+      }
+    }
     if (action === "jump-to-chapter") {
       const c = sequence.value.cues.find(
         (c) => c.id === chapterId && c.kind === "chapter",
@@ -502,6 +527,8 @@ export const useWorkspace = defineStore("workspace", () => {
     shareLink,
     shareVersion,
     quizAnswers,
+    dismissedQuizIds,
+    dismissQuiz,
     viewerFlags,
     playerViewId,
     choose,

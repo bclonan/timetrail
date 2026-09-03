@@ -24,6 +24,24 @@ See DOWNLOADS.md and VERIFICATION.md for the current development checks.
 
 ## Fixed during implementation
 
+B22: Position setup used a 30% by 30% box and ordinary hotspots defaulted to
+large filled labels. Plain notes, facts, sources, definitions, warnings and
+hotspots now use compact info indicators. Clicking opens a closable detail card;
+custom filled and outline styles retain their geometry. The inspector has
+percentage fields in a two-column layout, a draggable and resizable video guide,
+keyboard adjustments and a Use small indicator action for older large cues.
+Guide changes stay in the draft until Save cue or proposal acceptance. WebMCP
+form inspection reports the effective position and its units.
+
+B21: Answering a quiz left its video overlay open, with feedback and Continue
+only in the separate context panel. Real footage could render two quiz copies,
+and matching answers by question text confused repeated questions. The runtime
+now owns one quiz overlay keyed by cue ID. It shows feedback, Continue film,
+Skip question and Close question and continue. Escape also closes and resumes.
+Side-panel and WebMCP answers synchronize with the overlay. Continue or Play
+hides it for the viewing session; Start again resets questions and answers.
+Dismissal never edits the saved project. Interactive exports use the same overlay.
+
 B20: A failed or stalled video source left FrameTrail's "Loading Interface"
 panel over a running timeline. TimeTrail now watches actual frame readiness and
 source errors, pauses while loading, and offers Retry clip, Skip clip and Open
@@ -166,3 +184,14 @@ revision zero, visible acceptance advanced it to one, and project checks found
 no missing assets. Cinema and Research changes preserved 55 seconds. Native
 export prepared a 17,454,903-byte HTML with local assets included. Browser error
 logs were empty. Ordinary Chromium and native WebMCP evidence are separate.
+
+## FrameTrail areas repair
+
+B23: The mapper always emitted empty layout areas and runtime CSS hid all four
+areas. Screen forms now support titled tabs on every side of the video, including
+notes, transcripts, chapters, native timelines and custom text. WebMCP fills the
+same draft and submits it for review. Closed active tabs reopen, keyboard actions
+work, and sidebar content scrolls. Video and overlay bounds follow the native
+picture rectangle. Fixed an aspect-ratio/minimum-height interaction that made
+the iframe wider than its visible container. Side areas stack below the picture
+on phones. Saved areas remain in interactive exports and storyboard rebuilds.

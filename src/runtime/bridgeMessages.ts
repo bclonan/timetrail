@@ -1,5 +1,9 @@
 import { z } from "zod";
 import { projectSchema } from "../domain/model";
+const quizState = z.object({
+  answers: z.record(z.string().max(100), z.number().int().min(0).max(7)),
+  dismissedCueIds: z.array(z.string().max(100)).max(5000),
+});
 export const parentMessage = z.discriminatedUnion("type", [
   z.object({ type: z.literal("TIMETRAIL_PING") }),
   z.object({
@@ -9,7 +13,9 @@ export const parentMessage = z.discriminatedUnion("type", [
     revision: z.number().int().nonnegative(),
     startTime: z.number().nonnegative().default(0),
     assetUrls: z.record(z.string(), z.string()).default({}),
+    quizState: quizState.optional(),
   }),
+  z.object({ type: z.literal("TIMETRAIL_QUIZ_STATE"), state: quizState }),
   z.object({
     type: z.literal("TIMETRAIL_PLAYBACK"),
     action: z.enum(["play", "pause", "seek", "retry-media", "skip-media"]),
@@ -23,6 +29,13 @@ export const parentMessage = z.discriminatedUnion("type", [
   z.object({ type: z.literal("TIMETRAIL_DESTROY") }),
 ]);
 export const runtimeMessage = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("TIMETRAIL_VIEWPORT"),
+    x: z.number().min(0).max(100),
+    y: z.number().min(0).max(100),
+    width: z.number().positive().max(100),
+    height: z.number().positive().max(100),
+  }),
   z.object({
     type: z.literal("TIMETRAIL_READY"),
     revision: z.number().int().nonnegative().optional(),
@@ -53,6 +66,7 @@ export const runtimeMessage = z.discriminatedUnion("type", [
     cueId: z.string(),
     answerIndex: z.number().int().nonnegative(),
   }),
+  z.object({ type: z.literal("TIMETRAIL_QUIZ_DISMISSED"), cueId: z.string() }),
 ]);
 export type ParentMessage = z.input<typeof parentMessage>;
 export type RuntimeMessage = z.infer<typeof runtimeMessage>;

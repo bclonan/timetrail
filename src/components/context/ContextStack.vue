@@ -11,29 +11,16 @@ import { useWorkspace } from "../../stores/workspace";
 const w = useWorkspace();
 const pinned = toRef(w, "pinnedCues");
 const answered = computed(() => w.quizAnswers);
-const seen = new Set<string>();
-watch(
-  () => w.quizAnswers,
-  () => {
-    if (!Object.keys(w.quizAnswers).length) seen.clear();
-  },
-);
 const active = computed(
   () =>
     w.sequence?.cues.filter(
       (c) =>
         !["chapter", "caption", "narration"].includes(c.kind) &&
+        (!c.quiz || !w.dismissedQuizIds.includes(c.id)) &&
         ((w.time >= c.start && w.time < (c.end ?? c.start + 5)) ||
           pinned.value.includes(c.id)),
     ) || [],
 );
-watch(active, (cues) => {
-  const quiz = cues.find((c) => c.quiz && !seen.has(c.id));
-  if (quiz && w.playerReady) {
-    seen.add(quiz.id);
-    w.playback("pause");
-  }
-});
 watch(
   () => w.sequenceId,
   () => {

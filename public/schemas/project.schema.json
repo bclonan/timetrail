@@ -410,6 +410,64 @@
           },
           "narrationEnabled": {
             "type": "boolean"
+          },
+          "layoutAreas": {
+            "maxItems": 16,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "area": {
+                  "type": "string",
+                  "enum": [
+                    "left",
+                    "right",
+                    "top",
+                    "bottom"
+                  ]
+                },
+                "content": {
+                  "type": "string",
+                  "enum": [
+                    "notes",
+                    "transcript",
+                    "chapters",
+                    "timelines",
+                    "text"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "size": {
+                  "default": "medium",
+                  "type": "string",
+                  "enum": [
+                    "small",
+                    "medium",
+                    "large"
+                  ]
+                },
+                "collapsed": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 8000
+                }
+              },
+              "required": [
+                "area",
+                "content",
+                "title",
+                "size",
+                "collapsed"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [

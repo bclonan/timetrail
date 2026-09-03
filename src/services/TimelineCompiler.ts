@@ -95,6 +95,10 @@ export class TimelineCompiler {
       baseMode: "generated-canvas",
       clips: [],
       cues: [],
+      layoutAreas: clone(
+        project.sequences.find((s) => s.id === project.activeSequenceId)
+          ?.layoutAreas || [],
+      ),
     };
     const media: Media[] = [];
     const branches: Sequence[] = [];

@@ -9,6 +9,7 @@ import {
   type Sequence,
 } from "../domain/model";
 import { presentationSchema } from "../domain/presentation";
+import { layoutAreasSchema } from "../domain/layoutAreas";
 import { storyboardSchema, TimelineCompiler } from "./TimelineCompiler";
 
 const key = z
@@ -25,6 +26,7 @@ export const productionSchema = z.object({
         key,
         storyboard: storyboardSchema,
         cues: z.array(cueInputSchema).max(300).default([]),
+        layoutAreas: layoutAreasSchema.optional(),
       }),
     )
     .min(1)
@@ -85,6 +87,7 @@ export function compileProduction(
           (o) => o.type === "upsert_sequence" && o.value.id === sequenceId,
         ) as { value: Sequence }
     ).value;
+    if (item.layoutAreas) sequence.layoutAreas = item.layoutAreas;
     item.cues.forEach((cue, i) =>
       sequence.cues.push({
         ...cue,

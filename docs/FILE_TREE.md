@@ -67,7 +67,9 @@ timetrail/
       common/Modal.vue
       context/ContextStack.vue
       context/CueInspector.vue
+      editor/CuePositionGuide.vue
       editor/EditorForms.vue
+      editor/LayoutAreaEditor.vue
       editor/FrameEditStudio.vue
       editor/ProductionControls.vue
       editor/QualityReview.vue
@@ -88,6 +90,7 @@ timetrail/
       model.ts
       presentation.ts
       hotspots.ts
+    layoutAreas.ts
       retouch.ts
     pages/
       DiscoverPage.vue
@@ -101,6 +104,10 @@ timetrail/
     runtime/
       bridgeMessages.ts
       frame.ts
+      QuizOverlay.ts
+      AnnotationIndicators.ts
+    LayoutAreaBridge.ts
+    layoutAreaMapper.ts
       FrameTrailAdapter.ts
       FrameTrailBridge.ts
       MediaLoadMonitor.ts
@@ -144,6 +151,8 @@ timetrail/
   tests/
     setup.ts
     e2e/
+      annotations.spec.ts
+      layout-areas.spec.ts
       downloads.spec.ts
       hackathon.spec.ts
       editor.spec.ts
@@ -151,12 +160,14 @@ timetrail/
       media.spec.ts
       production.spec.ts
       quality.spec.ts
+      quiz.spec.ts
       retouch.spec.ts
       studio.spec.ts
       timeline.spec.ts
     unit/
       mp4-export.test.ts
       media-load.test.ts
+      layout-areas.test.ts
       editor.test.ts
       production.test.ts
       quality.test.ts

@@ -299,7 +299,8 @@ describe("FrameTrail and bridge", () => {
     const p = makeDemo();
     const contents = toFrameTrailContents(p, p.activeSequenceId);
     expect(contents).toEqual(toFrameTrailContents(p, p.activeSequenceId));
-    expect(contents[0]!.hypervideo.contents).toHaveLength(6);
+    // Four scene images, one quiz, one branch and seven compact annotation markers.
+    expect(contents[0]!.hypervideo.contents).toHaveLength(13);
     expect(
       contents[0]!.hypervideo.contents.some(
         (c) => c.body["frametrail:type"] === "quiz",

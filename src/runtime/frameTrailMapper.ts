@@ -11,7 +11,13 @@ import {
 } from "../domain/model";
 import { mediaFromUrl } from "../services/MediaImportService";
 import { cardSvg, escapeHtml } from "./generatedCard";
-import { hotspotAppearance } from "../domain/hotspots";
+import { toFrameTrailLayoutAreas } from "./layoutAreaMapper";
+import {
+  hotspotAppearance,
+  positionForCue,
+  annotationKinds,
+  isIndicator,
+} from "../domain/hotspots";
 export type AssetUrls = Record<string, string>;
 export function mediaUrl(m: Media, assets: AssetUrls = {}) {
   return m.source.kind === "remote"
@@ -70,7 +76,10 @@ function annotation(
 export function interactiveContents(cues: Cue[], sequenceId: string) {
   return cues
     .filter(
-      (c) => c.kind === "quiz" || c.kind === "hotspot" || c.kind === "branch",
+      (c) =>
+        c.kind === "quiz" ||
+        c.kind === "branch" ||
+        annotationKinds.includes(c.kind),
     )
     .map((c) => {
       if (c.quiz)
@@ -98,10 +107,12 @@ export function interactiveContents(cues: Cue[], sequenceId: string) {
         true,
         "hotspot",
         undefined,
-        c.position || { x: 60, y: 72, width: 34, height: 14 },
+        positionForCue(c, cues),
         {
-          text: c.branch?.label || c.title || "Explore",
-          ...hotspotAppearance(c.style),
+          text: isIndicator(c) ? "i" : c.branch?.label || c.title || "Explore",
+          ...hotspotAppearance(
+            isIndicator(c) ? { ...c.style, preset: "marker" } : c.style,
+          ),
           linkUrl: "",
           action: "none",
         },
@@ -225,7 +236,7 @@ function hypervideo(project: Project, s: Sequence, assets: AssetUrls) {
       theme: "dark",
       hidden: false,
       slidingMode: "overlay",
-      layoutArea: { areaTop: [], areaBottom: [], areaLeft: [], areaRight: [] },
+      layoutArea: toFrameTrailLayoutAreas(s),
     },
     clips: [
       {

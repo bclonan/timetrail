@@ -102,6 +102,16 @@
 .film-player .screen iframe {
   height: 100%;
 }
+.film-player iframe.has-layout-areas {
+  width: 100%;
+  height: 520px;
+  aspect-ratio: auto;
+}
+@media (max-width: 650px) {
+  .film-player iframe.has-layout-areas {
+    height: 620px;
+  }
+}
 .film-player .player-shell {
   background: #070d13;
   border: 1px solid #8996a330;

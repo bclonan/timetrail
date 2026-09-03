@@ -49,6 +49,14 @@ proposal. The human can also save the visible form directly after inspecting it.
 All form writes require the revision returned by inspection. A changed revision
 invalidates the form until it is reopened.
 
+Plain notes and hotspots default to small info indicators. `style.preset: filled`
+or `outline` keeps a custom label or box; `marker` uses a compact indicator.
+`position` uses percentages of the video, with x and y measured from the top-left.
+Form inspection includes the effective placement and units even before an explicit
+position is saved. Filling a position shows the draft guide on the video. The
+visible editor supports dragging, corner resizing, arrow keys and numeric fields.
+Guide edits do not save; the existing Save cue and proposal review rules apply.
+
 | Tool                          | Controls                                                                                                                                             |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `timetrail.editor.inspect`    | Current form, complete form fields, view settings, history availability, paginated sequences, media, clips and cues. Use `itemId` for the full item. |
@@ -352,6 +360,13 @@ An answered quiz stays paused while the viewer reads feedback. Resume with
 inspection will not move a paused timeline. At the end, continue QA on another
 screen or prepare the export. Inspecting metadata does not prove narrated playback.
 
+Quiz answers from WebMCP, the side panel and the video popup stay synchronized.
+The popup itself has feedback and Continue film. Continue or `playback.control`
+with `action: play` dismisses active quizzes for the current viewing session and
+resumes playback. Close and Escape do the same without recording an answer.
+Restart clears answers and dismissals. Player inspection excludes dismissed
+quizzes from the active list. Saved cue content and timing do not change.
+
 The public `/hackathon` page explains the project, links working examples and
 contains illustrated tool calls, all required submission answers and a complete
 2:40 demo production prompt. `/webmcp` remains the live tool Lab. The prompt
@@ -378,3 +393,53 @@ approved main timeline with clip audio and captions. Interactive ZIP includes
 an `index.html` that starts in Research view. The visible download control still
 owns file delivery. See [Download formats](DOWNLOADS.md) for audio, codec,
 source-file and static-host requirements.
+
+## FrameTrail areas in screen forms
+
+Open a sequence with `timetrail.editor.open`, then fill `layoutAreas` through
+`timetrail.editor.fill`. This uses the same visible Edit screen form. Inspect
+its draft, submit it with `timetrail.editor.propose`, then obtain visible review.
+The production spec also accepts `sequences[].layoutAreas` in a single proposal.
+
+```json
+{
+  "layoutAreas": [
+    {
+      "area": "right",
+      "content": "transcript",
+      "title": "Transcript",
+      "size": "medium",
+      "collapsed": false
+    },
+    {
+      "area": "left",
+      "content": "notes",
+      "title": "Evidence",
+      "size": "medium",
+      "collapsed": true
+    },
+    {
+      "area": "bottom",
+      "content": "chapters",
+      "title": "Chapters",
+      "size": "small",
+      "collapsed": false
+    },
+    {
+      "area": "top",
+      "content": "text",
+      "title": "Mission",
+      "size": "small",
+      "collapsed": true,
+      "text": "Choose a region to explore next."
+    }
+  ]
+}
+```
+
+Areas are left, right, top or bottom. Content is notes, transcript, chapters,
+timelines or text. Sizes are small, medium or large. A screen allows four tabs
+per area, sixteen in total. Send an empty array to remove the screen's areas.
+Text is plain text. Transcripts use caption cues; notes include notes, facts,
+sources, definitions and warnings. Tabs remain available in Cinema and Research,
+on phones, and in HTML and interactive ZIP exports. They are not part of MP4.

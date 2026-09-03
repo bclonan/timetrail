@@ -13,6 +13,8 @@ import { FrameTrailBridge } from "../../runtime/FrameTrailBridge";
 import { FrameTrailAdapter } from "../../runtime/FrameTrailAdapter";
 import { storage } from "../../storage/BrowserWorkspaceStore";
 import { clone } from "../../domain/model";
+import CuePositionGuide from "../editor/CuePositionGuide.vue";
+defineProps<{ editable?: boolean }>();
 const w = useWorkspace();
 const frame = ref<HTMLIFrameElement>();
 const container = ref<HTMLElement>();
@@ -38,6 +40,7 @@ function waitForInterface() {
   }, 20000);
 }
 const caption = ref("");
+const viewport = ref({ left: "0%", top: "0%", width: "100%", height: "100%" });
 let spoken = "";
 async function initialize() {
   if (!w.current || !w.sequence || initializing) return;
@@ -60,6 +63,10 @@ async function initialize() {
       revision: w.record?.revision || 0,
       startTime: Math.min(w.time, w.sequence.durationSeconds),
       assetUrls: assets,
+      quizState: {
+        answers: { ...w.quizAnswers },
+        dismissedCueIds: [...w.dismissedQuizIds],
+      },
     });
   } catch (e) {
     initializing = false;
@@ -70,6 +77,13 @@ async function initialize() {
 onMounted(() => {
   waitForInterface();
   bridge = new FrameTrailBridge(frame.value!, (m) => {
+    if (m.type === "TIMETRAIL_VIEWPORT")
+      viewport.value = {
+        left: `${m.x}%`,
+        top: `${m.y}%`,
+        width: `${m.width}%`,
+        height: `${m.height}%`,
+      };
     if (m.type === "TIMETRAIL_READY") {
       if (m.revision === undefined) void initialize();
       else {
@@ -101,8 +115,23 @@ onMounted(() => {
       w.selectedCue = m.cueId;
     if (m.type === "TIMETRAIL_QUIZ_ANSWERED")
       w.quizAnswers[m.cueId] = m.answerIndex;
+    if (m.type === "TIMETRAIL_QUIZ_DISMISSED") w.dismissQuiz(m.cueId);
   });
 });
+watch(
+  () => [w.quizAnswers, w.dismissedQuizIds],
+  () => {
+    if (bridge && w.playerReady)
+      bridge.send({
+        type: "TIMETRAIL_QUIZ_STATE",
+        state: {
+          answers: { ...w.quizAnswers },
+          dismissedCueIds: [...w.dismissedQuizIds],
+        },
+      });
+  },
+  { deep: true },
+);
 watch(
   () => [w.current, w.sequenceId],
   () => {
@@ -185,7 +214,10 @@ const fmt = (n: number) =>
     class="player-shell"
     aria-label="Interactive preview"
   >
-    <div class="screen">
+    <div
+      class="screen"
+      :class="{ 'has-layout-areas': w.sequence?.layoutAreas?.length }"
+    >
       <iframe
         ref="frame"
         :src="src"
@@ -205,7 +237,10 @@ const fmt = (n: number) =>
       <div v-if="w.previewProject" class="preview-tag">
         PROPOSAL PREVIEW · UNSAVED
       </div>
-      <div v-if="caption" class="caption-text">{{ caption }}</div>
+      <div class="picture-controls" :style="viewport">
+        <div v-if="caption" class="caption-text">{{ caption }}</div>
+        <CuePositionGuide v-if="editable" />
+      </div>
     </div>
     <div class="player-controls">
       <button

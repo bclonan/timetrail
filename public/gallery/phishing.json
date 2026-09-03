@@ -129,7 +129,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     },
     {
       "id": "film_example_phishing_inspect",
@@ -225,7 +226,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     },
     {
       "id": "film_example_phishing_safe",
@@ -279,7 +281,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     },
     {
       "id": "film_example_phishing_credential_failure",
@@ -333,7 +336,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     },
     {
       "id": "film_example_phishing_attachment_failure",
@@ -387,7 +391,8 @@
             "createdAt": "2026-09-02T12:00:00.000Z"
           }
         }
-      ]
+      ],
+      "layoutAreas": []
     }
   ],
   "media": [

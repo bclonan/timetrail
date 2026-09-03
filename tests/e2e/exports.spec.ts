@@ -99,10 +99,55 @@ test("generated SVG renders, ZIP round trips, and exported viewers run on a sepa
         .poll(() => viewer.locator("#seek").inputValue())
         .not.toBe("0");
       await viewer.getByRole("button", { name: "Pause", exact: true }).click();
+      await viewer.locator("#seek").fill("2");
+      const indicator = viewer
+        .frameLocator("iframe")
+        .getByRole("button", { name: "Open annotation: DNA", exact: true });
+      await expect(indicator).toBeVisible();
+      expect((await indicator.boundingBox())!.width).toBeLessThanOrEqual(40);
+      await indicator.click();
+      const details = viewer
+        .frameLocator("iframe")
+        .getByRole("dialog", { name: "Annotation details" });
+      await expect(details).toContainText("DNA");
+      await details.getByRole("button", { name: "Close annotation" }).click();
+      await expect(details).toBeHidden();
       await viewer.locator("#seek").fill("84");
       await expect(
         viewer.getByText("What carries a gene's message to the ribosome?"),
       ).toBeVisible();
+      const popup = viewer
+        .frameLocator("iframe")
+        .getByRole("dialog", { name: "Video question" });
+      await expect(popup).toBeVisible();
+      // A side-panel answer must update the popup too.
+      await viewer
+        .locator("#context")
+        .getByRole("button", { name: "Messenger RNA", exact: true })
+        .click();
+      await expect(popup.getByRole("status")).toContainText("Correct.");
+      await popup
+        .getByRole("button", { name: "Continue film", exact: true })
+        .click();
+      await expect(popup).toBeHidden();
+      await expect
+        .poll(async () => Number(await viewer.locator("#seek").inputValue()))
+        .toBeGreaterThan(84.3);
+      await viewer
+        .getByRole("button", { name: "Start again", exact: true })
+        .click();
+      await expect(viewer.locator("#seek")).toBeEnabled();
+      await viewer.locator("#seek").fill("84");
+      await expect(
+        popup.getByRole("button", { name: "Messenger RNA", exact: true }),
+      ).toBeEnabled();
+      await popup
+        .getByRole("button", {
+          name: "Close question and continue",
+          exact: true,
+        })
+        .click();
+      await expect(popup).toBeHidden();
       expect(errors).toEqual([]);
     } finally {
       await viewer.close();

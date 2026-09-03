@@ -49,17 +49,17 @@ because the pinned resource URL resolver does not recognize data URLs.
 
 ## Mapping
 
-| TimeTrail                               | FrameTrail                                             |
-| --------------------------------------- | ------------------------------------------------------ |
-| Sequence                                | Hypervideo metadata and duration                       |
-| Generated card or image clip            | Timed image Overlay in hypervideo contents             |
-| Chapter                                 | Hypervideo chapters                                    |
-| Note, source, definition, fact, warning | W3C Annotation plus parent context card                |
-| Image cue                               | Positioned image Overlay                               |
-| Quiz                                    | Quiz Overlay with escaped question and bounded answers |
-| Branch or hotspot                       | Hotspot Overlay with typed parent navigation           |
-| Caption                                 | Parent caption text and exported WebVTT                |
-| Media item                              | FrameTrail resource entry with resolved source         |
+| TimeTrail                               | FrameTrail                                                         |
+| --------------------------------------- | ------------------------------------------------------------------ |
+| Sequence                                | Hypervideo metadata and duration                                   |
+| Generated card or image clip            | Timed image Overlay in hypervideo contents                         |
+| Chapter                                 | Hypervideo chapters                                                |
+| Note, source, definition, fact, warning | W3C Annotation plus parent context card                            |
+| Image cue                               | Positioned image Overlay                                           |
+| Quiz                                    | One TimeTrail quiz overlay with synchronized answers and dismissal |
+| Branch or hotspot                       | Hotspot Overlay with typed parent navigation                       |
+| Caption                                 | Parent caption text and exported WebVTT                            |
+| Media item                              | FrameTrail resource entry with resolved source                     |
 
 The mapper emits `t=start,end` and percentage `xywh` selectors. It sets
 `frametrail:type`, resource attributes, creator, and provenance. Global events,
@@ -67,11 +67,26 @@ resource events, and custom CSS remain empty. Branch destinations come from
 validated sequence IDs, not JavaScript or imported action strings. Remote
 hotspot links open through TimeTrail's safe click handler.
 
+The portable mapper retains FrameTrail quiz data, but the TimeTrail runtime
+removes those quiz copies from both FrameTrail players. `QuizOverlay.ts` renders
+one readable question above the footage, with feedback, Continue, Skip and Close.
+It uses DOM text nodes and cue IDs, so repeated questions and punctuation do not
+misroute answers. Quiz answers and dismissals are transient viewer state shared
+with Vue and the standalone client through `TIMETRAIL_QUIZ_STATE`. Runtime
+answer and dismissal events update that same state. Continue and Play dismiss
+the active question without deleting a cue; Start again resets the session.
+
 Hotspot and branch styles map through `domain/hotspots.ts` into FrameTrail's
 existing `color`, `textColor`, `backgroundColor`, `shape`, `borderWidth` and
 `radius` attributes. Colors are six-digit hex values; shapes and presets are
-allowlisted. Filled, outline and marker presets apply in Studio, Player and
-standalone exports through the same mapper. The `group` field is authoring
+allowlisted. Filled and outline styles apply in Studio, Player and standalone
+exports through the same mapper. Plain context annotations and marker-style
+hotspots use `AnnotationIndicators.ts`, one compact control layer over either
+FrameTrail player. Buttons stay between 24 and 40 pixels in each dimension,
+use accessible titles and open a closable text/source card. The default position
+is 4% by 7%; custom filled/outline geometry remains unchanged. The runtime removes
+duplicate indicator copies from FrameTrail, while the portable mapper retains
+small hotspot annotations. The `group` field is authoring
 metadata. It does not change activation behavior. No vendor changes or arbitrary
 CSS are required.
 
@@ -129,3 +144,24 @@ The standalone client pings the iframe when its listener starts and on iframe
 load. An initialization guard makes repeated Ready replies harmless. Play and
 seeking stay disabled until the new scene confirms readiness, including after
 a branch change. This also covers HTML files containing large embedded assets.
+
+## FrameTrail sidebars and layout areas
+
+Edit screen has a FrameTrail sidebars and areas section. Each screen can keep
+up to four tabs in each of the left, right, top and bottom areas. Content options
+are notes and sources, transcript, chapters, native FrameTrail timelines and
+custom plain text. Tabs have a title, size and Start closed setting. Viewers can
+switch tabs, close an area and reopen it with the tab. Enter and Space work too.
+On narrow screens, the left and right areas move below the picture.
+
+The mapper uses native FrameTrail ContentViews. Text, chapters, notes and
+transcript entries become escaped CustomHTML with bounded seek buttons.
+Timelines use the native Timelines view. Content-item code and event handlers
+remain empty. The wrapper keeps the source-video player, quizzes, indicators and
+placement guide inside the picture rectangle, measured with ResizeObserver.
+TIMETRAIL_VIEWPORT sends that rectangle to the Vue caption and placement layers.
+This does not enable FrameTrail's separate authoring sidebar.
+
+Sequence layoutAreas persist in project JSON/ZIP, share links and interactive
+exports. Rebuilding a storyboard preserves existing areas. Player views keep
+their separate outer context panels. MP4 remains a flat video export.

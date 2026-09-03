@@ -51,7 +51,14 @@ test("QA inspection explains a quiz pause and playback can continue after answer
   expect(answered.playback.paused).toBe(true);
   expect(answered.playback.activeQuizzes[0].answered).toBe(true);
   expect(answered.playback.next).toContain("action play");
+  const popup = page
+    .frameLocator('iframe[title="FrameTrail interactive preview"]')
+    .getByRole("dialog", { name: "Video question" });
+  await expect(
+    popup.getByRole("button", { name: "Continue film", exact: true }),
+  ).toBeVisible();
   await call(page, "timetrail.playback.control", { action: "play" });
+  await expect(popup).toBeHidden();
   await expect
     .poll(
       async () =>

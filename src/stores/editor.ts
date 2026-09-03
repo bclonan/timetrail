@@ -100,6 +100,10 @@ export const useEditor = defineStore("editor", () => {
   const entityId = ref("");
   const fresh = ref(false);
   const agentDraft = ref(false);
+  const positionEditing = ref(false);
+  watch(positionEditing, (visible) => {
+    if (visible && w.playerReady) w.playback("pause");
+  });
   const project = ref<z.infer<typeof metaFormSchema>>({
     title: "",
     description: "",
@@ -123,6 +127,7 @@ export const useEditor = defineStore("editor", () => {
   const urls = ref("");
   const resourcePreviewId = ref("");
   function close() {
+    positionEditing.value = false;
     active.value = undefined;
     agentDraft.value = false;
   }
@@ -136,6 +141,7 @@ export const useEditor = defineStore("editor", () => {
     },
   );
   function open(form: EditorForm, targetId?: string) {
+    positionEditing.value = false;
     const r = w.requireRecord();
     const seq =
       r.project.sequences.find((s) => s.id === w.sequenceId) ||
@@ -264,6 +270,7 @@ export const useEditor = defineStore("editor", () => {
     if (input.form === "urls") urls.value = input.fields.urls;
     if (input.form === "cue") {
       Object.assign(cue.value!, input.fields);
+      if (input.fields.position) positionEditing.value = true;
       if (input.fields.kind) changeKind();
       for (const key of input.clear || []) delete cue.value![key];
     }
@@ -527,6 +534,7 @@ export const useEditor = defineStore("editor", () => {
     entityId,
     fresh,
     agentDraft,
+    positionEditing,
     project,
     sequence,
     cue,
