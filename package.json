@@ -24,7 +24,7 @@
     "fflate": "^0.8.2",
     "fuse.js": "^7.1.0",
     "ulid": "^3.0.1",
-    "dompurify": "^3.2.6",
+    "dompurify": "^3.4.16",
     "lucide-vue-next": "^0.468.0",
     "mediabunny": "1.55.5"
   },
